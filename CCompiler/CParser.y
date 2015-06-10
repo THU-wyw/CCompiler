@@ -1,6 +1,36 @@
-%token IDENTIFIER STRING_LITERAL CONST
+%{
+#include "SyntaxNode.h"
+
+#include <string>
+Program* program;
+extern int yylex();
+void yyerror(const char*s) { printf("ERROR: %s\n", s); }
+%}
+
+%union {
+	SyntaxNode* node;
+	Expression* expression;
+	Identifier* identifier;
+	ImmediateInteger* immediate_integer;
+	StringLiteral* string_literal;
+	UnaryExpression* unary_expression;
+	BinaryExpression* binary_expression;
+	FunctionCall* function_call;
+	AssignmentExpression* assignment_expression;
+	Statement* statement;
+	VariableDeclaration* variable_declaration;
+	StatementsBlock* statements_block;
+	IfStatement* if_statement;
+	WhileStatement* while_statement;
+	ExpressionStatement* expression_statement;
+	FunctionDeclaration* function_declaration;
+	FunctionDefinition* function_definition;
+	std::string* string;
+%}
+
+%token IDENTIFIER STRING_LITERAL IMMEDIATE_INTEGER
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP AND_OP OR_OP
-%token ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN TYPE_NAME
+%token ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR CONTINUE BREAK RETURN
 %token CHAR INT FLOAT CONST VOID
 
@@ -8,10 +38,10 @@
 
 %%
 primary_expression
-	: IDENTIFIER
-	| CONSTANT
-	| STRING_LITERAL
-	| '(' expression ')'
+	: IDENTIFIER { $$ = new Identifier(*$1); delete $1; }
+	| IMMEDIATE_INTEGER { $$ = new ImmediateInteger(atol($1->c_str())); delete $1; }
+	| STRING_LITERAL { $$ = new StringLiteral($1); delete $1; }
+	| '(' expression ')'{ $$ = $1; }
 	;
 
 postfix_expression

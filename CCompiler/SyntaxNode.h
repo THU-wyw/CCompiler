@@ -49,6 +49,11 @@ private:
 	std::string name_;
 };
 
+class ImmediateInteger: public Expression {
+private:
+	int value_;
+};
+
 class UnaryExpression: public Expression {
 public:
 	enum UnaryOperator{
@@ -63,7 +68,13 @@ private:
 class BinaryExpression: public Expression {
 public:
 	enum BinaryOperator{
-		ADDITION
+		ADDITION,
+		SUBTRACTION,
+		MULTIPLICATION,
+		DIVISION,
+		MODULO,
+		ADDRESS,
+
 	};
 
 private:

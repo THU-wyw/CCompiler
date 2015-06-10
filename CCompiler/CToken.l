@@ -27,10 +27,64 @@ int PopFile(void);
 %%
 [ \t\n]+
 \\$
-([1-9][0-9]*)|0						{ printf("integer: %s\n", yytext); }
-[_a-zA-Z][_a-zA-Z0-9]*			{ printf("identifier: %s\n", yytext); }
-\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+)*\" { printf("string_literal: %s\n", yytext); }
-
+"case"							{ return CASE; }
+"default"						{ return DEFAULT; }
+"if"							{ return IF; }
+"else"							{ return ELSE; }
+"switch"						{ return SWITCH; }
+"while"							{ return WHILE; }
+"do"							{ return DO; }
+"for"							{ return FOR; }
+"continue"						{ return CONTINUE; }
+"break"							{ return BREAK; }
+"return"						{ return RETURN; }
+"char"							{ return CHAR; }
+"int"							{ return INT; }
+"float"							{ return FLOAT; }
+"const"							{ return CONST; }
+"void"							{ return VOID; }
+"{"								{ return '{'; }
+"}"								{ return '}'; }
+"["								{ return '['; }
+"]"								{ return ']'; }
+"("								{ return '('; }
+")"								{ return ')'; }
+"++"							{ return INC_OP; }
+"--"							{ return DEC_OP; }
+"+="							{ return ADD_ASSIGN; }
+"-="							{ return SUB_ASSIGN; }
+"*="							{ return MUL_ASSIGN; }
+"/="							{ return DIV_ASSIGN; }
+"<="							{ return LE_OP; }
+">="							{ return GE_OP; }
+"=="							{ return EQ_OP; }
+"!="							{ return NE_OP; }
+"&&"							{ return AND_OP; }
+"||"							{ return OR_OP; }
+"!"								{ return '!'; }
+"+"								{ return '+'; }
+"-"								{ return '-'; }
+"*"								{ return '*'; }
+"<"								{ return '<'; }
+">"								{ return '>'; }
+","								{ return ','; }
+"="								{ return '='; }
+";"								{ return ';'; }
+([1-9][0-9]*)|0					{ 
+									printf("integer: %s\n", yytext); 
+									yylval.string = new std::string(yytext, yyleng);
+									return IMMEDIATE_INTEGER;
+								}
+[_a-zA-Z][_a-zA-Z0-9]*			{ 
+									printf("identifier: %s\n", yytext); 
+									yylval.string = new std::string(yytext, yyleng);
+									return IDENTIFIER;
+								}
+\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+)*\" { 
+									printf("string_literal: %s\n", yytext);
+									yylval.string = new std::string(yytext, yyleng);
+									return STRING_LITERAL; 
+								}
 ^"#"[ \t]*include[ \t]*[\"<]	{ BEGIN(IFILE); }
 <IFILE>[^ \t\n\">]+				{
 									char c;
