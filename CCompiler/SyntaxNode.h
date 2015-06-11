@@ -73,15 +73,16 @@ public:
 		MULTIPLICATION,
 		DIVISION,
 		MODULO,
-		ADDRESS,
+		INDEX
 
 	};
+	BinaryExpression(const Expression* left, const Expression* right, BinaryOperator opt); 
 
 private:
 	BinaryOperator operator_;
 	Expression* left_;
 	Expression* right_;
-}; 
+};
 
 class FunctionCall: public Expression {
 private:

@@ -45,9 +45,9 @@ primary_expression
 	;
 
 postfix_expression
-	: primary_expression
-	| postfix_expression '[' expression ']'
-	| postfix_expression '(' ')'
+	: primary_expression { $$ = $1; }
+	| postfix_expression '[' expression ']' { $$ = new BinaryExpression($1, $2, BinaryExpression::BinaryOperator.INDEX); }
+	| postfix_expression '(' ')' { $$ = new FunctionCall($1, new std::vector<Expression*>()); } 
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
