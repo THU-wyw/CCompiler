@@ -3,6 +3,7 @@
 %x IFILE
 %{
 #include <stdio.h>
+#include "CParser.hpp"
 
 struct Reference {
 	struct Reference *next;
@@ -43,7 +44,7 @@ int PopFile(void);
 "float"							{ return FLOAT; }
 "const"							{ return CONST; }
 "void"							{ return VOID; }
-"{"								{ return '{'; }
+"{"  							{ return '{'; }
 "}"								{ return '}'; }
 "["								{ return '['; }
 "]"								{ return ']'; }
@@ -51,37 +52,54 @@ int PopFile(void);
 ")"								{ return ')'; }
 "++"							{ return INC_OP; }
 "--"							{ return DEC_OP; }
+"->"							{ return RIGHT_ARROW; }
 "+="							{ return ADD_ASSIGN; }
 "-="							{ return SUB_ASSIGN; }
 "*="							{ return MUL_ASSIGN; }
 "/="							{ return DIV_ASSIGN; }
+"%="                            { return MOD_ASSIGN; }
+"<<="                           { return SHIFT_LEFT_ASSIGN; }
+">>="                           { return SHIFT_RIGHT_ASSIGN; }
+"&="                            {return AND_ASSIGN; }
+"^="                            {return EXCLUSIVE_OR_ASSIGN; }
+"|="                            {return INCLUSIVE_OR_ASSIGN; }
 "<="							{ return LE_OP; }
 ">="							{ return GE_OP; }
 "=="							{ return EQ_OP; }
 "!="							{ return NE_OP; }
 "&&"							{ return AND_OP; }
 "||"							{ return OR_OP; }
+"<<"                            { return SHIFT_LEFT_OP; }
+">>"                            { return SHIFT_RIGHT_OP; }
 "!"								{ return '!'; }
 "+"								{ return '+'; }
 "-"								{ return '-'; }
 "*"								{ return '*'; }
+"/"                             { return '/'; }
+"%"                             { return '%'; }
 "<"								{ return '<'; }
 ">"								{ return '>'; }
 ","								{ return ','; }
 "="								{ return '='; }
 ";"								{ return ';'; }
+"&"                             { return '&'; }
+"*"                             { return '*'; }
+"+"                             { return '+'; }
+"-"                             { return '-'; }
+"~"                             { return '~'; }
+"!"                             { return '!'; }
 ([1-9][0-9]*)|0					{ 
-									printf("integer: %s\n", yytext); 
+									// printf("integer: %s\n", yytext); 
 									yylval.string = new std::string(yytext, yyleng);
 									return IMMEDIATE_INTEGER;
 								}
 [_a-zA-Z][_a-zA-Z0-9]*			{ 
-									printf("identifier: %s\n", yytext); 
+									// printf("identifier: %s\n", yytext); 
 									yylval.string = new std::string(yytext, yyleng);
 									return IDENTIFIER;
 								}
 \"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+)*\" { 
-									printf("string_literal: %s\n", yytext);
+									// printf("string_literal: %s\n", yytext);
 									yylval.string = new std::string(yytext, yyleng);
 									return STRING_LITERAL; 
 								}
@@ -107,11 +125,11 @@ int PopFile(void);
 . 								{ printf("no match: %s\n", yytext); }
 %%
 
-int main() {
+/*int main() {
 	NewFile("test.txt");	
 	yylex();
 	return 0;
-}
+}*/
 
 int NewFile(char *filename) {
 	FILE* file = fopen(filename, "r");

@@ -15,30 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="CToken.l">
-      <Filter>源文件</Filter>
-    </CustomBuild>
-    <CustomBuild Include="CParser.y">
-      <Filter>源文件</Filter>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CToken.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="SyntaxNode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CParser.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

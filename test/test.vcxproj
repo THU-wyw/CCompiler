@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A173634B-DE99-483F-9C06-5A366DAAA49A}</ProjectGuid>
+    <ProjectGuid>{E230358D-4344-4AD8-8195-A920ADC9DCB4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CCompiler</RootNamespace>
+    <RootNamespace>test</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,31 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="CToken.l">
-      <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex --wincompat -o %(Filename).cpp %(Filename)%(Extension)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex --wincompat -o %(Filename).cpp %(Filename)%(Extension)</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="CParser.y">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -o %(Filename).cpp %(Filename)%(Extension)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bison -d -o %(Filename).cpp %(Filename)%(Extension)</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(Filename).cpp</Outputs>
-      <FileType>Document</FileType>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="CParser.cpp" />
-    <ClCompile Include="CToken.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CParser.hpp" />
-    <ClInclude Include="SyntaxNode.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

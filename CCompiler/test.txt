@@ -1,9 +1,1 @@
-#include "stdio.h"
-int main() 
-{
-	int test = 45;
-	void test1();
-	char* begining = "12\3213\n";
-	int str;
-	return 0;
-}
+testtest

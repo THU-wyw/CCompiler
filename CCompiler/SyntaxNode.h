@@ -3,97 +3,122 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+using namespace std;
+class VariableDeclaration;
+class FunctionDeclaration;
+class FunctionDefinition;
+class ExternalDeclaration;
 class SyntaxNode {
 public:
-	virtual ~SyntaxNode() = 0;
+	//virtual ~SyntaxNode() = 0;
 	virtual void codeGen(std::ostream& output) = 0;
-	enum VariableType {
-		INT,
-		FLOAT,
-		CHAR,
-		CHAR_ARRAY,
-		INT_ARRAY,
-		FLOAT_ARRAY,
-		VOID
-	};
+	
+};
+
+class ExternalDeclaration : public SyntaxNode {
+public:
+	enum Type{
+		VARIABLE_DECLARATION,
+		FUNCTION_DECLARATION
+	} type;
+
+	union Declaration{
+		VariableDeclaration *vd;
+		FunctionDeclaration *fd;
+	} declaration;
+
+	ExternalDeclaration(Type t, Declaration d):type(t) {
+		if (t == VARIABLE_DECLARATION){
+			declaration.vd = d;
+		}
+		else{
+			declaration.fd = d;
+		}
+	}
 };
 
 class Program: public SyntaxNode {
+public:
+	void pushDeclaration(ExternalDeclaration* e){
+		_externalDeclarations.pushback(e);
+	}
 private:
-	struct ExternalDeclaration {
-		enum {
-			VARIABLE_DECLARATION,
-			FUNCTION_DECLARATION,
-			FUNCTION_DEFINITION
-		} type;
-		union {
-			VariableDeclaration* variable_declaration;
-			FunctionDeclaration* function_declaration;
-			FunctionDefinition* function_definition;
-		};
-	};
-	std::vector<ExternalDeclaration*> external_declarations_;
+	vector<ExternalDeclaration*> _externalDeclarations;
 };
 
 class Expression: public SyntaxNode {
-public:
-	virtual ~Expression() = 0;
 };
 
 class Identifier: public Expression {
 public:
-	Identifier(const std::string& name);
-	inline const std::string& get_name() { return this->name_; }
+	Identifier(const std::string& name) { _name = name; }
+	inline const std::string& getName() { return this->name_; }
+	void codeGen(std::ostream& output) {}
 private:
-	std::string name_;
+	std::string _name;
+
 };
 
 class ImmediateInteger: public Expression {
+public:
+	ImmediateInteger(int value) { _value = value; }
+	void codeGen(std::ostream& output) {}
+
 private:
-	int value_;
+	int _value;
+};
+
+class StringLiteral : public Expression {
+public:
+	StringLiteral(std::string value) { _value = value; }
+	void codeGen(std::ostream& output) {}
+private:
+	std::string _value;
 };
 
 class UnaryExpression: public Expression {
-public:
-	enum UnaryOperator{
-		LOGICAL_NEGTIVE
-	};
-
+public:	
+	UnaryExpression(const Expression *e, string opt)
+	{
+		_unaryOperator = opt;
+		_expression = e;
+	}
 private:
-	Expression* expression_;
-	UnaryOperator operator_;
+	Expression* _expression;
+	//possible value : _--, _++, --_, ++_, &, *, +, -, ~, !
+	string _unaryOperator;
+
 };
 
 class BinaryExpression: public Expression {
 public:
-	enum BinaryOperator{
-		ADDITION,
-		SUBTRACTION,
-		MULTIPLICATION,
-		DIVISION,
-		MODULO,
-		INDEX
-
-	};
-	BinaryExpression(const Expression* left, const Expression* right, BinaryOperator opt); 
+	BinaryExpression(const Expression* left, const Expression* right, string opt)
+	{
+		_left = left;
+		_right = right;
+		_binaryOperator = opt;
+	} 
 
 private:
-	BinaryOperator operator_;
-	Expression* left_;
-	Expression* right_;
-};
-
-class FunctionCall: public Expression {
-private:
-	Identifier* function_;
-	std::vector<Expression*> arguments_;
+	// possible value : +, -, *, /, %, [], ., ->, <<, >>, <, >, <=, >=, 
+	//                  ==, !=, &, ^, |, &&, ||
+	string _binaryOperator;
+	Expression* _left;
+	Expression* _right;
 };
 
 class AssignmentExpression: public Expression {
+public:
+	AssignmentExpression(Expression *left, Expression *right, string opt)
+	{
+		_unaryExpression = left;
+		_assignmentExpression = right;
+		_assignmentOperator = opt;
+	}
 private:
-	Identifier* identifier_;
-	Expression* expression_;
+	string _assignmentOperator;
+	Expression *_unaryExpression;
+	Expression *_assignmentExpression;
 };
 
 class Statement: public SyntaxNode {
@@ -101,50 +126,100 @@ public:
 	virtual ~Statement() = 0;
 };
 
+class VariableType: public SyntaxNode {
+public:
+	enum Type{
+		VOID,
+		CHAR,
+		INT,
+		FLOAT
+	};
+	VariableType():type(Type::VOID), pointer(0){}
+	Type type;
+	int pointer;
+	vector<Expression *> array;
+};
+
 class VariableDeclaration: public Statement {
-private:
-	Identifier* identifier_;
-	VariableType type_;
+public:
+	VariableDeclaration():identifier(NULL), initializer(NULL){}
+	Identifier	*identifier;
+	VariableType vt;
+	Expression *initializer;
 };
 
 class StatementsBlock: public Statement {
+public:
+	void pushStatement(Statement *s){
+		_statements.pushback(s);
+	}
 private:
-	std::vector<Statement*> statements_;
-	Expression* init_value_;
+	vector<Statement*> _statements;
+	Expression* _initValue;
 };
 
 class IfStatement: public Statement {
+public:
+	IfStatement(Expression *cond, StatementsBlock *thenS=NULL, StatementsBlock *elseS=NULL)
+		:_condition(cond), _thenStatements(thenS), _elseStatements(elseS){}
 private:
-	Expression* condition_;
-	StatementsBlock* then_statements_;
-	StatementsBlock* else_statements_;
+	Expression* _condition;
+	StatementsBlock* _thenStatements;
+	StatementsBlock* _elseStatements;
+};
+
+class JumpStatement: public Statement {
+public:
+	enum JumpType {
+		CONTINUE,
+		BREAK
+	}type;
+};
+
+class ReturnStatement: public Statement {
+public:
+	ReturnStatement(Expression* rv): returnValue(rv){}
+private:
+	Expression * returnValue;
 };
 
 class WhileStatement: public Statement {
+public:
+	WhileStatement(Expression *cond, StatementsBlock, *sb, bool hasDo = false)
+		: _condition(cond), _body(sb), _hasDo(hasDo) {}
 private:
-	Expression* condition_;
-	StatementsBlock* body_;
+	Expression* _condition;
+	StatementsBlock* _body;
+	bool _hasDo;
 };
 
 class ExpressionStatement: public Statement {
+public:
+	ExpressionStatement(Expression *e):_expression(e){}
 private:
-	Expression* expression_;
+	Expression* _expression;
 };
 
-class FunctionDeclaration: public SyntaxNode {
+class FunctionDeclaration: public Statement {
+public:
+	FunctionDeclaration(Identifier *ident, vector<VariableDeclaration*> *v;)
+		:_identifier(ident), _arguments(v){}
+	void setReturnType(VariableType vt){ _returnType = vt; }
+	void setStatementBlock(StatementsBlock *sb) { _statements = sb; }
 private:
-	VariableType type_;
-	std::string function_name_;
-	std::vector<Identifier*> arguments_;
+	VariableType _returnType;
+	Identifier *_identifier;
+	vector<VariableDeclaration*> *_arguments;
+	StatementsBlock *_statements;
 };
 
-class FunctionDefinition: public SyntaxNode {
-
+class FunctionCall: public Expression {
+public:
+	FunctionCall(Indentifier *func, vector<Identifier *> *v;)
+		:_identifier(ident), _arguments(v){}
 private:
-	VariableType type_;
-	std::string function_name_;
-	std::vector<Identifier*> arguments_;
-	StatementsBlock* body_;
+	Identifier* _identifier;
+	vector<Identifier*> _arguments;
 };
 #endif
 
