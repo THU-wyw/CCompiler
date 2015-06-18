@@ -1,12 +1,31 @@
 #include <iostream>
+#include <fstream>
+#include <stdio.h>
 #include "SyntaxNode.h"
 using namespace std;
 extern int yyparse();
- 
-int main(int argc, char **argv)
+extern FILE * yyin;
+extern Program* program;
+
+void test(string file)
 {
-	//yyin = fopen("test.txt", "r");
-    yyparse();
-    cout << "code over" << endl;
+	string test_file = "../SyntaxTests/tests/"+file+".cpp";
+	string result_file = "../SyntaxTests/results/"+file+".txt";
+	ifstream fin;
+	fin.open(test_file);
+	string temp;
+	fin >> temp;
+	yyin = fopen(test_file.c_str(), "r");
+	yyparse();
+	ofstream fout;
+	fout.open(result_file);
+	if (program != NULL)
+		program->printTree(fout);
+}
+int main(int argc, char **argv)
+{	
+	test("expression");
+	//test("declaration");
+	//test("statement");
     return 0;
 }

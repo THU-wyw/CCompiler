@@ -32,6 +32,15 @@
     <ClCompile Include="CParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="codeGen.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="printTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SyntaxNode.h">

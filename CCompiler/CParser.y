@@ -10,50 +10,99 @@ void yyerror(const char*s) { printf("ERROR: %s\n", s); }
 %}
 
 %code requires {
+	#include <vector>
 	#include "SyntaxNode.h"
 	using namespace std;
 }
 %union {
 	SyntaxNode* node;
+	Program* program;
 	Expression* expression;
 	Identifier* identifier;
+	vector<Identifier*>* identifier_list;
 	ImmediateInteger* immediate_integer;
 	StringLiteral* string_literal;
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
+	vector<Expression*>* expression_list;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
+	Declaration* declaration;
+	vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
+	vector<VariableDeclaration*>* variable_declaration_list;
 	StatementsBlock* statements_block;
 	IfStatement* if_statement;
 	WhileStatement* while_statement;
 	ExpressionStatement* expression_statement;
 	FunctionDeclaration* function_declaration;
 	FunctionDefinition* function_definition;
-	std::string* string;
+	string* str;
+	int number;
+	char symbol;
+	VariableType::Type vt_t;
 }
 
-//terminal symbols
+// terminal symbols
 %token IDENTIFIER STRING_LITERAL IMMEDIATE_INTEGER
-%token PTR_OP INC_OP DEC_OP SHIFT_LEFT_OP SHIFT_RIGHT_OP LE_OP GE_OP EQ_OP NE_OP AND_OP OR_OP
-%token ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN
+
+// unary op
+%token INC_OP DEC_OP 
+
+// binary op
+%token PTR_OP SHIFT_LEFT_OP SHIFT_RIGHT_OP LE_OP GE_OP EQ_OP NE_OP AND_OP OR_OP
+
+// assign op
+%token ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN SHIFT_LEFT_ASSIGN SHIFT_RIGHT_ASSIGN AND_ASSIGN INCLUSIVE_OR_ASSIGN EXCLUSIVE_OR_ASSIGN
+
+// labels
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR CONTINUE BREAK RETURN
+
+// types
 %token CHAR INT FLOAT CONST VOID
 
-//type of the ymbols
-%type <expression> primary_expression
-%type <string> IDENTIFIER IMMEDIATE_INTEGER STRING_LITERAL
+// type of the symbols
+// expression types
+%type <expression> expression constant_expression conditional_expression
+%type <expression> primary_expression postfix_expression unary_expression
+%type <expression> multiplicative_expression additive_expression shift_expression relational_expression equality_expression AND_expression inclusive_OR_expression exclusive_OR_expression logical_AND_expression logical_OR_expression
+%type <expression> assignment_expression initializer
+%type <expression_list> argument_expression_list
+
+//declaration types
+%type <variable_declaration> variable_declaration init_declarator declarator direct_declarator parameter_declaration 
+%type <variable_declaration_list> parameter_list init_declarator_list 
+%type <function_declaration> function_declarator function_declaration
+%type <declaration> declaration
+
+//statement types
+%type <statement> compound_statement block_item_list
+%type <statement> expression_statement
+%type <statement> if_statement
+%type <statement> while_statement
+%type <statement> jump_statement
+%type <statement> return_statement
+%type <program> translation_unit program
+
+%type <statement> block_item statement
+
+//basic types
+%type <identifier> identifier
+%type <str> IDENTIFIER IMMEDIATE_INTEGER STRING_LITERAL
+%type <str> unary_operator assignment_operator
+%type <number> pointer 
+%type <vt_t> declaration_specifiers type_specifier
 
 %start program
 
 %%
 program
-	:statement
+	: translation_unit { $$ = $1; program = $1; }
 	;
 
 primary_expression
-	: IDENTIFIER { $$ = new Identifier(*$1); delete $1; }
+	: identifier
 	| IMMEDIATE_INTEGER { 
 		$$ = new ImmediateInteger(atol($1->c_str())); delete $1; 
 	}
@@ -66,16 +115,21 @@ primary_expression
 postfix_expression
 	: primary_expression
 	| postfix_expression '[' expression ']' { 
-		$$ = new BinaryExpression($1, $2, "[]"); 
+		$$ = new BinaryExpression($1, $3, "[]"); 
 	}
 	| postfix_expression '(' argument_expression_list ')' {
+		cout << "function call" << endl;
 		$$ = new FunctionCall($1, $3); 
 	}
-	| postfix_expression '.' IDENTIFIER {
-		$$ = new BinaryExpression($1, $3, $2); 
+	| postfix_expression '(' ')' {
+		cout << "function call" << endl;
+		$$ = new FunctionCall($1, new vector<Expression*>()); 
 	}
-	| postfix_expression PTR_OP IDENTIFIER { 
-		$$ = new BinaryExpression($1, $3, $2); 
+	| postfix_expression '.' identifier {
+		$$ = new BinaryExpression($1, $3, "."); 
+	}
+	| postfix_expression PTR_OP identifier { 
+		$$ = new BinaryExpression($1, $3, "->"); 
 	}
 	| postfix_expression INC_OP {
 		$$ = new UnaryExpression($1, "_++");
@@ -86,35 +140,35 @@ postfix_expression
 	;
 
 argument_expression_list
-	: assignment_expression{
-		$$ = new vector<Expression>();
-		$$.pushback(*$1);
+	: assignment_expression {
+		$$ = new vector<Expression*>();
+		$$->push_back($1);
 	}
 	| argument_expression_list ',' assignment_expression {
-		$$.pushback(*$3);
+		$$->push_back($3);
 	}
 	;
 
 unary_expression
 	: postfix_expression 
 	| INC_OP unary_expression {
-		$$ = new UnaryExpression($1, "++_");
+		$$ = new UnaryExpression($2, "++_");
 	}
 	| DEC_OP unary_expression {
-		$$ = new UnaryExpression($1, "--_");
+		$$ = new UnaryExpression($2, "--_");
 	}
 	| unary_operator unary_expression {
-		$$ = new UnaryExpression($2, $1);
+		$$ = new UnaryExpression($2, *$1);
 	}
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&' { $$ = new string("&"); }
+	| '*' { $$ = new string("*"); }
+	| '+' { $$ = new string("+"); }
+	| '-' { $$ = new string("-"); }
+	| '~' { $$ = new string("~"); }
+	| '!' { $$ = new string("!"); }
 	;
 
 multiplicative_expression
@@ -132,7 +186,7 @@ multiplicative_expression
 
 additive_expression
 	: multiplicative_expression
-	| additive-expression '+' multiplicative_expression {
+	| additive_expression '+' multiplicative_expression {
 		$$ = new BinaryExpression($1, $3, "+"); 
 	}
 	| additive_expression '-' multiplicative_expression {
@@ -153,10 +207,10 @@ shift_expression
 relational_expression
 	: shift_expression
 	| relational_expression '<' shift_expression {
-		$$ = new BinaryExpression($1, $3, $2); 
+		$$ = new BinaryExpression($1, $3, "<"); 
 	}
 	| relational_expression '>' shift_expression {
-		$$ = new BinaryExpression($1, $3, $2); 
+		$$ = new BinaryExpression($1, $3, ">"); 
 	}
 	| relational_expression LE_OP shift_expression {
 		$$ = new BinaryExpression($1, $3, "<="); 
@@ -179,21 +233,21 @@ equality_expression
 AND_expression
 	: equality_expression
 	| AND_expression '&' equality_expression {
-		$$ = new BinaryExpression($1, $3, $2); 
+		$$ = new BinaryExpression($1, $3, "&"); 
 	}
 	;
 
 exclusive_OR_expression
 	: AND_expression
 	| exclusive_OR_expression '^' AND_expression {
-		$$ = new BinaryExpression($1, $3, $2); 
+		$$ = new BinaryExpression($1, $3, "^"); 
 	}
 	;
 
 inclusive_OR_expression
 	: exclusive_OR_expression
 	| inclusive_OR_expression '|' exclusive_OR_expression {
-		$$ = new BinaryExpression($1, $3, $2); 
+		$$ = new BinaryExpression($1, $3, "|"); 
 	}
 	;
 
@@ -214,63 +268,30 @@ logical_OR_expression
 assignment_expression
 	: logical_OR_expression
 	| unary_expression assignment_operator assignment_expression {
-		switch($2)
-		{
-			case '=':
-				$$ = new AssigementExpression($1, $3, "=");
-				break;
-			case ADD_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "+=");
-				break;
-			case SUB_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "-=");
-				break;
-			case MUL_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "*=");
-				break;
-			case DIV_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "/=");
-				break;
-			case MOD_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "%=");
-				break;
-			case SHIFT_LEFT_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "<<=");
-				break;
-			case SHIFT_RIGHT_ASSIGN:
-				$$ = new AssigementExpression($1, $3, ">>=");
-				break;
-			case AND_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "&=");
-				break;
-			case EXCLUSIVE_OR_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "^=");
-				break;
-			case INCLUSIVE_OR_ASSIGN:
-				$$ = new AssigementExpression($1, $3, "|=");
-				break;
-			default:
-				break;
-		}		
+		$$ = new AssignmentExpression($1, $3, *$2);
 	}
 	;
 
 assignment_operator
-	:'='
-	| MUL_ASSIGN
-	| DIV_ASSIGN
-	| MOD_ASSIGN
-	| ADD_ASSIGN
-	| SUB_ASSIGN
-	| SHIFT_LEFT_ASSIGN
-	| SHIFT_RIGHT_ASSIGN
-	| AND_ASSIGN
-	| EXCLUSIVE_OR_ASSIGN
-	| INCLUSIVE_OR_ASSIGN
+	:'=' { $$ = new string("="); }
+	| MUL_ASSIGN { $$ = new string("*="); }
+	| DIV_ASSIGN { $$ = new string("/="); }
+	| MOD_ASSIGN { $$ = new string("%="); }
+	| ADD_ASSIGN { $$ = new string("+="); }
+	| SUB_ASSIGN { $$ = new string("-="); }
+	| SHIFT_LEFT_ASSIGN { $$ = new string("<<="); }
+	| SHIFT_RIGHT_ASSIGN { $$ = new string(">>="); }
+	| AND_ASSIGN { $$ = new string("&="); }
+	| EXCLUSIVE_OR_ASSIGN { $$ = new string("^="); }
+	| INCLUSIVE_OR_ASSIGN { $$ = new string("|="); }
 	;
 
 expression
 	: assignment_expression
+	;
+
+conditional_expression
+	: logical_OR_expression
 	;
 
 constant_expression
@@ -283,39 +304,24 @@ declaration_specifiers
 
 variable_declaration
 	: declaration_specifiers init_declarator_list {
-		vector<VariableDeclaration>::iterator iter;
-		VariableType::Type t;
-		switch($1){
-			case VOID:
-				t = VariableType::Type::VOID;
-				break;
-			case CHAR:
-				t = VariableType::Type::VOID;
-				break;
-			case INT:
-				t = VariableType::Type::VOID;
-				break;
-			case FLOAT
-				t = VariableType::Type::VOID;
-				break;
-			default:
-				break;
+		vector<VariableDeclaration*>::iterator iter;
+		for (iter = $2->begin(); iter != $2->end(); iter++){
+			(*iter)->vt.type = $1;
 		}
-		for (iter = $2.begin(); iter != iter.end(); iter++){
-			iter->vt.type = t;
-		}
+		$$ = *($2->begin());
 	}
 	;
 
 init_declarator_list
 	: init_declarator {
-		$$ = new vector<VariableDeclaration>();
-		$$.pushback(*$1);
+		$$ = new vector<VariableDeclaration*>();
+		$$->push_back($1);
 	}
-	| init_declarator ',' init_declarator_list {
-		$3.pushback(*$1);
-		$$ = $3;
-	}
+	/*| init_declarator_list ',' init_declarator {
+		$1->push_back($3);
+		$$ = $1;
+	}*/
+	;
 
 init_declarator
 	: declarator 
@@ -326,10 +332,10 @@ init_declarator
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| INT
-	| FLOAT
+	: VOID { $$ = VariableType::VOID; }
+	| CHAR { $$ = VariableType::CHAR; }
+	| INT { $$ = VariableType::INT; }
+	| FLOAT { $$ = VariableType::FLOAT; }
 	;
 
 pointer
@@ -339,17 +345,18 @@ pointer
 
 declarator
 	: pointer direct_declarator {
-		$2->pointer = $1;
+		$2->vt.pointer = $1;
+		$$ = $2;
 	}
 	;
 
 direct_declarator
 	: identifier {
 		$$ = new VariableDeclaration();
-		$$->indentifier = $1;
+		$$->identifier = $1;
 	}
 	| direct_declarator '[' constant_expression ']' {
-		$1->array->pushback($3);
+		$1->vt.array.push_back($3);
 		$$ = $1;
 	};
 
@@ -357,50 +364,32 @@ function_declarator
 	: identifier '(' parameter_list ')' {
 		$$ = new FunctionDeclaration($1, $3);
 	}
+	| identifier '(' ')' {
+		$$ = new FunctionDeclaration($1, new vector<VariableDeclaration*>());
+	}
 	;
 
-function_call
-	: direct_declarator '(' identifier_list ')' {
-		$$ = new FunctionCall($1, $3);
-	}
-
 parameter_list
-	: {
+	: parameter_declaration {
 		$$ = new vector<VariableDeclaration*>();
+		$$->push_back($1);
 	}
-	| parameter_declaration ',' parameter_list {
-		$$->pushback(*$1);
+	| parameter_list ',' parameter_declaration {
+		$1->push_back($3);
+		$$ = $1;
 	}
 	;
 
 parameter_declaration
 	: declaration_specifiers declarator {
-		VariableType::Type t;
-		switch($1){
-			case VOID:
-				t = VariableType::Type::VOID;
-				break;
-			case CHAR:
-				t = VariableType::Type::VOID;
-				break;
-			case INT:
-				t = VariableType::Type::VOID;
-				break;
-			case FLOAT
-				t = VariableType::Type::VOID;
-				break;
-			default:
-				break;
-		}
-		$2->returnType.type = t;
+		cout << "parameter_declaration" << endl;
+		$2->vt.type = $1;
+		$$ = $2;
 	}
 	;
 
-identifier_list
-	: { $$ = new vector<identifier*>(); }
-	| identifier_list ',' identifier {
-		$$->pushback($3);
-	}
+identifier
+	: IDENTIFIER { $$ = new Identifier(*$1); }
 	;
 
 initializer
@@ -412,15 +401,14 @@ initializer
 	;
 
 statement
-	: labeled_statement
-	| compound_statement
+	: compound_statement
 	| expression_statement
 	| if_statement
 	| while_statement
-	| for_statement
+//	| for_statement
 	| jump_statement
 	| return_statement
-	| variable_declaration
+	| variable_declaration ';' { $$ = $1; }
 	;
 
 compound_statement
@@ -430,12 +418,14 @@ compound_statement
 	;
 
 block_item_list
-	: block_item {
+	: {
 		$$ = new StatementsBlock();
-		$$->pushStatement($1);
+		//((StatementsBlock *)$$)->pushStatement($1);
 	}
 	| block_item_list block_item {
-		$$->pushStatement($1);
+		cout << "block_item_list" << endl;
+		((StatementsBlock *)$1)->pushStatement($2);
+		$$ = $1;
 	}
 	;
 
@@ -444,7 +434,7 @@ block_item
 	;
 
 expression_statement
-	: expression {
+	: expression ';' {
 		$$ = new ExpressionStatement($1);
 	}
 	;
@@ -459,11 +449,11 @@ if_statement
 	;
 
 while_statement
-	: WHILE '(' epression ')' statement {
+	: WHILE '(' expression ')' statement {
 		$$ = new WhileStatement ($3, $5);
 	}
-	| do statement while '(' expression ')' ';' {
-		$$ = new WhileStatement ($3, $5, true);
+	| DO statement WHILE '(' expression ')' ';' {
+		$$ = new WhileStatement ($5, $2, true);
 	}
 	;
 
@@ -476,12 +466,10 @@ for_statement
 
 jump_statement
 	: CONTINUE ';' {
-		$$ = new JumpStatement();
-		$$->type = JumpStatement::JumpType::CONTINUE;
+		$$ = new JumpStatement(JumpStatement::CONTINUE);
 	}
 	| BREAK ';' {
-		$$ = new JumpStatement();
-		$$->type = JumpStatement::JumpType::BREAK;
+		$$ = new JumpStatement(JumpStatement::BREAK);
 	}
 	;
 
@@ -489,28 +477,35 @@ return_statement
 	: RETURN expression ';' {
 		$$ = new ReturnStatement($2);
 	}
+	| RETURN ';' {
+		$$ = new ReturnStatement(NULL);
+	}
 	;
 
 translation_unit
-	: external_declaration {
+	: declaration {
 		$$ = new Program();
+		$$->pushDeclaration($1);
 	}
-	| translation_unit external_declaration {
-		$$->externalDeclarations.pushback($1);
+	| translation_unit declaration {
+		$$->pushDeclaration($2);
 	}
 	;
 
-external_declaration
-	: function_definition {
-		$$ = new ExternalDeclaration(ExternalDeclaration::Type::FUNCTION_DECLARATION, $1);
+declaration
+	: function_declaration {
+		$$ = $1;
 	} 
 	| variable_declaration {
-		$$ = new ExternalDeclaration(ExternalDeclaration::Type::VARIABLE_DECLARATION, $1);
+		$$ = $1;
 	}
 	;
 
-function_definition
+function_declaration
 	: declaration_specifiers function_declarator compound_statement {
-		$2->setReturnType($1);
-		$2->setStatements($3);
+		VariableType vt;
+		vt.type = $1;
+		$2->setReturnType(vt);
+		$2->setStatementsBlock($3);
+		$$ = $2;
 	}

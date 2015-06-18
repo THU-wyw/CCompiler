@@ -7,123 +7,125 @@ using namespace std;
 class VariableDeclaration;
 class FunctionDeclaration;
 class FunctionDefinition;
-class ExternalDeclaration;
+class Declaration;
 class SyntaxNode {
 public:
 	//virtual ~SyntaxNode() = 0;
-	virtual void codeGen(std::ostream& output) = 0;
+	virtual void codeGen(ostream& output) = 0;
+	virtual void printTree(ostream& output) = 0;
 	
-};
-
-class ExternalDeclaration : public SyntaxNode {
-public:
-	enum Type{
-		VARIABLE_DECLARATION,
-		FUNCTION_DECLARATION
-	} type;
-
-	union Declaration{
-		VariableDeclaration *vd;
-		FunctionDeclaration *fd;
-	} declaration;
-
-	ExternalDeclaration(Type t, Declaration d):type(t) {
-		if (t == VARIABLE_DECLARATION){
-			declaration.vd = d;
-		}
-		else{
-			declaration.fd = d;
-		}
-	}
 };
 
 class Program: public SyntaxNode {
 public:
-	void pushDeclaration(ExternalDeclaration* e){
-		_externalDeclarations.pushback(e);
+	void pushDeclaration(Declaration* d){
+		declarations_.push_back(d);
 	}
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	vector<ExternalDeclaration*> _externalDeclarations;
+	vector<Declaration*> declarations_;
 };
 
 class Expression: public SyntaxNode {
+public:
+	enum Type {
+		UNARY,
+		BINARY,
+		ASSIGN
+	}type;
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 };
 
 class Identifier: public Expression {
 public:
-	Identifier(const std::string& name) { _name = name; }
+	Identifier(const std::string& name) { name_ = name; }
 	inline const std::string& getName() { return this->name_; }
-	void codeGen(std::ostream& output) {}
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	std::string _name;
+	std::string name_;
 
 };
 
 class ImmediateInteger: public Expression {
 public:
-	ImmediateInteger(int value) { _value = value; }
-	void codeGen(std::ostream& output) {}
+	ImmediateInteger(int value) { value_ = value; }
+	
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 
 private:
-	int _value;
+	int value_;
 };
 
 class StringLiteral : public Expression {
 public:
-	StringLiteral(std::string value) { _value = value; }
-	void codeGen(std::ostream& output) {}
+	StringLiteral(std::string value) { value_ = value; }
+	
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	std::string _value;
+	std::string value_;
 };
 
 class UnaryExpression: public Expression {
 public:	
-	UnaryExpression(const Expression *e, string opt)
+	UnaryExpression(Expression *e, string opt)
 	{
-		_unaryOperator = opt;
-		_expression = e;
+		unary_operator_ = opt;
+		expression_ = e;
+		type = UNARY;
 	}
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Expression* _expression;
+	Expression* expression_;
 	//possible value : _--, _++, --_, ++_, &, *, +, -, ~, !
-	string _unaryOperator;
+	string unary_operator_;
 
 };
 
 class BinaryExpression: public Expression {
 public:
-	BinaryExpression(const Expression* left, const Expression* right, string opt)
+	BinaryExpression(Expression* left, Expression* right, string opt)
 	{
-		_left = left;
-		_right = right;
-		_binaryOperator = opt;
+		left_ = left;
+		right_ = right;
+		binary_operator = opt;
+		type = BINARY;
 	} 
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 
 private:
 	// possible value : +, -, *, /, %, [], ., ->, <<, >>, <, >, <=, >=, 
 	//                  ==, !=, &, ^, |, &&, ||
-	string _binaryOperator;
-	Expression* _left;
-	Expression* _right;
+	string binary_operator;
+	Expression* left_;
+	Expression* right_;
 };
 
 class AssignmentExpression: public Expression {
 public:
 	AssignmentExpression(Expression *left, Expression *right, string opt)
 	{
-		_unaryExpression = left;
-		_assignmentExpression = right;
-		_assignmentOperator = opt;
+		unary_expression_ = left;
+		assignment_expression_ = right;
+		assignment_operator = opt;
+		type = ASSIGN;
 	}
-private:
-	string _assignmentOperator;
-	Expression *_unaryExpression;
-	Expression *_assignmentExpression;
-};
 
-class Statement: public SyntaxNode {
-public:
-	virtual ~Statement() = 0;
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
+private:
+	string assignment_operator;
+	Expression *unary_expression_;
+	Expression *assignment_expression_;
 };
 
 class VariableType: public SyntaxNode {
@@ -134,38 +136,56 @@ public:
 		INT,
 		FLOAT
 	};
-	VariableType():type(Type::VOID), pointer(0){}
+	VariableType():type(VOID), pointer(0){}
 	Type type;
 	int pointer;
 	vector<Expression *> array;
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 };
 
-class VariableDeclaration: public Statement {
+class Statement: public SyntaxNode {
 public:
-	VariableDeclaration():identifier(NULL), initializer(NULL){}
-	Identifier	*identifier;
-	VariableType vt;
-	Expression *initializer;
+	enum Type{
+		BLOCK,
+		IF,
+		JUMP,
+		RETURN,
+		WHILE,
+		EXPRESSION,
+		DECLARATION
+	}type;
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 };
 
 class StatementsBlock: public Statement {
 public:
 	void pushStatement(Statement *s){
-		_statements.pushback(s);
+		statements_.push_back(s);
+		type = BLOCK;
 	}
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	vector<Statement*> _statements;
-	Expression* _initValue;
+	vector<Statement*> statements_;
+	Expression* init_value;
 };
 
 class IfStatement: public Statement {
 public:
-	IfStatement(Expression *cond, StatementsBlock *thenS=NULL, StatementsBlock *elseS=NULL)
-		:_condition(cond), _thenStatements(thenS), _elseStatements(elseS){}
+	IfStatement(Expression *cond, Statement *thenS=NULL, Statement *elseS=NULL)
+		:condition_(cond), then_statements_(thenS), else_statements_(elseS){ type = IF; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Expression* _condition;
-	StatementsBlock* _thenStatements;
-	StatementsBlock* _elseStatements;
+	Expression* condition_;
+	Statement* then_statements_;
+	Statement* else_statements_;
 };
 
 class JumpStatement: public Statement {
@@ -174,52 +194,98 @@ public:
 		CONTINUE,
 		BREAK
 	}type;
+	JumpStatement(JumpType jt){ 
+		Statement::type = JUMP; JumpStatement::type = jt;
+	}
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 };
 
 class ReturnStatement: public Statement {
 public:
-	ReturnStatement(Expression* rv): returnValue(rv){}
+	ReturnStatement(Expression* rv): return_value_(rv){ type = RETURN; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Expression * returnValue;
+	Expression * return_value_;
 };
 
 class WhileStatement: public Statement {
 public:
-	WhileStatement(Expression *cond, StatementsBlock, *sb, bool hasDo = false)
-		: _condition(cond), _body(sb), _hasDo(hasDo) {}
+	WhileStatement(Expression *cond, Statement *sb, bool hasDo = false)
+		: condition_(cond), body_(sb), has_do_(hasDo) { type = WHILE; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Expression* _condition;
-	StatementsBlock* _body;
-	bool _hasDo;
+	Expression* condition_;
+	Statement* body_;
+	bool has_do_;
 };
 
 class ExpressionStatement: public Statement {
 public:
-	ExpressionStatement(Expression *e):_expression(e){}
+	ExpressionStatement(Expression *e):expression_(e){ type = EXPRESSION; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Expression* _expression;
+	Expression* expression_;
 };
 
-class FunctionDeclaration: public Statement {
+class Declaration : public Statement{
 public:
-	FunctionDeclaration(Identifier *ident, vector<VariableDeclaration*> *v;)
-		:_identifier(ident), _arguments(v){}
-	void setReturnType(VariableType vt){ _returnType = vt; }
-	void setStatementBlock(StatementsBlock *sb) { _statements = sb; }
+	enum Type{
+		VARIABLE,
+		FUNCTION
+	} type;
+	Declaration(){ Statement::type = DECLARATION; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
+};
+
+class VariableDeclaration: public Declaration {
+public:
+	VariableDeclaration():identifier(NULL), initializer(NULL){ Declaration::type = VARIABLE; }
+	Identifier	*identifier;
+	VariableType vt;
+	Expression *initializer;
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
+};
+
+class FunctionDeclaration: public Declaration {
+public:
+	FunctionDeclaration(Identifier *ident, vector<VariableDeclaration*> *v)
+		:identifier_(ident), arguments_(v){ type = FUNCTION; }
+	void setReturnType(VariableType vt){ return_type_ = vt; }
+	void setStatementsBlock(Statement *sb) { statements_ = (StatementsBlock*)sb; }
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	VariableType _returnType;
-	Identifier *_identifier;
-	vector<VariableDeclaration*> *_arguments;
-	StatementsBlock *_statements;
+	VariableType return_type_;
+	Identifier *identifier_;
+	vector<VariableDeclaration*> *arguments_;
+	StatementsBlock *statements_;
 };
 
 class FunctionCall: public Expression {
 public:
-	FunctionCall(Indentifier *func, vector<Identifier *> *v;)
-		:_identifier(ident), _arguments(v){}
+	FunctionCall(Expression *func, vector<Expression *> *v){
+		identifier_ = (Identifier*) func;
+		arguments_ = (vector<Identifier*>*)v;
+	}
+
+	void codeGen(ostream& output);
+	void printTree(ostream& output);
 private:
-	Identifier* _identifier;
-	vector<Identifier*> _arguments;
+	Identifier* identifier_;
+	vector<Identifier*> *arguments_;
 };
 #endif
 

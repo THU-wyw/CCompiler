@@ -1,0 +1,206 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: post_fix_expression
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				BinaryExpression: []
+					Identifier: a
+					ImmediateInteger: 5
+			ExpressionStatement:
+				BinaryExpression: .
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: ->
+					Identifier: c
+					Identifier: d
+			ExpressionStatement:
+				UnaryExpression: _++
+					Identifier: c
+			ExpressionStatement:
+				UnaryExpression: _--
+					Identifier: c
+			ExpressionStatement:
+				FunctionCall:
+					FunctionIdentifier:
+					Identifier: a
+					FunctionArguments:
+					Identifier: b
+			ExpressionStatement:
+				FunctionCall:
+					FunctionIdentifier:
+					Identifier: a
+					FunctionArguments:
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: primary_expression
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				Identifier: _23ideNtifIer
+			ExpressionStatement:
+				ImmediateInteger: 233333
+			ExpressionStatement:
+				StringLiteral: "StringLiteral"
+			ExpressionStatement:
+				ImmediateInteger: 5
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: unary_expression
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				UnaryExpression: ++_
+					Identifier: x
+			ExpressionStatement:
+				UnaryExpression: --_
+					Identifier: y
+			ExpressionStatement:
+				UnaryExpression: &
+					Identifier: a
+			ExpressionStatement:
+				UnaryExpression: *
+					Identifier: b
+			ExpressionStatement:
+				UnaryExpression: +
+					ImmediateInteger: 12
+			ExpressionStatement:
+				UnaryExpression: -
+					ImmediateInteger: 23
+			ExpressionStatement:
+				UnaryExpression: ~
+					Identifier: c
+			ExpressionStatement:
+				UnaryExpression: !
+					Identifier: d
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: binary_expression
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				BinaryExpression: *
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: /
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: %
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: +
+					Identifier: a
+					BinaryExpression: -
+						Identifier: b
+						Identifier: c
+			ExpressionStatement:
+				BinaryExpression: >>
+					BinaryExpression: <<
+						Identifier: a
+						Identifier: b
+					Identifier: c
+			ExpressionStatement:
+				BinaryExpression: <
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: >=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: ==
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: !=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: &
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: ^
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: |
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: &&
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				BinaryExpression: ||
+					Identifier: a
+					Identifier: b
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: assignment_expression
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				AssignmentExpression: =
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: *=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: /=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: %=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: +=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: -=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: <<=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: >>=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: &=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: ^=
+					Identifier: a
+					Identifier: b
+			ExpressionStatement:
+				AssignmentExpression: |=
+					Identifier: a
+					Identifier: b

@@ -1,0 +1,100 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: ifStatement
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			IfStatement:
+				Condition:
+				BinaryExpression: ==
+					Identifier: x
+					ImmediateInteger: 7
+				then:
+				StatementsBlock:
+					ExpressionStatement:
+						AssignmentExpression: =
+							Identifier: x
+							ImmediateInteger: 8
+				else:
+				ExpressionStatement:
+					AssignmentExpression: =
+						Identifier: x
+						ImmediateInteger: 1
+			IfStatement:
+				Condition:
+				BinaryExpression: ==
+					Identifier: x
+					ImmediateInteger: 8
+				then:
+				StatementsBlock:
+					ExpressionStatement:
+						AssignmentExpression: =
+							Identifier: x
+							ImmediateInteger: 9
+				else:
+				StatementsBlock:
+					IfStatement:
+						Condition:
+						BinaryExpression: ==
+							Identifier: x
+							ImmediateInteger: 9
+						then:
+						ExpressionStatement:
+							AssignmentExpression: =
+								Identifier: x
+								ImmediateInteger: 10
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: whileStatement
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			WhileStatement: (has_do: 0)
+				Condition: 
+				BinaryExpression: <
+					Identifier: x
+					ImmediateInteger: 10
+				LoopBody: 
+				StatementsBlock:
+					ExpressionStatement:
+						AssignmentExpression: *=
+							Identifier: x
+							ImmediateInteger: 2
+					IfStatement:
+						Condition:
+						BinaryExpression: ==
+							Identifier: x
+							ImmediateInteger: 6
+						then:
+						JumpStatement: Break
+					IfStatement:
+						Condition:
+						BinaryExpression: ==
+							Identifier: x
+							ImmediateInteger: 7
+						then:
+						JumpStatement: Continue
+					IfStatement:
+						Condition:
+						BinaryExpression: ==
+							Identifier: x
+							ImmediateInteger: 8
+						then:
+						ReturnStatement: 
+							Identifier: x
+			WhileStatement: (has_do: 1)
+				Condition: 
+				BinaryExpression: <
+					Identifier: x
+					ImmediateInteger: 10
+				LoopBody: 
+				StatementsBlock:
+					ExpressionStatement:
+						AssignmentExpression: *=
+							Identifier: x
+							ImmediateInteger: 3

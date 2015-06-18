@@ -43,12 +43,13 @@ extern int yydebug;
 /* Line 2058 of yacc.c  */
 #line 12 "CParser.y"
 
+	#include <vector>
 	#include "SyntaxNode.h"
 	using namespace std;
 
 
 /* Line 2058 of yacc.c  */
-#line 52 "CParser.hpp"
+#line 53 "CParser.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -59,38 +60,43 @@ extern int yydebug;
      IDENTIFIER = 258,
      STRING_LITERAL = 259,
      IMMEDIATE_INTEGER = 260,
-     PTR_OP = 261,
-     INC_OP = 262,
-     DEC_OP = 263,
-     LEFT_OP = 264,
-     RIGHT_OP = 265,
+     INC_OP = 261,
+     DEC_OP = 262,
+     PTR_OP = 263,
+     SHIFT_LEFT_OP = 264,
+     SHIFT_RIGHT_OP = 265,
      LE_OP = 266,
      GE_OP = 267,
      EQ_OP = 268,
      NE_OP = 269,
      AND_OP = 270,
      OR_OP = 271,
-     ASSIGN = 272,
-     ADD_ASSIGN = 273,
-     SUB_ASSIGN = 274,
-     MUL_ASSIGN = 275,
-     DIV_ASSIGN = 276,
-     CASE = 277,
-     DEFAULT = 278,
-     IF = 279,
-     ELSE = 280,
-     SWITCH = 281,
-     WHILE = 282,
-     DO = 283,
-     FOR = 284,
-     CONTINUE = 285,
-     BREAK = 286,
-     RETURN = 287,
-     CHAR = 288,
-     INT = 289,
-     FLOAT = 290,
-     CONST = 291,
-     VOID = 292
+     ADD_ASSIGN = 272,
+     SUB_ASSIGN = 273,
+     MUL_ASSIGN = 274,
+     DIV_ASSIGN = 275,
+     MOD_ASSIGN = 276,
+     SHIFT_LEFT_ASSIGN = 277,
+     SHIFT_RIGHT_ASSIGN = 278,
+     AND_ASSIGN = 279,
+     INCLUSIVE_OR_ASSIGN = 280,
+     EXCLUSIVE_OR_ASSIGN = 281,
+     CASE = 282,
+     DEFAULT = 283,
+     IF = 284,
+     ELSE = 285,
+     SWITCH = 286,
+     WHILE = 287,
+     DO = 288,
+     FOR = 289,
+     CONTINUE = 290,
+     BREAK = 291,
+     RETURN = 292,
+     CHAR = 293,
+     INT = 294,
+     FLOAT = 295,
+     CONST = 296,
+     VOID = 297
    };
 #endif
 
@@ -99,30 +105,39 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 16 "CParser.y"
+#line 17 "CParser.y"
 
 	SyntaxNode* node;
+	Program* program;
 	Expression* expression;
 	Identifier* identifier;
+	vector<Identifier*>* identifier_list;
 	ImmediateInteger* immediate_integer;
 	StringLiteral* string_literal;
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
+	vector<Expression*>* expression_list;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
+	Declaration* declaration;
+	vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
+	vector<VariableDeclaration*>* variable_declaration_list;
 	StatementsBlock* statements_block;
 	IfStatement* if_statement;
 	WhileStatement* while_statement;
 	ExpressionStatement* expression_statement;
 	FunctionDeclaration* function_declaration;
 	FunctionDefinition* function_definition;
-	std::string* string;
+	string* str;
+	int number;
+	char symbol;
+	VariableType::Type vt_t;
 
 
 /* Line 2058 of yacc.c  */
-#line 126 "CParser.hpp"
+#line 141 "CParser.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

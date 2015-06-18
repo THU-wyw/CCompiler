@@ -1,10 +1,13 @@
 #include <iostream>
 #include <string>
 using namespace std;
+
+void printStr(string s)
+{
+	cout << s << endl;
+}
 int main()
 {
-	string s1 = "s1";
-	string s2 = s1;
-	s1 = "ss1";
-	cout << s2;
+	string *s = new string("$");
+	cout << *s << endl;
 }

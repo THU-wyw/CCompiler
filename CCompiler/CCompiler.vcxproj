@@ -95,8 +95,11 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="codeGen.cpp" />
     <ClCompile Include="CParser.cpp" />
     <ClCompile Include="CToken.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="printTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CParser.hpp" />

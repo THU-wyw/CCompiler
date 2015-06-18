@@ -1,4 +1,5 @@
 %option noyywrap
+%option interactive
 %x COMMENT
 %x IFILE
 %{
@@ -52,7 +53,7 @@ int PopFile(void);
 ")"								{ return ')'; }
 "++"							{ return INC_OP; }
 "--"							{ return DEC_OP; }
-"->"							{ return RIGHT_ARROW; }
+"->"							{ return PTR_OP; }
 "+="							{ return ADD_ASSIGN; }
 "-="							{ return SUB_ASSIGN; }
 "*="							{ return MUL_ASSIGN; }
@@ -60,9 +61,9 @@ int PopFile(void);
 "%="                            { return MOD_ASSIGN; }
 "<<="                           { return SHIFT_LEFT_ASSIGN; }
 ">>="                           { return SHIFT_RIGHT_ASSIGN; }
-"&="                            {return AND_ASSIGN; }
-"^="                            {return EXCLUSIVE_OR_ASSIGN; }
-"|="                            {return INCLUSIVE_OR_ASSIGN; }
+"&="                            { return AND_ASSIGN; }
+"^="                            { return EXCLUSIVE_OR_ASSIGN; }
+"|="                            { return INCLUSIVE_OR_ASSIGN; }
 "<="							{ return LE_OP; }
 ">="							{ return GE_OP; }
 "=="							{ return EQ_OP; }
@@ -83,24 +84,23 @@ int PopFile(void);
 "="								{ return '='; }
 ";"								{ return ';'; }
 "&"                             { return '&'; }
-"*"                             { return '*'; }
-"+"                             { return '+'; }
-"-"                             { return '-'; }
 "~"                             { return '~'; }
-"!"                             { return '!'; }
+"."								{ return '.'; }
+"^"								{ return '^'; }
+"|"								{ return '|'; }
 ([1-9][0-9]*)|0					{ 
 									// printf("integer: %s\n", yytext); 
-									yylval.string = new std::string(yytext, yyleng);
+									yylval.str = new std::string(yytext, yyleng);
 									return IMMEDIATE_INTEGER;
 								}
 [_a-zA-Z][_a-zA-Z0-9]*			{ 
 									// printf("identifier: %s\n", yytext); 
-									yylval.string = new std::string(yytext, yyleng);
+									yylval.str = new std::string(yytext, yyleng);
 									return IDENTIFIER;
 								}
 \"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+)*\" { 
 									// printf("string_literal: %s\n", yytext);
-									yylval.string = new std::string(yytext, yyleng);
+									yylval.str = new std::string(yytext, yyleng);
 									return STRING_LITERAL; 
 								}
 ^"#"[ \t]*include[ \t]*[\"<]	{ BEGIN(IFILE); }

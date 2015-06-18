@@ -1,0 +1,66 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: variable_declaration
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				VariableType: char
+				Identifier: x
+				StringLiteral: "a"
+			VariableDeclaration: 
+				VariableType: float
+				Identifier: y
+				ImmediateInteger: 6
+			VariableDeclaration: 
+				VariableType: int pointer:1
+				Identifier: p
+				UnaryExpression: &
+					Identifier: x
+			VariableDeclaration: 
+				VariableType: int pointer:2
+				Identifier: q
+				UnaryExpression: *
+					Identifier: p
+			VariableDeclaration: 
+				VariableType: void array:1
+				Identifier: a
+			VariableDeclaration: 
+				VariableType: float array:2
+				Identifier: b
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: float
+		FunctionIdentifier:
+		Identifier: func0
+		FunctionArguments:
+		VariableDeclaration: 
+			VariableType: void pointer:2
+			Identifier: y
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				BinaryExpression: +
+					ImmediateInteger: 1
+					ImmediateInteger: 1
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: char
+		FunctionIdentifier:
+		Identifier: func1
+		FunctionArguments:
+		VariableDeclaration: 
+			VariableType: int
+			Identifier: x
+		VariableDeclaration: 
+			VariableType: int pointer:1
+			Identifier: y
+		FunctionStatement:
+		StatementsBlock:
+			ReturnStatement: 
+				BinaryExpression: +
+					Identifier: x
+					Identifier: y

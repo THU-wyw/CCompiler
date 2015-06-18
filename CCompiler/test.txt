@@ -1,1 +1,1 @@
-testtest
+int main(){int x;}
