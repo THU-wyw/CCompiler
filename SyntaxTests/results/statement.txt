@@ -98,3 +98,11 @@ Program
 						AssignmentExpression: *=
 							Identifier: x
 							ImmediateInteger: 3
+	FunctionDeclaration: 
+		ReturnType:
+		VariableType: int
+		FunctionIdentifier:
+		Identifier: emptyStatement
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:

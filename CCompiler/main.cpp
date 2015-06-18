@@ -24,8 +24,8 @@ void test(string file)
 }
 int main(int argc, char **argv)
 {	
-	test("expression");
+	//test("expression");
 	//test("declaration");
-	//test("statement");
+	test("statement");
     return 0;
 }

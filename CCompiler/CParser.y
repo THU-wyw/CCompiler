@@ -14,6 +14,7 @@ void yyerror(const char*s) { printf("ERROR: %s\n", s); }
 	#include "SyntaxNode.h"
 	using namespace std;
 }
+
 %union {
 	SyntaxNode* node;
 	Program* program;
@@ -111,7 +112,10 @@ primary_expression
 	}
 	| '(' expression ')' { $$ = $2; }
 	;
-
+/*
+*	postfix_expression example:
+*		a[6], a(), a.b, a->b, a++, a--
+*/
 postfix_expression
 	: primary_expression
 	| postfix_expression '[' expression ']' { 
@@ -139,6 +143,11 @@ postfix_expression
 	}
 	;
 
+/*
+*   argument_expression_list example:
+*       someFunction( a, 3*5 )
+*                     ^^^^^^ 
+*/
 argument_expression_list
 	: assignment_expression {
 		$$ = new vector<Expression*>();
@@ -149,6 +158,10 @@ argument_expression_list
 	}
 	;
 
+/*
+*   unary_expression_list example:
+*       ++a, --a, &p, *p, +2, -1, ~a, !a
+*/
 unary_expression
 	: postfix_expression 
 	| INC_OP unary_expression {
@@ -171,6 +184,13 @@ unary_operator
 	| '!' { $$ = new string("!"); }
 	;
 
+/*
+*	< means belongs to
+*	Here we have:
+*   unary_expression < multiplicative_expression < additive_expression < shift_expression
+*	< relational_expression < equality_expression < AND_expression < exclusive_OR_expression 
+*	< inclusive_OR_expression < logical_AND_expression < logical_OR_expression < assignment_expression
+*/
 multiplicative_expression
 	: unary_expression
 	| multiplicative_expression '*' unary_expression {
@@ -298,10 +318,31 @@ constant_expression
 	: conditional_expression
 	;
 
+/*
+*	in C++11 standard, declaration_specifiers means:
+*		const unsign long int *x;
+*		^^^^^^^^^^^^^^^^^^^^^
+*	type_specifier means:
+*		int x
+*		^^^
+*	To simplify, I just let declaration_specifiers equals to type_specifier
+*/
 declaration_specifiers
 	: type_specifier
 	;
-
+/*
+*	in C++11 standard, there is no variable_declaration 
+*	there is only declaration
+*	Here I remove some of the grammars of declaration and rename it variable_declaration
+*	in C++11 standard, variable_declaration can be:
+*		int x, *p, y = 2, **q = &p;
+*	init_declarator_list means:
+*		int x, *p, y = 2, **q = &p;
+*			^^^^^^^^^^^^^^^^^^^^^^
+*	To simplify, I just don't allow list of declarator 
+*		int x; or int x = 0;
+*			^		  ^^^^^
+*/
 variable_declaration
 	: declaration_specifiers init_declarator_list {
 		vector<VariableDeclaration*>::iterator iter;
@@ -323,6 +364,14 @@ init_declarator_list
 	}*/
 	;
 
+/*
+*					int **x = &y;
+* init_declarator:		^^^^^^^^
+* pointer:				^^
+* direct_declarator:      ^
+*					int x[5];
+* direct_declarator:    ^^^^
+*/
 init_declarator
 	: declarator 
 	| declarator '=' initializer {
@@ -360,6 +409,13 @@ direct_declarator
 		$$ = $1;
 	};
 
+/*
+* 						int someFunction(int x, int* y) {}
+* function_declarator:      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+* parameter_list: 						 ^^^^^^^^^^^^^
+* parameter_declaration:                 ^^^^^
+* function_declaration: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*/
 function_declarator
 	: identifier '(' parameter_list ')' {
 		$$ = new FunctionDeclaration($1, $3);
@@ -482,6 +538,10 @@ return_statement
 	}
 	;
 
+/*
+*	translation_unit is the begin of the program
+*	a program should is built up by a series of declarations(variable_declaration or function_declaration)
+*/
 translation_unit
 	: declaration {
 		$$ = new Program();
