@@ -41,15 +41,14 @@ extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 /* Line 2058 of yacc.c  */
-#line 12 "CParser.y"
+#line 14 "CParser.y"
 
 	#include <vector>
 	#include "SyntaxNode.h"
-	using namespace std;
 
 
 /* Line 2058 of yacc.c  */
-#line 53 "CParser.hpp"
+#line 52 "CParser.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -96,7 +95,14 @@ extern int yydebug;
      INT = 294,
      FLOAT = 295,
      CONST = 296,
-     VOID = 297
+     VOID = 297,
+     OR_ASSIGN = 298,
+     XOR_ASSIGN = 299,
+     UADD = 300,
+     UMINUS = 301,
+     DEREFERENCE = 302,
+     REFERENCE = 303,
+     LOWER_THAN_ELSE = 304
    };
 #endif
 
@@ -105,39 +111,39 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 18 "CParser.y"
+#line 19 "CParser.y"
 
 	SyntaxNode* node;
 	Program* program;
 	Expression* expression;
 	Identifier* identifier;
-	vector<Identifier*>* identifier_list;
+	std::vector<Identifier*>* identifier_list;
 	ImmediateInteger* immediate_integer;
 	StringLiteral* string_literal;
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
-	vector<Expression*>* expression_list;
+	std::vector<Expression*>* expression_list;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
 	Declaration* declaration;
-	vector<Declaration*>* declaration_list;
+	std::vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
-	vector<VariableDeclaration*>* variable_declaration_list;
+	std::vector<VariableDeclaration*>* variable_declaration_list;
 	StatementsBlock* statements_block;
 	IfStatement* if_statement;
 	WhileStatement* while_statement;
 	ExpressionStatement* expression_statement;
 	FunctionDeclaration* function_declaration;
 	FunctionDefinition* function_definition;
-	string* str;
+	std::string* str;
 	int number;
 	char symbol;
 	VariableType::Type vt_t;
 
 
 /* Line 2058 of yacc.c  */
-#line 141 "CParser.hpp"
+#line 147 "CParser.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

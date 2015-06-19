@@ -1,2 +1,0 @@
-CParser.y:101.30-31: error: $$ of 'program' has no declared type
-CParser.y:105.11-20: warning: type clash on default action: <expression> != <identifier>

@@ -5,14 +5,15 @@
 
 Program* program;
 extern int yylex();
-void yyerror(const char*s) { printf("ERROR: %s\n", s); }
+void yyerror(const char*s) { 
+	printf("ERROR: %s\n", s); 
+}
 
 %}
 
 %code requires {
 	#include <vector>
 	#include "SyntaxNode.h"
-	using namespace std;
 }
 
 %union {
@@ -20,26 +21,26 @@ void yyerror(const char*s) { printf("ERROR: %s\n", s); }
 	Program* program;
 	Expression* expression;
 	Identifier* identifier;
-	vector<Identifier*>* identifier_list;
+	std::vector<Identifier*>* identifier_list;
 	ImmediateInteger* immediate_integer;
 	StringLiteral* string_literal;
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
-	vector<Expression*>* expression_list;
+	std::vector<Expression*>* expression_list;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
 	Declaration* declaration;
-	vector<Declaration*>* declaration_list;
+	std::vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
-	vector<VariableDeclaration*>* variable_declaration_list;
+	std::vector<VariableDeclaration*>* variable_declaration_list;
 	StatementsBlock* statements_block;
 	IfStatement* if_statement;
 	WhileStatement* while_statement;
 	ExpressionStatement* expression_statement;
 	FunctionDeclaration* function_declaration;
 	FunctionDefinition* function_definition;
-	string* str;
+	std::string* str;
 	int number;
 	char symbol;
 	VariableType::Type vt_t;
@@ -65,10 +66,8 @@ void yyerror(const char*s) { printf("ERROR: %s\n", s); }
 
 // type of the symbols
 // expression types
-%type <expression> expression constant_expression conditional_expression
-%type <expression> primary_expression postfix_expression unary_expression
-%type <expression> multiplicative_expression additive_expression shift_expression relational_expression equality_expression AND_expression inclusive_OR_expression exclusive_OR_expression logical_AND_expression logical_OR_expression
-%type <expression> assignment_expression initializer
+%type <expression> expression 
+%type <expression> initializer
 %type <expression_list> argument_expression_list
 
 //declaration types
@@ -91,231 +90,92 @@ void yyerror(const char*s) { printf("ERROR: %s\n", s); }
 //basic types
 %type <identifier> identifier
 %type <str> IDENTIFIER IMMEDIATE_INTEGER STRING_LITERAL
-%type <str> unary_operator assignment_operator
 %type <number> pointer 
 %type <vt_t> declaration_specifiers type_specifier
 
 %start program
 
+%left '=' ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN SHIFT_LEFT_ASSIGN SHIFT_RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
+%left OR_OP
+%left AND_OP
+%left '|'
+%left '^'
+%left '&'
+%left EQ_OP NE_OP
+%left '>' '<' LE_OP GE_OP
+%left SHIFT_LEFT_OP SHIFT_RIGHT_OP
+%left '+' '-'
+%left '/' '*' '%'
+%nonassoc '!' REFERENCE DEREFERENCE INC_OP DEC_OP '~' UMINUS UADD
+%left '.' PTR_OP '[' ']' '(' ')'
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
 %%
 program
 	: translation_unit { $$ = $1; program = $1; }
 	;
 
-primary_expression
-	: identifier
+expression
+	: IDENTIFIER { $$ = new Identifier(*$1); }
 	| IMMEDIATE_INTEGER { 
-		$$ = new ImmediateInteger(atol($1->c_str())); delete $1; 
+		$$ = new ImmediateInteger(atol($1->c_str())); 
+		delete $1;
 	}
-	| STRING_LITERAL { 
-		$$ = new StringLiteral(*$1); delete $1; 
+	| STRING_LITERAL {
+		$$ = new StringLiteral(*$1);
+		delete $1;
 	}
 	| '(' expression ')' { $$ = $2; }
-	;
-/*
-*	postfix_expression example:
-*		a[6], a(), a.b, a->b, a++, a--
-*/
-postfix_expression
-	: primary_expression
-	| postfix_expression '[' expression ']' { 
-		$$ = new BinaryExpression($1, $3, "[]"); 
-	}
-	| postfix_expression '(' argument_expression_list ')' {
-		cout << "function call" << endl;
-		$$ = new FunctionCall($1, $3); 
-	}
-	| postfix_expression '(' ')' {
-		cout << "function call" << endl;
-		$$ = new FunctionCall($1, new vector<Expression*>()); 
-	}
-	| postfix_expression '.' identifier {
-		$$ = new BinaryExpression($1, $3, "."); 
-	}
-	| postfix_expression PTR_OP identifier { 
-		$$ = new BinaryExpression($1, $3, "->"); 
-	}
-	| postfix_expression INC_OP {
-		$$ = new UnaryExpression($1, "_++");
-	}
-	| postfix_expression DEC_OP {
-		$$ = new UnaryExpression($1, "_--");
-	}
+	| expression '+' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::ADD); }
+	| expression '-' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::SUB); }
+	| expression '*' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::MUL); }
+	| expression '/' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::DIV); }
+	| expression '%' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::MOD); }
+	| expression '^' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::XOR_BIT); }
+	| expression '|' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::OR_BIT); }
+	| expression '&' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::AND_BIT); }
+	| expression SHIFT_LEFT_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::SHIFT_LEFT); }
+	| expression SHIFT_RIGHT_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::SHIFT_RIGHT); }
+	| expression '>' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::GREATER); }
+	| expression '<' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::LESS); }
+	| expression EQ_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::EQUAL); }
+	| expression LE_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::LESS_EQUAL); }
+	| expression GE_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::GREATER_EQUAL); }
+	| expression NE_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::NOT_EQUAL); }
+	| expression '=' expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::ASSIGN); }
+	| expression ADD_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::ADD_ASSIGN); }
+	| expression SUB_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::SUB_ASSIGN); }
+	| expression MUL_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::MUL_ASSIGN); }
+	| expression DIV_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::DIV_ASSIGN); }
+	| expression MOD_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::MOD_ASSIGN); }
+	| expression AND_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::AND_ASSIGN); }
+	| expression EXCLUSIVE_OR_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::EXCLUSIVE_OR_ASSIGN); }
+	| expression INCLUSIVE_OR_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::INCLUSIVE_OR_ASSIGN); }
+	| expression SHIFT_LEFT_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::SHIFT_LEFT_ASSIGN); }
+	| expression SHIFT_RIGHT_ASSIGN expression { $$ = new AssignmentExpression($1, $3, AssignmentExpression::Operator::SHIFT_RIGHT_ASSIGN); }
+	| expression AND_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::AND); }
+	| expression OR_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::OR); }
+	| expression '[' expression ']' { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::INDEX); }
+	| expression '.' expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::DOT); }
+	| expression PTR_OP expression { $$ = new BinaryExpression($1, $3, BinaryExpression::Operator::POINTER); }
+	| expression INC_OP { $$ = new UnaryExpression($1, UnaryExpression::Operator::INC_AFTER); }
+	| expression DEC_OP { $$ = new UnaryExpression($1, UnaryExpression::Operator::DEC_AFTER); }
+	| INC_OP expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::INC_PRE); }
+	| DEC_OP expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::DEC_PRE); }
+	| '&' expression %prec REFERENCE { $$ = new UnaryExpression($2, UnaryExpression::Operator::REFERENCE); }
+	| '*' expression %prec DEREFERENCE { $$ = new UnaryExpression($2, UnaryExpression::Operator::DEREFERENCE); }
+	| '+' expression %prec UADD { $$ = $2; }
+	| '-' expression %prec UMINUS { $$ = new UnaryExpression($2, UnaryExpression::Operator::MINUS); }
+	| '~' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT_BIT); }
+	| '!' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT); }
+	| identifier '(' argument_expression_list ')' { $$ = new FunctionCall($1, $3); }
+	| identifier '('')' { $$ = new FunctionCall($1, NULL); }
 	;
 
-/*
-*   argument_expression_list example:
-*       someFunction( a, 3*5 )
-*                     ^^^^^^ 
-*/
 argument_expression_list
-	: assignment_expression {
-		$$ = new vector<Expression*>();
-		$$->push_back($1);
-	}
-	| argument_expression_list ',' assignment_expression {
-		$$->push_back($3);
-	}
-	;
-
-/*
-*   unary_expression_list example:
-*       ++a, --a, &p, *p, +2, -1, ~a, !a
-*/
-unary_expression
-	: postfix_expression 
-	| INC_OP unary_expression {
-		$$ = new UnaryExpression($2, "++_");
-	}
-	| DEC_OP unary_expression {
-		$$ = new UnaryExpression($2, "--_");
-	}
-	| unary_operator unary_expression {
-		$$ = new UnaryExpression($2, *$1);
-	}
-	;
-
-unary_operator
-	: '&' { $$ = new string("&"); }
-	| '*' { $$ = new string("*"); }
-	| '+' { $$ = new string("+"); }
-	| '-' { $$ = new string("-"); }
-	| '~' { $$ = new string("~"); }
-	| '!' { $$ = new string("!"); }
-	;
-
-/*
-*	< means belongs to
-*	Here we have:
-*   unary_expression < multiplicative_expression < additive_expression < shift_expression
-*	< relational_expression < equality_expression < AND_expression < exclusive_OR_expression 
-*	< inclusive_OR_expression < logical_AND_expression < logical_OR_expression < assignment_expression
-*/
-multiplicative_expression
-	: unary_expression
-	| multiplicative_expression '*' unary_expression {
-		$$ = new BinaryExpression($1, $3, "*"); 
-	}
-	| multiplicative_expression '/' unary_expression {
-		$$ = new BinaryExpression($1, $3, "/"); 
-	}
-	| multiplicative_expression '%' unary_expression {
-		$$ = new BinaryExpression($1, $3, "%"); 
-	}
-	;
-
-additive_expression
-	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression {
-		$$ = new BinaryExpression($1, $3, "+"); 
-	}
-	| additive_expression '-' multiplicative_expression {
-		$$ = new BinaryExpression($1, $3, "-"); 
-	}
-	;
-
-shift_expression
-	: additive_expression
-	| shift_expression SHIFT_LEFT_OP additive_expression {
-		$$ = new BinaryExpression($1, $3, "<<"); 
-	}
-	| shift_expression SHIFT_RIGHT_OP additive_expression {
-		$$ = new BinaryExpression($1, $3, ">>"); 
-	}
-	;
-
-relational_expression
-	: shift_expression
-	| relational_expression '<' shift_expression {
-		$$ = new BinaryExpression($1, $3, "<"); 
-	}
-	| relational_expression '>' shift_expression {
-		$$ = new BinaryExpression($1, $3, ">"); 
-	}
-	| relational_expression LE_OP shift_expression {
-		$$ = new BinaryExpression($1, $3, "<="); 
-	}
-	| relational_expression GE_OP shift_expression {
-		$$ = new BinaryExpression($1, $3, ">="); 
-	}
-	;
-
-equality_expression
-	: relational_expression
-	| equality_expression EQ_OP relational_expression {
-		$$ = new BinaryExpression($1, $3, "==");  
-	}
-	| equality_expression NE_OP relational_expression {
-		$$ = new BinaryExpression($1, $3, "!="); 
-	}
-	;
-
-AND_expression
-	: equality_expression
-	| AND_expression '&' equality_expression {
-		$$ = new BinaryExpression($1, $3, "&"); 
-	}
-	;
-
-exclusive_OR_expression
-	: AND_expression
-	| exclusive_OR_expression '^' AND_expression {
-		$$ = new BinaryExpression($1, $3, "^"); 
-	}
-	;
-
-inclusive_OR_expression
-	: exclusive_OR_expression
-	| inclusive_OR_expression '|' exclusive_OR_expression {
-		$$ = new BinaryExpression($1, $3, "|"); 
-	}
-	;
-
-logical_AND_expression
-	: inclusive_OR_expression
-	| logical_AND_expression AND_OP inclusive_OR_expression {
-		$$ = new BinaryExpression($1, $3, "&&"); 
-	}
-	;
-
-logical_OR_expression
-	: logical_AND_expression
-	| logical_OR_expression OR_OP logical_AND_expression {
-		$$ = new BinaryExpression($1, $3, "||"); 
-	}
-	;
-
-assignment_expression
-	: logical_OR_expression
-	| unary_expression assignment_operator assignment_expression {
-		$$ = new AssignmentExpression($1, $3, *$2);
-	}
-	;
-
-assignment_operator
-	:'=' { $$ = new string("="); }
-	| MUL_ASSIGN { $$ = new string("*="); }
-	| DIV_ASSIGN { $$ = new string("/="); }
-	| MOD_ASSIGN { $$ = new string("%="); }
-	| ADD_ASSIGN { $$ = new string("+="); }
-	| SUB_ASSIGN { $$ = new string("-="); }
-	| SHIFT_LEFT_ASSIGN { $$ = new string("<<="); }
-	| SHIFT_RIGHT_ASSIGN { $$ = new string(">>="); }
-	| AND_ASSIGN { $$ = new string("&="); }
-	| EXCLUSIVE_OR_ASSIGN { $$ = new string("^="); }
-	| INCLUSIVE_OR_ASSIGN { $$ = new string("|="); }
-	;
-
-expression
-	: assignment_expression
-	;
-
-conditional_expression
-	: logical_OR_expression
-	;
-
-constant_expression
-	: conditional_expression
+	: expression { $$ = new std::vector<Expression*>(); $$->push_back($1); }
+	| argument_expression_list ',' expression { $$->push_back($3); }
 	;
 
 /*
@@ -345,9 +205,9 @@ declaration_specifiers
 */
 variable_declaration
 	: declaration_specifiers init_declarator_list {
-		vector<VariableDeclaration*>::iterator iter;
+		std::vector<VariableDeclaration*>::iterator iter;
 		for (iter = $2->begin(); iter != $2->end(); iter++){
-			(*iter)->vt.type = $1;
+			(*iter)->get_variable_type().type = $1;
 		}
 		$$ = *($2->begin());
 	}
@@ -355,7 +215,7 @@ variable_declaration
 
 init_declarator_list
 	: init_declarator {
-		$$ = new vector<VariableDeclaration*>();
+		$$ = new std::vector<VariableDeclaration*>();
 		$$->push_back($1);
 	}
 	/*| init_declarator_list ',' init_declarator {
@@ -376,7 +236,7 @@ init_declarator
 	: declarator 
 	| declarator '=' initializer {
 		$$ = $1;
-		$$->initializer = $3;
+		$$->set_initializer($3);
 	}
 	;
 
@@ -394,7 +254,7 @@ pointer
 
 declarator
 	: pointer direct_declarator {
-		$2->vt.pointer = $1;
+		$2->get_variable_type().pointer = $1;
 		$$ = $2;
 	}
 	;
@@ -402,10 +262,10 @@ declarator
 direct_declarator
 	: identifier {
 		$$ = new VariableDeclaration();
-		$$->identifier = $1;
+		$$->set_identifier($1);
 	}
-	| direct_declarator '[' constant_expression ']' {
-		$1->vt.array.push_back($3);
+	| direct_declarator '[' expression ']' {
+		$1->get_variable_type().array.push_back($3);
 		$$ = $1;
 	};
 
@@ -421,13 +281,13 @@ function_declarator
 		$$ = new FunctionDeclaration($1, $3);
 	}
 	| identifier '(' ')' {
-		$$ = new FunctionDeclaration($1, new vector<VariableDeclaration*>());
+		$$ = new FunctionDeclaration($1, new std::vector<VariableDeclaration*>());
 	}
 	;
 
 parameter_list
 	: parameter_declaration {
-		$$ = new vector<VariableDeclaration*>();
+		$$ = new std::vector<VariableDeclaration*>();
 		$$->push_back($1);
 	}
 	| parameter_list ',' parameter_declaration {
@@ -438,8 +298,8 @@ parameter_list
 
 parameter_declaration
 	: declaration_specifiers declarator {
-		cout << "parameter_declaration" << endl;
-		$2->vt.type = $1;
+		std::cout << "parameter_declaration" << std::endl;
+		$2->get_variable_type().type = $1;
 		$$ = $2;
 	}
 	;
@@ -449,7 +309,7 @@ identifier
 	;
 
 initializer
-	: assignment_expression
+	: expression
 	/*
 	| { initializer_list }
 	| { initializer_list , }
@@ -476,11 +336,11 @@ compound_statement
 block_item_list
 	: {
 		$$ = new StatementsBlock();
-		//((StatementsBlock *)$$)->pushStatement($1);
+		//((StatementsBlock *)$$)->PushStatement($1);
 	}
 	| block_item_list block_item {
-		cout << "block_item_list" << endl;
-		((StatementsBlock *)$1)->pushStatement($2);
+		std::cout << "block_item_list" << std::endl;
+		((StatementsBlock *)$1)->PushStatement($2);
 		$$ = $1;
 	}
 	;
@@ -495,8 +355,9 @@ expression_statement
 	}
 	;
 
+//One shift/reduce confilcts
 if_statement
-	: IF '(' expression ')' statement {
+	: IF '(' expression ')' statement %prec LOWER_THAN_ELSE {
 		$$ = new IfStatement($3, $5);
 	}
 	| IF '(' expression ')' statement ELSE statement {
@@ -545,10 +406,10 @@ return_statement
 translation_unit
 	: declaration {
 		$$ = new Program();
-		$$->pushDeclaration($1);
+		$$->PushDeclaration($1);
 	}
 	| translation_unit declaration {
-		$$->pushDeclaration($2);
+		$$->PushDeclaration($2);
 	}
 	;
 

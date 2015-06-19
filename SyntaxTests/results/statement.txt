@@ -9,43 +9,38 @@ Program
 		StatementsBlock:
 			IfStatement:
 				Condition:
-				BinaryExpression: ==
+				BinaryExpression: 14
 					Identifier: x
 					ImmediateInteger: 7
 				then:
 				StatementsBlock:
 					ExpressionStatement:
-						AssignmentExpression: =
+						AssignmentExpression: 0
 							Identifier: x
 							ImmediateInteger: 8
 				else:
-				ExpressionStatement:
-					AssignmentExpression: =
-						Identifier: x
-						ImmediateInteger: 1
+				StatementsBlock:
+					ExpressionStatement:
+						AssignmentExpression: 0
+							Identifier: x
+							ImmediateInteger: 8
 			IfStatement:
 				Condition:
-				BinaryExpression: ==
+				BinaryExpression: 14
 					Identifier: x
 					ImmediateInteger: 8
 				then:
 				StatementsBlock:
 					ExpressionStatement:
-						AssignmentExpression: =
+						AssignmentExpression: 0
 							Identifier: x
 							ImmediateInteger: 9
 				else:
 				StatementsBlock:
-					IfStatement:
-						Condition:
-						BinaryExpression: ==
+					ExpressionStatement:
+						AssignmentExpression: 0
 							Identifier: x
 							ImmediateInteger: 9
-						then:
-						ExpressionStatement:
-							AssignmentExpression: =
-								Identifier: x
-								ImmediateInteger: 10
 	FunctionDeclaration: 
 		ReturnType:
 		VariableType: int
@@ -56,46 +51,53 @@ Program
 		StatementsBlock:
 			WhileStatement: (has_do: 0)
 				Condition: 
-				BinaryExpression: <
+				BinaryExpression: 10
 					Identifier: x
 					ImmediateInteger: 10
 				LoopBody: 
 				StatementsBlock:
 					ExpressionStatement:
-						AssignmentExpression: *=
+						AssignmentExpression: 3
 							Identifier: x
 							ImmediateInteger: 2
 					IfStatement:
 						Condition:
-						BinaryExpression: ==
+						BinaryExpression: 14
 							Identifier: x
 							ImmediateInteger: 6
 						then:
 						JumpStatement: Break
+						else:
+						JumpStatement: Break
 					IfStatement:
 						Condition:
-						BinaryExpression: ==
+						BinaryExpression: 14
 							Identifier: x
 							ImmediateInteger: 7
 						then:
 						JumpStatement: Continue
+						else:
+						JumpStatement: Continue
 					IfStatement:
 						Condition:
-						BinaryExpression: ==
+						BinaryExpression: 14
 							Identifier: x
 							ImmediateInteger: 8
 						then:
 						ReturnStatement: 
 							Identifier: x
+						else:
+						ReturnStatement: 
+							Identifier: x
 			WhileStatement: (has_do: 1)
 				Condition: 
-				BinaryExpression: <
+				BinaryExpression: 10
 					Identifier: x
 					ImmediateInteger: 10
 				LoopBody: 
 				StatementsBlock:
 					ExpressionStatement:
-						AssignmentExpression: *=
+						AssignmentExpression: 3
 							Identifier: x
 							ImmediateInteger: 3
 	FunctionDeclaration: 

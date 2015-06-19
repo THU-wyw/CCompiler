@@ -95,15 +95,16 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="codeGen.cpp" />
     <ClCompile Include="CParser.cpp" />
     <ClCompile Include="CToken.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="printTree.cpp" />
+    <ClCompile Include="SyntaxNode.cpp" />
+    <ClCompile Include="Type.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CParser.hpp" />
     <ClInclude Include="SyntaxNode.h" />
+    <ClInclude Include="Type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

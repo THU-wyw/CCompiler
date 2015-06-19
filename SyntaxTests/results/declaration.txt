@@ -18,12 +18,12 @@ Program
 			VariableDeclaration: 
 				VariableType: int pointer:1
 				Identifier: p
-				UnaryExpression: &
+				UnaryExpression: 4
 					Identifier: x
 			VariableDeclaration: 
 				VariableType: int pointer:2
 				Identifier: q
-				UnaryExpression: *
+				UnaryExpression: 5
 					Identifier: p
 			VariableDeclaration: 
 				VariableType: void array:1
@@ -43,7 +43,7 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ExpressionStatement:
-				BinaryExpression: +
+				BinaryExpression: 0
 					ImmediateInteger: 1
 					ImmediateInteger: 1
 	FunctionDeclaration: 
@@ -61,6 +61,6 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ReturnStatement: 
-				BinaryExpression: +
+				BinaryExpression: 0
 					Identifier: x
 					Identifier: y

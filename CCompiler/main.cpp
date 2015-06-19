@@ -20,12 +20,13 @@ void test(string file)
 	ofstream fout;
 	fout.open(result_file);
 	if (program != NULL)
-		program->printTree(fout);
+		program->PrintTree(fout);
+	fout.close();
 }
 int main(int argc, char **argv)
 {	
 	//test("expression");
 	//test("declaration");
-	test("statement");
+	//test("statement");
     return 0;
 }

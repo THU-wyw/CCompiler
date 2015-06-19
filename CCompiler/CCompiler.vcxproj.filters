@@ -32,13 +32,13 @@
     <ClCompile Include="CParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="codeGen.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="printTree.cpp">
+    <ClCompile Include="SyntaxNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,10 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CParser.hpp">
-      <Filter>源文件</Filter>
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Type.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

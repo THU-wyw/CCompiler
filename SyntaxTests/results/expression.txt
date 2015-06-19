@@ -8,22 +8,22 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ExpressionStatement:
-				BinaryExpression: []
+				BinaryExpression: 5
 					Identifier: a
 					ImmediateInteger: 5
 			ExpressionStatement:
-				BinaryExpression: .
+				BinaryExpression: 6
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: ->
+				BinaryExpression: 7
 					Identifier: c
 					Identifier: d
 			ExpressionStatement:
-				UnaryExpression: _++
+				UnaryExpression: 2
 					Identifier: c
 			ExpressionStatement:
-				UnaryExpression: _--
+				UnaryExpression: 3
 					Identifier: c
 			ExpressionStatement:
 				FunctionCall:
@@ -61,28 +61,27 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ExpressionStatement:
-				UnaryExpression: ++_
+				UnaryExpression: 0
 					Identifier: x
 			ExpressionStatement:
-				UnaryExpression: --_
+				UnaryExpression: 1
 					Identifier: y
 			ExpressionStatement:
-				UnaryExpression: &
+				UnaryExpression: 4
 					Identifier: a
 			ExpressionStatement:
-				UnaryExpression: *
+				UnaryExpression: 5
 					Identifier: b
 			ExpressionStatement:
-				UnaryExpression: +
-					ImmediateInteger: 12
+				ImmediateInteger: 12
 			ExpressionStatement:
-				UnaryExpression: -
+				UnaryExpression: 6
 					ImmediateInteger: 23
 			ExpressionStatement:
-				UnaryExpression: ~
+				UnaryExpression: 7
 					Identifier: c
 			ExpressionStatement:
-				UnaryExpression: !
+				UnaryExpression: 8
 					Identifier: d
 	FunctionDeclaration: 
 		ReturnType:
@@ -93,63 +92,63 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ExpressionStatement:
-				BinaryExpression: *
+				BinaryExpression: 2
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: /
+				BinaryExpression: 3
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: %
+				BinaryExpression: 4
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: +
+				BinaryExpression: 0
 					Identifier: a
-					BinaryExpression: -
+					BinaryExpression: 1
 						Identifier: b
 						Identifier: c
 			ExpressionStatement:
-				BinaryExpression: >>
-					BinaryExpression: <<
+				BinaryExpression: 9
+					BinaryExpression: 8
 						Identifier: a
 						Identifier: b
 					Identifier: c
 			ExpressionStatement:
-				BinaryExpression: <
+				BinaryExpression: 10
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: >=
+				BinaryExpression: 13
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: ==
+				BinaryExpression: 14
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: !=
+				BinaryExpression: 15
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: &
+				BinaryExpression: 16
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: ^
+				BinaryExpression: 17
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: |
+				BinaryExpression: 18
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: &&
+				BinaryExpression: 19
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				BinaryExpression: ||
+				BinaryExpression: 20
 					Identifier: a
 					Identifier: b
 	FunctionDeclaration: 
@@ -161,46 +160,46 @@ Program
 		FunctionStatement:
 		StatementsBlock:
 			ExpressionStatement:
-				AssignmentExpression: =
+				AssignmentExpression: 0
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: *=
+				AssignmentExpression: 3
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: /=
+				AssignmentExpression: 4
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: %=
+				AssignmentExpression: 5
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: +=
+				AssignmentExpression: 1
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: -=
+				AssignmentExpression: 2
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: <<=
+				AssignmentExpression: 6
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: >>=
+				AssignmentExpression: 7
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: &=
+				AssignmentExpression: 10
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: ^=
+				AssignmentExpression: 8
 					Identifier: a
 					Identifier: b
 			ExpressionStatement:
-				AssignmentExpression: |=
+				AssignmentExpression: 9
 					Identifier: a
 					Identifier: b
