@@ -1,12 +1,12 @@
 #include "Type.h"
-
+#include "SyntaxNode.h"
 using namespace std;
 
 Type* Type::CreateBasicType(BasicType type) {
 	return new Type(new BasicType(type));
 }
 
-Type* Type::CreateArrayType(Type* type, int length) {
+Type* Type::CreateArrayType(Type* type, Expression* length) {
 	ArrayType* array_type = new ArrayType();
 	array_type->length = length;
 	array_type->type = type;

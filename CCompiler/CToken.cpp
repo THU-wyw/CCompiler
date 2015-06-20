@@ -2279,7 +2279,8 @@ void yyfree (void * ptr )
 }*/
 
 int NewFile(char *filename) {
-	FILE* file = fopen(filename, "r");
+	FILE* file;
+	fopen_s(&file, filename, "r");
 	struct BufferStack *buffer = (struct BufferStack *)malloc(sizeof(struct BufferStack));
 	if (file == NULL) {
 		perror(filename);

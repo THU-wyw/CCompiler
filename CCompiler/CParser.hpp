@@ -45,10 +45,11 @@ extern int yydebug;
 
 	#include <vector>
 	#include "SyntaxNode.h"
+	#include "Type.h"
 
 
 /* Line 2058 of yacc.c  */
-#line 52 "CParser.hpp"
+#line 53 "CParser.hpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -111,7 +112,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 19 "CParser.y"
+#line 20 "CParser.y"
 
 	SyntaxNode* node;
 	Program* program;
@@ -139,11 +140,11 @@ typedef union YYSTYPE
 	std::string* str;
 	int number;
 	char symbol;
-	VariableType::Type vt_t;
+	Type::BasicType vt_t;
 
 
 /* Line 2058 of yacc.c  */
-#line 147 "CParser.hpp"
+#line 148 "CParser.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -322,7 +322,7 @@ void Declaration::PrintTree(ostream& output)
 void VariableDeclaration::PrintTree(ostream& output)
 {
 	output << "VariableDeclaration: " << endl;
-	printNode(output, &variable_type_);
+//	printNode(output, &variable_type_);
 	printNode(output, identifier_);
 	if (initializer_ != NULL) printNode(output, initializer_);
 }
@@ -331,7 +331,7 @@ void FunctionDeclaration::PrintTree(ostream& output)
 {
 	output << "FunctionDeclaration: " << endl;
 	printStr(output, "ReturnType:");
-	printNode(output, &return_type_);
+//	printNode(output, &return_type_);
 	printStr(output, "FunctionIdentifier:");
 	printNode(output, identifier_);
 	printStr(output, "FunctionArguments:");

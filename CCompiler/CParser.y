@@ -14,6 +14,7 @@ void yyerror(const char*s) {
 %code requires {
 	#include <vector>
 	#include "SyntaxNode.h"
+	#include "Type.h"
 }
 
 %union {
@@ -43,7 +44,7 @@ void yyerror(const char*s) {
 	std::string* str;
 	int number;
 	char symbol;
-	VariableType::Type vt_t;
+	Type::BasicType vt_t;
 }
 
 // terminal symbols
@@ -95,7 +96,7 @@ void yyerror(const char*s) {
 
 %start program
 
-%left '=' ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN SHIFT_LEFT_ASSIGN SHIFT_RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN
+%left '=' ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN SHIFT_LEFT_ASSIGN SHIFT_RIGHT_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN EXCLUSIVE_OR_ASSIGN INCLUSIVE_OR_ASSIGN
 %left OR_OP
 %left AND_OP
 %left '|'
@@ -117,7 +118,7 @@ program
 	;
 
 expression
-	: IDENTIFIER { $$ = new Identifier(*$1); }
+	: identifier { $$ = $1; }
 	| IMMEDIATE_INTEGER { 
 		$$ = new ImmediateInteger(atol($1->c_str())); 
 		delete $1;
@@ -205,9 +206,8 @@ declaration_specifiers
 */
 variable_declaration
 	: declaration_specifiers init_declarator_list {
-		std::vector<VariableDeclaration*>::iterator iter;
-		for (iter = $2->begin(); iter != $2->end(); iter++){
-			(*iter)->get_variable_type().type = $1;
+		for (auto iterator = $2->begin(); iterator != $2->end(); iterator++) {
+			(*iterator)->set_basic_type($1);
 		}
 		$$ = *($2->begin());
 	}
@@ -241,10 +241,10 @@ init_declarator
 	;
 
 type_specifier
-	: VOID { $$ = VariableType::VOID; }
-	| CHAR { $$ = VariableType::CHAR; }
-	| INT { $$ = VariableType::INT; }
-	| FLOAT { $$ = VariableType::FLOAT; }
+	: VOID { $$ = Type::BasicType::VOID; }
+	| CHAR { $$ = Type::BasicType::CHARACTER; }
+	| INT { $$ = Type::BasicType::INTEGER; }
+	| FLOAT { $$ = Type::BasicType::FLOAT; }
 	;
 
 pointer
@@ -254,7 +254,9 @@ pointer
 
 declarator
 	: pointer direct_declarator {
-		$2->get_variable_type().pointer = $1;
+		for (int i = 0; i < $1; i++) {
+			$2->set_type(Type::CreatePointerType($2->get_type())); 
+		}
 		$$ = $2;
 	}
 	;
@@ -262,10 +264,11 @@ declarator
 direct_declarator
 	: identifier {
 		$$ = new VariableDeclaration();
+		$$->set_type(Type::CreateBasicType());
 		$$->set_identifier($1);
 	}
 	| direct_declarator '[' expression ']' {
-		$1->get_variable_type().array.push_back($3);
+		$1->set_type(Type::CreateArrayType($1->get_type(), $3)); 
 		$$ = $1;
 	};
 
@@ -277,11 +280,11 @@ direct_declarator
 * function_declaration: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 */
 function_declarator
-	: identifier '(' parameter_list ')' {
-		$$ = new FunctionDeclaration($1, $3);
+	: declaration_specifiers declarator '(' parameter_list ')' {
+		$$ = new FunctionDeclaration($2->get_identifier(), $4);
 	}
-	| identifier '(' ')' {
-		$$ = new FunctionDeclaration($1, new std::vector<VariableDeclaration*>());
+	| declaration_specifiers declarator '(' ')' {
+		$$ = new FunctionDeclaration($2->get_identifier(), new std::vector<VariableDeclaration*>());
 	}
 	;
 
@@ -299,7 +302,7 @@ parameter_list
 parameter_declaration
 	: declaration_specifiers declarator {
 		std::cout << "parameter_declaration" << std::endl;
-		$2->get_variable_type().type = $1;
+		$2->set_basic_type($1);
 		$$ = $2;
 	}
 	;
@@ -355,7 +358,6 @@ expression_statement
 	}
 	;
 
-//One shift/reduce confilcts
 if_statement
 	: IF '(' expression ')' statement %prec LOWER_THAN_ELSE {
 		$$ = new IfStatement($3, $5);
@@ -423,10 +425,7 @@ declaration
 	;
 
 function_declaration
-	: declaration_specifiers function_declarator compound_statement {
-		VariableType vt;
-		vt.type = $1;
-		$2->setReturnType(vt);
-		$2->setStatementsBlock($3);
-		$$ = $2;
+	: function_declarator compound_statement {
+		$1->set_body($2);
+		$$ = $1;
 	}

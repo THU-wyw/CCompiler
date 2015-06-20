@@ -1,7 +1,6 @@
 Program
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: post_fix_expression
 		FunctionArguments:
@@ -38,7 +37,6 @@ Program
 					FunctionArguments:
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: primary_expression
 		FunctionArguments:
@@ -54,7 +52,6 @@ Program
 				ImmediateInteger: 5
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: unary_expression
 		FunctionArguments:
@@ -85,7 +82,6 @@ Program
 					Identifier: d
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: binary_expression
 		FunctionArguments:
@@ -153,7 +149,6 @@ Program
 					Identifier: b
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: assignment_expression
 		FunctionArguments:

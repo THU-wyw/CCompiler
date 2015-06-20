@@ -1,7 +1,6 @@
 Program
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: ifStatement
 		FunctionArguments:
@@ -43,7 +42,6 @@ Program
 							ImmediateInteger: 9
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: whileStatement
 		FunctionArguments:
@@ -102,7 +100,6 @@ Program
 							ImmediateInteger: 3
 	FunctionDeclaration: 
 		ReturnType:
-		VariableType: int
 		FunctionIdentifier:
 		Identifier: emptyStatement
 		FunctionArguments:

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Type.h"
 class VariableDeclaration;
 class FunctionDeclaration;
 class FunctionDefinition;
@@ -147,22 +148,22 @@ private:
 	Expression *assignment_expression_;
 };
 
-class VariableType: public SyntaxNode {
-public:
-	enum Type{
-		VOID,
-		CHAR,
-		INT,
-		FLOAT
-	};
-	VariableType():type(VOID), pointer(0){}
-	Type type;
-	int pointer;
-	std::vector<Expression *> array;
-
-	virtual void GenerateCode(std::ostream& output);
-	virtual void PrintTree(std::ostream& output);
-};
+//class VariableType: public SyntaxNode {
+//public:
+//	enum Type{
+//		VOID,
+//		CHAR,
+//		INT,
+//		FLOAT
+//	};
+//	VariableType():type(VOID), pointer(0){}
+//	Type type;
+//	int pointer;
+//	std::vector<Expression *> array;
+//
+//	virtual void GenerateCode(std::ostream& output);
+//	virtual void PrintTree(std::ostream& output);
+//};
 
 class Statement: public SyntaxNode {
 public:
@@ -249,28 +250,29 @@ public:
 	VariableDeclaration();
 	virtual void GenerateCode(std::ostream& output);
 	virtual void PrintTree(std::ostream& output);
-	inline VariableType& get_variable_type() {return variable_type_;}
-	inline Expression* get_initializer() { return initializer_; }
+	inline void set_type(Type* type) { this->type_ = type; }
+	inline Type* get_type() { return this->type_; }
+	inline void set_basic_type(Type::BasicType basic_type) { this->type_->SetBasicType(basic_type); }
 	inline void set_initializer(Expression* initializer) { this->initializer_ = initializer; }
 	inline Identifier* get_identifier() { return identifier_; }
 	inline void set_identifier(Identifier* identifier) { this->identifier_ = identifier; }
 
 private:
 	Identifier	*identifier_;
-	VariableType variable_type_;
+	Type* type_;
 	Expression *initializer_;
 };
 
 class FunctionDeclaration: public Declaration {
 public:
 	FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments);
-	inline void setReturnType(VariableType vt){ return_type_ = vt; }
-	inline void setStatementsBlock(Statement *sb) { statements_ = static_cast<StatementsBlock*>(sb); }
+	inline void set_return_type(Type* return_type){ return_type_ = return_type; }
+	inline void set_body(Statement *body) { statements_ = static_cast<StatementsBlock*>(body); }
 
 	virtual void GenerateCode(std::ostream& output);
 	virtual void PrintTree(std::ostream& output);
 private:
-	VariableType return_type_;
+	Type* return_type_;
 	Identifier *identifier_;
 	std::vector<VariableDeclaration*> *arguments_;
 	StatementsBlock *statements_;

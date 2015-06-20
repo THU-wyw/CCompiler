@@ -1,7 +1,7 @@
 #ifndef TYPE_H
 #define TYPE_H
 #include <vector>
-
+class Expression;
 class Type {
 public:
 	typedef enum {
@@ -15,11 +15,12 @@ public:
 		INTEGER,
 		CHARACTER,
 		FLOAT,
-		VOID
+		VOID,
+		UNDEFINED
 	} BasicType;
 
 	typedef struct ArrayType {
-		int length;
+		Expression* length;
 		Type* type;
 	} ArrayType;
 
@@ -32,8 +33,8 @@ public:
 	friend bool operator==(const Type& typeA, const Type& typeB);
 	friend bool operator!=(const Type& typeA, const Type& typeB);
 	void SetBasicType(BasicType basic_type);
-	static Type* CreateBasicType(BasicType type);
-	static Type* CreateArrayType(Type* type, int length);
+	static Type* CreateBasicType(BasicType type = UNDEFINED);
+	static Type* CreateArrayType(Type* type, Expression* length);
 	static Type* CreatePointerType(Type* type);
 
 private:
