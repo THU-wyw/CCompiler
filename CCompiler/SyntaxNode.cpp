@@ -150,7 +150,7 @@ void VariableDeclaration::GenerateCode(ostream& output) {
 	this->identifier_->GenerateCode(output);
 	output << " ";
 	//TODO for Type
-	this->initializer_->GenerateCode(output);
+	//this->initializer_->GenerateCode(output);
 }
 
 FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments) {
@@ -166,11 +166,26 @@ void FunctionDeclaration::GenerateCode(ostream& output) {
 	std::vector<VariableDeclaration*> *arguments_;
 	StatementsBlock *statements_;
 	*/
+	output << "public static ";
 	//TODO for type
-	/*if(this->return_type_ == )
+
+	switch (this->return_type_->get_kind())
 	{
-	
-	}*/
+		case 0://BASIC_TYPE
+			cout << "basic type detected!"<<endl;
+			switch (*this->return_type_->get_basic_type())
+			{
+				default:
+					break;
+			}
+			break;
+		case 1://ARRAY_TYPE
+			break;
+		case 2://POINTER_TYPE
+			break;
+		default:
+			break;
+	}
 	output << " ";
 	this->identifier_->GenerateCode(output);
 

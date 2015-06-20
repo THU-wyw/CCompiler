@@ -230,6 +230,19 @@ private:
 	bool has_do_;
 };
 
+class ForStatement: public Statement {
+public:
+	ForStatement(Statement* initializer, Expression* operation, Expression* condition, Statement* body);
+	virtual void GenerateCode(std::ostream& output);
+	virtual void PrintTree(std::ostream& output);
+
+private:
+	Statement* initializer_;
+	Expression* operation_;
+	Expression* condition_;
+	Statement* body_;
+};
+
 class ExpressionStatement: public Statement {
 public:
 	ExpressionStatement(Expression *expression);

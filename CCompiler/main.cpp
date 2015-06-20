@@ -33,8 +33,8 @@ void test(string file)
 int main(int argc, char **argv)
 {	
 	//test("expression");
-	//test("declaration");
+	test("declaration");
 	//test("statement");
-    test("Palindrome");
+    //test("Palindrome");
 	return 0;
 }
