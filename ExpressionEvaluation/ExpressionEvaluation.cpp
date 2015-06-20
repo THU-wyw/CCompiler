@@ -2,7 +2,6 @@
 
 int calculate(char* str)
 {
-
 }
 
 int main()

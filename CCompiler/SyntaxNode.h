@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include "Type.h"
+using namespace std;
+
 class VariableDeclaration;
 class FunctionDeclaration;
 class FunctionDefinition;
