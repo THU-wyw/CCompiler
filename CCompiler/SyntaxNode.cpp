@@ -66,11 +66,6 @@ void AssignmentExpression::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
 }
 
-void VariableType::GenerateCode(ostream& output)
-{
-
-}
-
 void StatementsBlock::PushStatement(Statement *statement) {
 	this->statements_.push_back(statement);
 }
@@ -220,33 +215,6 @@ void AssignmentExpression::PrintTree(ostream& output)
 	printNode(output, assignment_expression_);
 }
 
-void VariableType::PrintTree(ostream& output)
-{
-	string t;
-	switch (VariableType::type)
-	{
-	case VOID:
-		t = "void";
-		break;
-	case INT:
-		t = "int";
-		break;
-	case FLOAT:
-		t = "float";
-		break;
-	case CHAR:
-		t = "char";
-		break;
-	default:
-		t = "wrong type";
-		break;
-	}
-	output << "VariableType: " << t;
-	if (pointer > 0) output << " pointer:" << pointer;
-	if (array.size() > 0) output << " array:" << array.size();
-	output << endl;
-
-}
 
 void StatementsBlock::PrintTree(ostream& output)
 {

@@ -25,8 +25,9 @@ void test(string file)
 }
 int main(int argc, char **argv)
 {	
-	test("expression");
-	test("declaration");
-	test("statement");
-    return 0;
+	//test("expression");
+	//test("declaration");
+	//test("statement");
+    test("Palindrome");
+	return 0;
 }
