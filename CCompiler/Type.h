@@ -32,7 +32,11 @@ public:
 	bool Equals(const Type& other) const;
 	friend bool operator==(const Type& typeA, const Type& typeB);
 	friend bool operator!=(const Type& typeA, const Type& typeB);
-	void SetBasicType(BasicType basic_type);
+	inline Kind get_kind() const { return this->kind_; };
+	inline const BasicType* get_basic_type() const { return this->kind_ == BASIC_TYPE ? this->basic_type_ : NULL; }
+	inline const ArrayType* get_array_type() const { return this->kind_ == ARRAY_TYPE ? this->array_type_ : NULL; }
+	inline const PointerType* get_pointer_type() const { return this->kind_ == POINTER_TYPE ? this->pointer_type_ : NULL; }
+	void set_basic_type(BasicType basic_type);
 	static Type* CreateBasicType(BasicType type = UNDEFINED);
 	static Type* CreateArrayType(Type* type, Expression* length);
 	static Type* CreatePointerType(Type* type);

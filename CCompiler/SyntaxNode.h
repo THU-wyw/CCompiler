@@ -253,7 +253,7 @@ public:
 	virtual void PrintTree(std::ostream& output);
 	inline void set_type(Type* type) { this->type_ = type; }
 	inline Type* get_type() { return this->type_; }
-	inline void set_basic_type(Type::BasicType basic_type) { this->type_->SetBasicType(basic_type); }
+	inline void set_basic_type(Type::BasicType basic_type) { this->type_->set_basic_type(basic_type); }
 	inline void set_initializer(Expression* initializer) { this->initializer_ = initializer; }
 	inline Identifier* get_identifier() { return identifier_; }
 	inline void set_identifier(Identifier* identifier) { this->identifier_ = identifier; }

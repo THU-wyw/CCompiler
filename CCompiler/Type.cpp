@@ -78,17 +78,17 @@ bool operator!=(const Type& typeA, const Type& typeB) {
 	return !typeA.Equals(typeB);
 }
 
-void Type::SetBasicType(BasicType basic_type) {
+void Type::set_basic_type(BasicType basic_type) {
 	switch (this->kind_)
 	{
 	case BASIC_TYPE:
 		*(this->basic_type_) = basic_type;
 		break;
 	case ARRAY_TYPE:
-		this->array_type_->type->SetBasicType(basic_type);
+		this->array_type_->type->set_basic_type(basic_type);
 		break;
 	case POINTER_TYPE:
-		this->pointer_type_->pointer->SetBasicType(basic_type);
+		this->pointer_type_->pointer->set_basic_type(basic_type);
 		break;
 	default:
 		break;
