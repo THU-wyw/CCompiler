@@ -8,7 +8,7 @@ int variable_declaration()
 	float b[5][5];
 }
 
-float func0(void **y)
+float func0(void y)
 {
 	1+1;
 }
