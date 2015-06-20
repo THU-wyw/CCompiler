@@ -1,4 +1,3 @@
-
 int main() {
 	char str[100];
 	int flag = 0;

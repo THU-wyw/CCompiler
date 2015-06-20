@@ -40,6 +40,7 @@ StringLiteral::StringLiteral(string& value): value_(value) {
 
 void StringLiteral::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	output << value_;
 }
 
 UnaryExpression::UnaryExpression(Expression *expression, Operator unary_operator):
@@ -53,7 +54,6 @@ void UnaryExpression::GenerateCode(ostream& output) {
 	/*Expression* expression_;
 	//possible value : _--, _++, --_, ++_, &, *, +, -, ~, !
 	Operator unary_operator_;*/
-	cout << "unary expression detected!" << endl;
 	switch (unary_operator_)
 	{
 	case UnaryExpression::INC_PRE:
@@ -104,7 +104,6 @@ void UnaryExpression::GenerateCode(ostream& output) {
 	default:
 		break;
 	}
-	output << ";";
 }
 
 BinaryExpression::BinaryExpression(Expression* left, Expression* right, Operator binary_operator):
@@ -119,6 +118,15 @@ void BinaryExpression::GenerateCode(ostream& output) {
 	/*Operator binary_operator_;
 	Expression* left_;
 	Expression* right_;*/
+	if(binary_operator_ == BinaryExpression::INDEX)
+	{
+		left_->GenerateCode(output);
+		output << "[";
+		right_->GenerateCode(output);
+		output << "]";
+		return;
+	}
+
 	left_->GenerateCode(output);
 	switch (binary_operator_)
 	{
@@ -136,9 +144,6 @@ void BinaryExpression::GenerateCode(ostream& output) {
 			break;
 		case BinaryExpression::MOD:
 			output << " % ";
-			break;
-		case BinaryExpression::INDEX:
-			output << "[]";
 			break;
 		case BinaryExpression::DOT:
 			output << ".";
@@ -200,6 +205,49 @@ AssignmentExpression::AssignmentExpression(Expression *left, Expression *right, 
 
 void AssignmentExpression::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	/*Operator assignment_operator_;
+	Expression *unary_expression_;
+	Expression *assignment_expression_;*/
+	unary_expression_->GenerateCode(output);
+	switch (assignment_operator_)
+	{
+	case AssignmentExpression::ASSIGN:
+		output << " = ";
+		break;
+	case AssignmentExpression::ADD_ASSIGN:
+		output << " += ";
+		break;
+	case AssignmentExpression::SUB_ASSIGN:
+		output << " -= ";
+		break;
+	case AssignmentExpression::MUL_ASSIGN:
+		output << " *= ";
+		break;
+	case AssignmentExpression::DIV_ASSIGN:
+		output << " /= ";
+		break;
+	case AssignmentExpression::MOD_ASSIGN:
+		output << " %= ";
+		break;
+	case AssignmentExpression::SHIFT_LEFT_ASSIGN:
+		output << " <<= ";
+		break;
+	case AssignmentExpression::SHIFT_RIGHT_ASSIGN:
+		output << " >>= ";
+		break;
+	case AssignmentExpression::EXCLUSIVE_OR_ASSIGN:
+		output << " ^= ";
+		break;
+	case AssignmentExpression::INCLUSIVE_OR_ASSIGN:
+		output << " |= ";
+		break;
+	case AssignmentExpression::AND_ASSIGN:
+		output << " &= ";
+		break;
+	default:
+		break;
+	}
+	assignment_expression_->GenerateCode(output);
 }
 
 void StatementsBlock::PushStatement(Statement *statement) {
@@ -214,6 +262,7 @@ void StatementsBlock::GenerateCode(ostream& output) {
 	for(auto iter = this->statements_.begin(); iter != this->statements_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output);
+		output << ";" << endl;
 	}
 	output << "}" << endl;
 	//this->init_value->GenerateCode(output);
@@ -235,8 +284,11 @@ void IfStatement::GenerateCode(ostream& output) {
 	output << ")";
 	this->then_statement_->GenerateCode(output);
 
-	output << "else";
-	this->else_statement_->GenerateCode(output);
+	if(else_statement_ != NULL)
+	{
+		output << "else";
+		this->else_statement_->GenerateCode(output);
+	}
 }
 
 JumpStatement::JumpStatement(JumpType jump_type) {
@@ -245,6 +297,17 @@ JumpStatement::JumpStatement(JumpType jump_type) {
 
 void JumpStatement::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	switch (type_)
+	{
+	case JumpStatement::CONTINUE:
+		output << "continue";
+		break;
+	case JumpStatement::BREAK:
+		output << "break";
+		break;
+	default:
+		break;
+	}
 }
 
 ReturnStatement::ReturnStatement(Expression* return_value):
@@ -257,7 +320,6 @@ void ReturnStatement::GenerateCode(ostream& output) {
 	//Expression * return_value_;
 	output << "return ";
 	return_value_->GenerateCode(output);
-	output << ";" <<endl;
 }
 
 WhileStatement::WhileStatement(Expression *condition, Statement *body, bool has_do /* = false */) {
@@ -277,7 +339,7 @@ void WhileStatement::GenerateCode(ostream& output) {
 		body_->GenerateCode(output);
 		output << "while(";
 		condition_->GenerateCode(output);
-		output << ");";
+		output << ")";
 	}
 	else
 	{
@@ -285,7 +347,6 @@ void WhileStatement::GenerateCode(ostream& output) {
 		condition_->GenerateCode(output);
 		output << ")";
 		body_->GenerateCode(output);
-		output << endl;
 	}
 }
 
@@ -298,6 +359,18 @@ ForStatement::ForStatement(Statement* initializer, Expression* operation, Expres
 
 void ForStatement::GenerateCode(std::ostream& output) {
 	//TODO for sister yuan yang
+	/*Statement* initializer_;
+	Expression* operation_;
+	Expression* condition_;
+	Statement* body_;*/
+	output << "for(";
+	initializer_->GenerateCode(output);
+	output <<"; ";
+	condition_->GenerateCode(output);
+	output <<"; ";
+	operation_->GenerateCode(output);
+	output << ")";
+	body_->GenerateCode(output);
 }
 
 ExpressionStatement::ExpressionStatement(Expression *expression) {
@@ -328,7 +401,6 @@ void VariableDeclaration::GenerateCode(ostream& output) {
 		output << " = ";
 		this->initializer_->GenerateCode(output);
 	}
-	output << ";" << endl;
 }
 
 FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments) {
@@ -345,29 +417,29 @@ void FunctionDeclaration::GenerateCode(ostream& output) {
 	StatementsBlock *statements_;
 	*/
 	//修饰符
-	if(this->identifier_->getName() == "main")
+	if(this->identifier_->getName() == "main")//main函数特殊处理
 	{
-		output << "public static void ";
+		output << "public static void main(String[] args)";
 	}
 	else
 	{
 		output << "public static ";
-	}
-	//返回值
-	//TODO for type
+		//返回值
+		//TODO for type
 
-	//函数名
-	this->identifier_->GenerateCode(output);
+		//函数名
+		this->identifier_->GenerateCode(output);
 
-	//参数列表
-	output << "(";
-	for(auto iter = this->arguments_->begin(); iter != this->arguments_->end(); iter++)
-	{
-		(*iter)->GenerateCode(output);
-		if(iter != this->arguments_->end()-1)
-			output << ", ";
+		//参数列表
+		output << "(";
+		for(auto iter = this->arguments_->begin(); iter != this->arguments_->end(); iter++)
+		{
+			(*iter)->GenerateCode(output);
+			if(iter != this->arguments_->end()-1)
+				output << ", ";
+		}
+		output << ")";
 	}
-	output << ")";
 
 	//函数定义
 	this->statements_->GenerateCode(output);
@@ -380,6 +452,18 @@ FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> 
 
 void FunctionCall::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	/*	Identifier* identifier_;
+	std::vector<Expression*> *arguments_;*/
+	//special cases to be added
+	identifier_->GenerateCode(output);
+	output << "(";
+	for(auto iter = arguments_->begin(); iter != arguments_->end(); iter++)
+	{
+		(*iter)->GenerateCode(output);
+		if(iter != arguments_->end() - 1)
+			output <<", ";
+	}
+	output << ")";
 }
 
 int tabs = 0;
