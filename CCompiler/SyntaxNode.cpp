@@ -2,6 +2,10 @@
 using namespace std;
 void Program::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
+	{
+		(*iter)->GenerateCode(output);
+	}
 }
 
 void Program::PushDeclaration(Declaration* declaration) {

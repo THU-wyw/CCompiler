@@ -1,0 +1,54 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: variable_declaration
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: x
+				StringLiteral: "a"
+			VariableDeclaration: 
+				Identifier: y
+				ImmediateInteger: 6
+			VariableDeclaration: 
+				Identifier: p
+				UnaryExpression: 4
+					Identifier: x
+			VariableDeclaration: 
+				Identifier: q
+				UnaryExpression: 5
+					Identifier: p
+			VariableDeclaration: 
+				Identifier: a
+			VariableDeclaration: 
+				Identifier: b
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: func0
+		FunctionArguments:
+		VariableDeclaration: 
+			Identifier: y
+		FunctionStatement:
+		StatementsBlock:
+			ExpressionStatement:
+				BinaryExpression: 0
+					ImmediateInteger: 1
+					ImmediateInteger: 1
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: func1
+		FunctionArguments:
+		VariableDeclaration: 
+			Identifier: x
+		VariableDeclaration: 
+			Identifier: y
+		FunctionStatement:
+		StatementsBlock:
+			ReturnStatement: 
+				BinaryExpression: 0
+					Identifier: x
+					Identifier: y

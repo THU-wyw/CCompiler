@@ -10,7 +10,8 @@ extern Program* program;
 void test(string file)
 {
 	string test_file = "../SyntaxTests/tests/"+file+".cpp";
-	string result_file = "../SyntaxTests/results/"+file+".txt";
+	string result_file = "../SyntaxTests/results/"+file+"-syntax.txt";
+	string final_file = "../SyntaxTests/results/"+file+"-java.java";
 	ifstream fin;
 	fin.open(test_file);
 	string temp;
@@ -22,12 +23,16 @@ void test(string file)
 	if (program != NULL)
 		program->PrintTree(fout);
 	fout.close();
+	fout.open(final_file);
+	if(program != NULL)
+		program->GenerateCode(fout);
+	fout.close();
 }
 int main(int argc, char **argv)
 {	
 	//test("expression");
-	//test("declaration");
+	test("declaration");
 	//test("statement");
-    test("Palindrome");
+    //test("Palindrome");
 	return 0;
 }
