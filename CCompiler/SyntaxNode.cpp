@@ -21,6 +21,7 @@ Identifier::Identifier(std::string& name): name_(name) {
 void Identifier::GenerateCode(ostream& output)
 {
 	//TODO for sister yuan yang
+	output << this->name_;
 }
 
 ImmediateInteger::ImmediateInteger(int value): value_(value) {
@@ -143,6 +144,13 @@ VariableDeclaration::VariableDeclaration() {
 
 void VariableDeclaration::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	/*Identifier	*identifier_;
+	Type* type_;
+	Expression *initializer_;*/
+	this->identifier_->GenerateCode(output);
+	output << " ";
+	//TODO for Type
+	this->initializer_->GenerateCode(output);
 }
 
 FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments) {
@@ -158,7 +166,23 @@ void FunctionDeclaration::GenerateCode(ostream& output) {
 	std::vector<VariableDeclaration*> *arguments_;
 	StatementsBlock *statements_;
 	*/
+	//TODO for type
+	/*if(this->return_type_ == )
+	{
+	
+	}*/
+	output << " ";
+	this->identifier_->GenerateCode(output);
 
+	output << "(";
+	for(auto iter = this->arguments_->begin(); iter != this->arguments_->end(); iter++)
+	{
+		(*iter)->GenerateCode(output);
+	}
+	output << ")";
+	output << "{" << endl;
+	this->statements_->GenerateCode(output);
+	output << "}" << endl;
 }
 
 FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments) {
