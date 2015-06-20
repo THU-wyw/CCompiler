@@ -19,10 +19,12 @@ void test(string file)
 	fopen_s(&yyin, test_file.c_str(), "r");
 	yyparse();
 	ofstream fout;
+
 	fout.open(result_file);
 	if (program != NULL)
 		program->PrintTree(fout);
 	fout.close();
+
 	fout.open(final_file);
 	if(program != NULL)
 		program->GenerateCode(fout);

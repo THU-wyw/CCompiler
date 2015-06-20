@@ -2,10 +2,12 @@
 using namespace std;
 void Program::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
+	output << "public class " << "ClassName" << "{" << endl;
 	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output);
 	}
+	output << "}" <<endl;
 }
 
 void Program::PushDeclaration(Declaration* declaration) {
@@ -150,6 +152,13 @@ FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<Var
 
 void FunctionDeclaration::GenerateCode(ostream& output) {
 	//TODO for sister yuan yangs
+	/*	
+	Type* return_type_;
+	Identifier *identifier_;
+	std::vector<VariableDeclaration*> *arguments_;
+	StatementsBlock *statements_;
+	*/
+
 }
 
 FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments) {
