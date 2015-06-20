@@ -117,6 +117,17 @@ void WhileStatement::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
 }
 
+ForStatement::ForStatement(Statement* initializer, Expression* operation, Expression* condition, Statement* body) {
+	this->initializer_ = initializer;
+	this->operation_ = operation;
+	this->condition_ = condition;
+	this->body_ = body;
+}
+
+void ForStatement::GenerateCode(std::ostream& output) {
+	//TODO for sister yuan yang
+}
+
 ExpressionStatement::ExpressionStatement(Expression *expression) {
 	this->expression_ = expression;
 }
@@ -283,6 +294,18 @@ void ReturnStatement::PrintTree(ostream& output)
 void WhileStatement::PrintTree(ostream& output)
 {
 	output << "WhileStatement: " << "(has_do: " << has_do_ << ")" << endl;
+	printStr(output, "Condition: ");
+	printNode(output, condition_);
+	printStr(output, "LoopBody: ");
+	printNode(output, body_);
+}
+
+void ForStatement::PrintTree(std::ostream& output) {
+	output << "ForStatement: " << endl;
+	printStr(output, "Initializer: ");
+	printNode(output, initializer_);
+	printStr(output, "Operation: ");
+	printNode(output, operation_);
 	printStr(output, "Condition: ");
 	printNode(output, condition_);
 	printStr(output, "LoopBody: ");

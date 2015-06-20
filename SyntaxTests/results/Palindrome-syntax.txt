@@ -1,0 +1,100 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: main
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: str
+			VariableDeclaration: 
+				Identifier: flag
+				ImmediateInteger: 0
+			VariableDeclaration: 
+				Identifier: length
+				ImmediateInteger: 0
+			ExpressionStatement:
+				FunctionCall:
+					FunctionIdentifier:
+					Identifier: scanf
+					FunctionArguments:
+					StringLiteral: "%s"
+					Identifier: str
+			WhileStatement: (has_do: 0)
+				Condition: 
+				BinaryExpression: 15
+					BinaryExpression: 5
+						Identifier: str
+						Identifier: length
+					ImmediateInteger: 0
+				LoopBody: 
+				ExpressionStatement:
+					UnaryExpression: 2
+						Identifier: length
+			ForStatement: 
+				Initializer: 
+				VariableDeclaration: 
+					Identifier: i
+					ImmediateInteger: 0
+				Operation: 
+				BinaryExpression: 10
+					Identifier: i
+					BinaryExpression: 3
+						Identifier: length
+						ImmediateInteger: 2
+				Condition: 
+				UnaryExpression: 2
+					Identifier: i
+				LoopBody: 
+				StatementsBlock:
+					IfStatement:
+						Condition:
+						BinaryExpression: 15
+							BinaryExpression: 5
+								Identifier: str
+								Identifier: i
+							BinaryExpression: 5
+								Identifier: str
+								BinaryExpression: 1
+									BinaryExpression: 1
+										Identifier: length
+										Identifier: i
+									ImmediateInteger: 1
+						then:
+						StatementsBlock:
+							ExpressionStatement:
+								AssignmentExpression: 0
+									Identifier: flag
+									ImmediateInteger: 1
+							JumpStatement: Break
+						else:
+						StatementsBlock:
+							ExpressionStatement:
+								AssignmentExpression: 0
+									Identifier: flag
+									ImmediateInteger: 1
+							JumpStatement: Break
+			IfStatement:
+				Condition:
+				BinaryExpression: 14
+					Identifier: flag
+					ImmediateInteger: 0
+				then:
+				StatementsBlock:
+					ExpressionStatement:
+						FunctionCall:
+							FunctionIdentifier:
+							Identifier: printf
+							FunctionArguments:
+							StringLiteral: "yes\n"
+				else:
+				StatementsBlock:
+					ExpressionStatement:
+						FunctionCall:
+							FunctionIdentifier:
+							Identifier: printf
+							FunctionArguments:
+							StringLiteral: "yes\n"
+			ReturnStatement: 
+				ImmediateInteger: 0
