@@ -81,7 +81,7 @@ void yyerror(const char*s) {
 %type <statement> compound_statement block_item_list
 %type <statement> expression_statement
 %type <statement> if_statement
-%type <statement> while_statement
+%type <statement> while_statement for_statement
 %type <statement> jump_statement
 %type <statement> return_statement
 %type <program> translation_unit program
@@ -324,7 +324,7 @@ statement
 	| expression_statement
 	| if_statement
 	| while_statement
-//	| for_statement
+	| for_statement
 	| jump_statement
 	| return_statement
 	| variable_declaration ';' { $$ = $1; }
@@ -376,12 +376,16 @@ while_statement
 	}
 	;
 
-/*
+
 for_statement
-	: for '(' expression ';' expression ';' expression ')' statement
-	| for '(' declaration expression ';' expression')'statement
+	: FOR '(' expression ';' expression ';' expression ')' statement {
+		$$ = new ForStatement(new ExpressionStatement($3), $5, $7, $9);
+	}
+	| FOR '(' variable_declaration ';' expression ';' expression')'statement {
+		$$ = new ForStatement($3, $5, $7, $9);
+	}
 	;
-*/
+
 
 jump_statement
 	: CONTINUE ';' {

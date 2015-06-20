@@ -16,7 +16,7 @@ void test(string file)
 	fin.open(test_file);
 	string temp;
 	fin >> temp;
-	yyin = fopen(test_file.c_str(), "r");
+	fopen_s(&yyin, test_file.c_str(), "r");
 	yyparse();
 	ofstream fout;
 	fout.open(result_file);
@@ -31,8 +31,8 @@ void test(string file)
 int main(int argc, char **argv)
 {	
 	//test("expression");
-	test("declaration");
+	//test("declaration");
 	//test("statement");
-    //test("Palindrome");
+    test("Palindrome");
 	return 0;
 }
