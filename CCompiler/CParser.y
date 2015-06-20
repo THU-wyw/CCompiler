@@ -282,9 +282,11 @@ direct_declarator
 function_declarator
 	: declaration_specifiers declarator '(' parameter_list ')' {
 		$$ = new FunctionDeclaration($2->get_identifier(), $4);
+		$$->set_return_type($2->get_type());
 	}
 	| declaration_specifiers declarator '(' ')' {
 		$$ = new FunctionDeclaration($2->get_identifier(), new std::vector<VariableDeclaration*>());
+		$$->set_return_type($2->get_type());
 	}
 	;
 
