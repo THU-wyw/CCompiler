@@ -9,9 +9,9 @@ extern Program* program;
 
 void test(string file)
 {
-	string test_file = "../SyntaxTests/tests/"+file+".cpp";
-	string result_file = "../SyntaxTests/results/"+file+"-syntax.txt";
-	string final_file = "../SyntaxTests/results/"+file+"-java.java";
+	string test_file = "../Tests/source_code/"+file+".cpp";
+	string result_file = "../Tests/syntax_results/"+file+"-syntax.txt";
+	string final_file = "../Tests/translate_results/"+file+".java";
 	ifstream fin;
 	fin.open(test_file);
 	string temp;
@@ -35,6 +35,8 @@ int main(int argc, char **argv)
 	//test("expression");
 	//test("declaration");
 	//test("statement");
-    test("Palindrome");
+    //test("Palindrome");
+	//test("KMP");
+	test("ExpressionEvaluation");
 	return 0;
 }
