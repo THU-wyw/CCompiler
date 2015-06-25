@@ -1,0 +1,279 @@
+Program
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: strlen
+		FunctionArguments:
+		VariableDeclaration: 
+			Identifier: s
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: i
+				ImmediateInteger: 0
+			ForStatement: 
+				Initializer: 
+				ExpressionStatement:
+					AssignmentExpression: 0
+						Identifier: i
+						ImmediateInteger: 0
+				Operation: 
+				BinaryExpression: 15
+					BinaryExpression: 5
+						Identifier: s
+						Identifier: i
+					ImmediateInteger: 0
+				Condition: 
+				UnaryExpression: 2
+					Identifier: i
+				LoopBody: 
+				ExpressionStatement:
+			ReturnStatement: 
+				Identifier: i
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: get_next
+		FunctionArguments:
+		VariableDeclaration: 
+			Identifier: t
+		VariableDeclaration: 
+			Identifier: next
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: tlen
+			VariableDeclaration: 
+				Identifier: i
+				ImmediateInteger: 1
+			ExpressionStatement:
+				AssignmentExpression: 0
+					BinaryExpression: 5
+						Identifier: next
+						ImmediateInteger: 0
+					ImmediateInteger: 0
+			ExpressionStatement:
+				AssignmentExpression: 0
+					BinaryExpression: 5
+						Identifier: next
+						ImmediateInteger: 1
+					ImmediateInteger: 0
+			ExpressionStatement:
+				AssignmentExpression: 0
+					Identifier: tlen
+					FunctionCall:
+						FunctionIdentifier:
+						Identifier: strlen
+						FunctionArguments:
+						Identifier: t
+			WhileStatement: (has_do: 0)
+				Condition: 
+				BinaryExpression: 10
+					Identifier: i
+					Identifier: tlen
+				LoopBody: 
+				StatementsBlock:
+					IfStatement:
+						Condition:
+						BinaryExpression: 14
+							BinaryExpression: 5
+								Identifier: t
+								Identifier: i
+							BinaryExpression: 5
+								Identifier: t
+								Identifier: j
+						then:
+						StatementsBlock:
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: i
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: j
+							ExpressionStatement:
+								AssignmentExpression: 0
+									BinaryExpression: 5
+										Identifier: next
+										Identifier: i
+									Identifier: j
+						else:
+						StatementsBlock:
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: i
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: j
+							ExpressionStatement:
+								AssignmentExpression: 0
+									BinaryExpression: 5
+										Identifier: next
+										Identifier: i
+									Identifier: j
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: Index_KMP
+		FunctionArguments:
+		VariableDeclaration: 
+			Identifier: s
+		VariableDeclaration: 
+			Identifier: t
+		VariableDeclaration: 
+			Identifier: pos
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: slen
+			VariableDeclaration: 
+				Identifier: next
+			IfStatement:
+				Condition:
+				BinaryExpression: 20
+					BinaryExpression: 14
+						Identifier: s
+						Identifier: NULL
+					BinaryExpression: 14
+						Identifier: t
+						Identifier: NULL
+				then:
+				ReturnStatement: 
+					UnaryExpression: 6
+						ImmediateInteger: 1
+				else:
+				ReturnStatement: 
+					UnaryExpression: 6
+						ImmediateInteger: 1
+			ExpressionStatement:
+				AssignmentExpression: 0
+					Identifier: slen
+					FunctionCall:
+						FunctionIdentifier:
+						Identifier: strlen
+						FunctionArguments:
+						Identifier: s
+			ExpressionStatement:
+				AssignmentExpression: 0
+					Identifier: tlen
+					FunctionCall:
+						FunctionIdentifier:
+						Identifier: strlen
+						FunctionArguments:
+						Identifier: t
+			ExpressionStatement:
+				FunctionCall:
+					FunctionIdentifier:
+					Identifier: get_next
+					FunctionArguments:
+					Identifier: t
+					Identifier: next
+			IfStatement:
+				Condition:
+				BinaryExpression: 20
+					BinaryExpression: 20
+						BinaryExpression: 11
+							Identifier: tlen
+							Identifier: slen
+						BinaryExpression: 10
+							Identifier: pos
+							ImmediateInteger: 0
+					BinaryExpression: 11
+						Identifier: pos
+						BinaryExpression: 1
+							Identifier: tlen
+							ImmediateInteger: 1
+				then:
+				ReturnStatement: 
+					UnaryExpression: 6
+						ImmediateInteger: 1
+				else:
+				ReturnStatement: 
+					UnaryExpression: 6
+						ImmediateInteger: 1
+			ExpressionStatement:
+				AssignmentExpression: 0
+					Identifier: i
+					Identifier: pos
+			ExpressionStatement:
+				AssignmentExpression: 0
+					Identifier: j
+					ImmediateInteger: 0
+			WhileStatement: (has_do: 0)
+				Condition: 
+				BinaryExpression: 19
+					BinaryExpression: 10
+						Identifier: i
+						Identifier: slen
+					BinaryExpression: 10
+						Identifier: j
+						Identifier: tlen
+				LoopBody: 
+				StatementsBlock:
+					IfStatement:
+						Condition:
+						BinaryExpression: 14
+							BinaryExpression: 5
+								Identifier: s
+								Identifier: i
+							BinaryExpression: 5
+								Identifier: t
+								Identifier: j
+						then:
+						StatementsBlock:
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: i
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: j
+						else:
+						StatementsBlock:
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: i
+							ExpressionStatement:
+								UnaryExpression: 0
+									Identifier: j
+			IfStatement:
+				Condition:
+				BinaryExpression: 13
+					Identifier: j
+					Identifier: tlen
+				then:
+				ReturnStatement: 
+					BinaryExpression: 1
+						Identifier: i
+						Identifier: tlen
+				else:
+				ReturnStatement: 
+					BinaryExpression: 1
+						Identifier: i
+						Identifier: tlen
+	FunctionDeclaration: 
+		ReturnType:
+		FunctionIdentifier:
+		Identifier: main
+		FunctionArguments:
+		FunctionStatement:
+		StatementsBlock:
+			VariableDeclaration: 
+				Identifier: str
+				StringLiteral: "helloWorld"
+			VariableDeclaration: 
+				Identifier: c
+				StringLiteral: "Wo"
+			ExpressionStatement:
+				FunctionCall:
+					FunctionIdentifier:
+					Identifier: printf
+					FunctionArguments:
+					StringLiteral: "%d\n"
+					FunctionCall:
+						FunctionIdentifier:
+						Identifier: Index_KMP
+						FunctionArguments:
+						Identifier: str
+						Identifier: c
+						ImmediateInteger: 0
+			ReturnStatement: 
+				ImmediateInteger: 0

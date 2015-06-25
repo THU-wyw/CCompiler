@@ -1,0 +1,4 @@
+Program
+	VariableDeclaration: 
+		Identifier: true
+		ImmediateInteger: 1

@@ -1,8 +1,7 @@
-#define true 1 
-#define false 0 
-#define OPSETSIZE 8 
-#define MAXSIZE 100
-typedef int Status; 
+int true = 1;
+int false = 0; 
+int OPSETSIZE = 8; 
+int MAXSIZE = 100;
 unsigned char Prior[8][8] =
 { // 运算符优先级表 
  // '+' '-' '*' '/' '(' ')' '#' '^' 
@@ -107,7 +106,7 @@ float Operate(float a,unsigned char theta, float b)      //计算函数Operate
 
 char OPSET[OPSETSIZE]={'+','-','*','/','(',')','#','^'}; 
 
-Status In(char Test,char *TestOp)
+int In(char Test,char *TestOp)
 {
 	int Find=false; 
 	for (int i=0; i< OPSETSIZE; i++)
@@ -118,7 +117,7 @@ Status In(char Test,char *TestOp)
 	return Find; 
 } 
 
-Status ReturnOpOrd(char op,char *TestOp)
+int ReturnOpOrd(char op,char *TestOp)
 { 
 	for(int i=0; i< OPSETSIZE; i++)
 	{

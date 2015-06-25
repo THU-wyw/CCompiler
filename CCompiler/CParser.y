@@ -218,10 +218,10 @@ init_declarator_list
 		$$ = new std::vector<VariableDeclaration*>();
 		$$->push_back($1);
 	}
-	/*| init_declarator_list ',' init_declarator {
+	| init_declarator_list ',' init_declarator {
 		$1->push_back($3);
 		$$ = $1;
-	}*/
+	}
 	;
 
 /*
@@ -266,6 +266,10 @@ direct_declarator
 		$$ = new VariableDeclaration();
 		$$->set_type(Type::CreateBasicType());
 		$$->set_identifier($1);
+	}
+	| direct_declarator '[' ']' {
+		$1->set_type(Type::CreateArrayType($1->get_type(), NULL));
+		$$ = $1;
 	}
 	| direct_declarator '[' expression ']' {
 		$1->set_type(Type::CreateArrayType($1->get_type(), $3)); 
@@ -322,7 +326,8 @@ initializer
 	;
 
 statement
-	: compound_statement
+	: ';' { $$ = new ExpressionStatement(NULL); }
+	| compound_statement
 	| expression_statement
 	| if_statement
 	| while_statement
@@ -383,7 +388,7 @@ for_statement
 	: FOR '(' expression ';' expression ';' expression ')' statement {
 		$$ = new ForStatement(new ExpressionStatement($3), $5, $7, $9);
 	}
-	| FOR '(' variable_declaration ';' expression ';' expression')'statement {
+	| FOR '(' variable_declaration ';' expression ';' expression')' statement {
 		$$ = new ForStatement($3, $5, $7, $9);
 	}
 	;

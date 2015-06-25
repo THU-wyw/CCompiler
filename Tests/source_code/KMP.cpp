@@ -7,7 +7,7 @@ int strlen(char *s)
 	return i;
 }
 
-void get_next( char* t, int next[] )        /*若不存在k使得‘p0...pk-1’ = ‘pj-k...pj-1’，则令next[j] = 0（原先算法是令这种情况的next值为1）*/
+void get_next( char* t, int next[] )
 {
 	int tlen;
 	int i = 1, j = 0;

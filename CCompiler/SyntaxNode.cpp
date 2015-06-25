@@ -379,7 +379,9 @@ ExpressionStatement::ExpressionStatement(Expression *expression) {
 
 void ExpressionStatement::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
-	expression_->GenerateCode(output);
+	if (this->expression_ != NULL) {
+		expression_->GenerateCode(output);
+	}
 }
 
 VariableDeclaration::VariableDeclaration() {
@@ -611,7 +613,11 @@ void ForStatement::PrintTree(std::ostream& output) {
 void ExpressionStatement::PrintTree(ostream& output)
 {
 	output << "ExpressionStatement:" << endl;
-	printNode(output, expression_);
+	if (this->expression_ != NULL) {
+		printNode(output, expression_);
+	} else {
+
+	}
 }
 
 void Declaration::PrintTree(ostream& output)
