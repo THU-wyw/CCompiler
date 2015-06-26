@@ -195,6 +195,7 @@ typedef union YYSTYPE
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
 	Declaration* declaration;
+	DeclarationStatement* variable_statement;
 	std::vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
 	std::vector<VariableDeclaration*>* variable_declaration_list;
@@ -211,7 +212,7 @@ typedef union YYSTYPE
 
 
 /* Line 387 of yacc.c  */
-#line 215 "CParser.cpp"
+#line 216 "CParser.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -239,7 +240,7 @@ int yyparse ();
 /* Copy the second part of user declarations.  */
 
 /* Line 390 of yacc.c  */
-#line 243 "CParser.cpp"
+#line 244 "CParser.cpp"
 
 #ifdef short
 # undef short
@@ -576,17 +577,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   117,   117,   121,   122,   126,   130,   131,   132,   133,
-     134,   135,   136,   137,   138,   139,   140,   141,   142,   143,
-     144,   145,   146,   147,   148,   149,   150,   151,   152,   153,
-     154,   155,   156,   157,   158,   159,   160,   161,   162,   163,
-     164,   165,   166,   167,   168,   169,   170,   171,   172,   173,
-     174,   178,   179,   192,   208,   217,   221,   236,   237,   244,
-     245,   246,   247,   251,   252,   256,   265,   270,   274,   287,
-     291,   298,   302,   309,   317,   321,   329,   330,   331,   332,
-     333,   334,   335,   336,   337,   341,   347,   351,   359,   363,
-     369,   372,   378,   381,   388,   391,   398,   401,   407,   410,
-     420,   424,   430,   433,   439
+       0,   118,   118,   122,   123,   127,   131,   132,   133,   134,
+     135,   136,   137,   138,   139,   140,   141,   142,   143,   144,
+     145,   146,   147,   148,   149,   150,   151,   152,   153,   154,
+     155,   156,   157,   158,   159,   160,   161,   162,   163,   164,
+     165,   166,   167,   168,   169,   170,   171,   172,   173,   174,
+     175,   179,   180,   193,   209,   218,   222,   237,   238,   245,
+     246,   247,   248,   252,   253,   257,   266,   271,   275,   288,
+     292,   299,   303,   310,   318,   322,   330,   331,   332,   333,
+     334,   335,   336,   337,   338,   342,   348,   352,   360,   364,
+     370,   373,   379,   382,   389,   392,   399,   402,   408,   411,
+     421,   425,   431,   434,   440
 };
 #endif
 
@@ -1878,19 +1879,19 @@ yyreduce:
     {
         case 2:
 /* Line 1792 of yacc.c  */
-#line 117 "CParser.y"
+#line 118 "CParser.y"
     { (yyval.program) = (yyvsp[(1) - (1)].program); program = (yyvsp[(1) - (1)].program); }
     break;
 
   case 3:
 /* Line 1792 of yacc.c  */
-#line 121 "CParser.y"
+#line 122 "CParser.y"
     { (yyval.expression) = (yyvsp[(1) - (1)].identifier); }
     break;
 
   case 4:
 /* Line 1792 of yacc.c  */
-#line 122 "CParser.y"
+#line 123 "CParser.y"
     { 
 		(yyval.expression) = new ImmediateInteger(atol((yyvsp[(1) - (1)].str)->c_str())); 
 		delete (yyvsp[(1) - (1)].str);
@@ -1899,7 +1900,7 @@ yyreduce:
 
   case 5:
 /* Line 1792 of yacc.c  */
-#line 126 "CParser.y"
+#line 127 "CParser.y"
     {
 		(yyval.expression) = new StringLiteral(*(yyvsp[(1) - (1)].str));
 		delete (yyvsp[(1) - (1)].str);
@@ -1908,289 +1909,289 @@ yyreduce:
 
   case 6:
 /* Line 1792 of yacc.c  */
-#line 130 "CParser.y"
+#line 131 "CParser.y"
     { (yyval.expression) = (yyvsp[(2) - (3)].expression); }
     break;
 
   case 7:
 /* Line 1792 of yacc.c  */
-#line 131 "CParser.y"
+#line 132 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::ADD); }
     break;
 
   case 8:
 /* Line 1792 of yacc.c  */
-#line 132 "CParser.y"
+#line 133 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::SUB); }
     break;
 
   case 9:
 /* Line 1792 of yacc.c  */
-#line 133 "CParser.y"
+#line 134 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::MUL); }
     break;
 
   case 10:
 /* Line 1792 of yacc.c  */
-#line 134 "CParser.y"
+#line 135 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::DIV); }
     break;
 
   case 11:
 /* Line 1792 of yacc.c  */
-#line 135 "CParser.y"
+#line 136 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::MOD); }
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 136 "CParser.y"
+#line 137 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::XOR_BIT); }
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 137 "CParser.y"
+#line 138 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::OR_BIT); }
     break;
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 138 "CParser.y"
+#line 139 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::AND_BIT); }
     break;
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 139 "CParser.y"
+#line 140 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::SHIFT_LEFT); }
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 140 "CParser.y"
+#line 141 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::SHIFT_RIGHT); }
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 141 "CParser.y"
+#line 142 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::GREATER); }
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 142 "CParser.y"
+#line 143 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::LESS); }
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 143 "CParser.y"
+#line 144 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::EQUAL); }
     break;
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 144 "CParser.y"
+#line 145 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::LESS_EQUAL); }
     break;
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 145 "CParser.y"
+#line 146 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::GREATER_EQUAL); }
     break;
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 146 "CParser.y"
+#line 147 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::NOT_EQUAL); }
     break;
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 147 "CParser.y"
+#line 148 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::ASSIGN); }
     break;
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 148 "CParser.y"
+#line 149 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::ADD_ASSIGN); }
     break;
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 149 "CParser.y"
+#line 150 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::SUB_ASSIGN); }
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 150 "CParser.y"
+#line 151 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::MUL_ASSIGN); }
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 151 "CParser.y"
+#line 152 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::DIV_ASSIGN); }
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 152 "CParser.y"
+#line 153 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::MOD_ASSIGN); }
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 153 "CParser.y"
+#line 154 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::AND_ASSIGN); }
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 154 "CParser.y"
+#line 155 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::EXCLUSIVE_OR_ASSIGN); }
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 155 "CParser.y"
+#line 156 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::INCLUSIVE_OR_ASSIGN); }
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 156 "CParser.y"
+#line 157 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::SHIFT_LEFT_ASSIGN); }
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 157 "CParser.y"
+#line 158 "CParser.y"
     { (yyval.expression) = new AssignmentExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), AssignmentExpression::Operator::SHIFT_RIGHT_ASSIGN); }
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 158 "CParser.y"
+#line 159 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::AND); }
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 159 "CParser.y"
+#line 160 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::OR); }
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 160 "CParser.y"
+#line 161 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (4)].expression), (yyvsp[(3) - (4)].expression), BinaryExpression::Operator::INDEX); }
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 161 "CParser.y"
+#line 162 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::DOT); }
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 162 "CParser.y"
+#line 163 "CParser.y"
     { (yyval.expression) = new BinaryExpression((yyvsp[(1) - (3)].expression), (yyvsp[(3) - (3)].expression), BinaryExpression::Operator::POINTER); }
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 163 "CParser.y"
+#line 164 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(1) - (2)].expression), UnaryExpression::Operator::INC_AFTER); }
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 164 "CParser.y"
+#line 165 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(1) - (2)].expression), UnaryExpression::Operator::DEC_AFTER); }
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 165 "CParser.y"
+#line 166 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::INC_PRE); }
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 166 "CParser.y"
+#line 167 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::DEC_PRE); }
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 167 "CParser.y"
+#line 168 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::REFERENCE); }
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 168 "CParser.y"
+#line 169 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::DEREFERENCE); }
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 169 "CParser.y"
+#line 170 "CParser.y"
     { (yyval.expression) = (yyvsp[(2) - (2)].expression); }
     break;
 
   case 46:
 /* Line 1792 of yacc.c  */
-#line 170 "CParser.y"
+#line 171 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::MINUS); }
     break;
 
   case 47:
 /* Line 1792 of yacc.c  */
-#line 171 "CParser.y"
+#line 172 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::NOT_BIT); }
     break;
 
   case 48:
 /* Line 1792 of yacc.c  */
-#line 172 "CParser.y"
+#line 173 "CParser.y"
     { (yyval.expression) = new UnaryExpression((yyvsp[(2) - (2)].expression), UnaryExpression::Operator::NOT); }
     break;
 
   case 49:
 /* Line 1792 of yacc.c  */
-#line 173 "CParser.y"
+#line 174 "CParser.y"
     { (yyval.expression) = new FunctionCall((yyvsp[(1) - (4)].identifier), (yyvsp[(3) - (4)].expression_list)); }
     break;
 
   case 50:
 /* Line 1792 of yacc.c  */
-#line 174 "CParser.y"
+#line 175 "CParser.y"
     { (yyval.expression) = new FunctionCall((yyvsp[(1) - (3)].identifier), NULL); }
     break;
 
   case 51:
 /* Line 1792 of yacc.c  */
-#line 178 "CParser.y"
+#line 179 "CParser.y"
     { (yyval.expression_list) = new std::vector<Expression*>(); (yyval.expression_list)->push_back((yyvsp[(1) - (1)].expression)); }
     break;
 
   case 52:
 /* Line 1792 of yacc.c  */
-#line 179 "CParser.y"
+#line 180 "CParser.y"
     { (yyval.expression_list)->push_back((yyvsp[(3) - (3)].expression)); }
     break;
 
   case 54:
 /* Line 1792 of yacc.c  */
-#line 208 "CParser.y"
+#line 209 "CParser.y"
     {
 		for (auto iterator = (yyvsp[(2) - (2)].variable_declaration_list)->begin(); iterator != (yyvsp[(2) - (2)].variable_declaration_list)->end(); iterator++) {
 			(*iterator)->set_basic_type((yyvsp[(1) - (2)].vt_t));
@@ -2201,7 +2202,7 @@ yyreduce:
 
   case 55:
 /* Line 1792 of yacc.c  */
-#line 217 "CParser.y"
+#line 218 "CParser.y"
     {
 		(yyval.variable_declaration_list) = new std::vector<VariableDeclaration*>();
 		(yyval.variable_declaration_list)->push_back((yyvsp[(1) - (1)].variable_declaration));
@@ -2210,7 +2211,7 @@ yyreduce:
 
   case 56:
 /* Line 1792 of yacc.c  */
-#line 221 "CParser.y"
+#line 222 "CParser.y"
     {
 		(yyvsp[(1) - (3)].variable_declaration_list)->push_back((yyvsp[(3) - (3)].variable_declaration));
 		(yyval.variable_declaration_list) = (yyvsp[(1) - (3)].variable_declaration_list);
@@ -2219,7 +2220,7 @@ yyreduce:
 
   case 58:
 /* Line 1792 of yacc.c  */
-#line 237 "CParser.y"
+#line 238 "CParser.y"
     {
 		(yyval.variable_declaration) = (yyvsp[(1) - (3)].variable_declaration);
 		(yyval.variable_declaration)->set_initializer((yyvsp[(3) - (3)].expression));
@@ -2228,43 +2229,43 @@ yyreduce:
 
   case 59:
 /* Line 1792 of yacc.c  */
-#line 244 "CParser.y"
+#line 245 "CParser.y"
     { (yyval.vt_t) = Type::BasicType::VOID; }
     break;
 
   case 60:
 /* Line 1792 of yacc.c  */
-#line 245 "CParser.y"
+#line 246 "CParser.y"
     { (yyval.vt_t) = Type::BasicType::CHARACTER; }
     break;
 
   case 61:
 /* Line 1792 of yacc.c  */
-#line 246 "CParser.y"
+#line 247 "CParser.y"
     { (yyval.vt_t) = Type::BasicType::INTEGER; }
     break;
 
   case 62:
 /* Line 1792 of yacc.c  */
-#line 247 "CParser.y"
+#line 248 "CParser.y"
     { (yyval.vt_t) = Type::BasicType::FLOAT; }
     break;
 
   case 63:
 /* Line 1792 of yacc.c  */
-#line 251 "CParser.y"
+#line 252 "CParser.y"
     { (yyval.number) = 0; }
     break;
 
   case 64:
 /* Line 1792 of yacc.c  */
-#line 252 "CParser.y"
+#line 253 "CParser.y"
     { (yyval.number) = (yyvsp[(2) - (2)].number) + 1; }
     break;
 
   case 65:
 /* Line 1792 of yacc.c  */
-#line 256 "CParser.y"
+#line 257 "CParser.y"
     {
 		for (int i = 0; i < (yyvsp[(1) - (2)].number); i++) {
 			(yyvsp[(2) - (2)].variable_declaration)->set_type(Type::CreatePointerType((yyvsp[(2) - (2)].variable_declaration)->get_type())); 
@@ -2275,7 +2276,7 @@ yyreduce:
 
   case 66:
 /* Line 1792 of yacc.c  */
-#line 265 "CParser.y"
+#line 266 "CParser.y"
     {
 		(yyval.variable_declaration) = new VariableDeclaration();
 		(yyval.variable_declaration)->set_type(Type::CreateBasicType());
@@ -2285,7 +2286,7 @@ yyreduce:
 
   case 67:
 /* Line 1792 of yacc.c  */
-#line 270 "CParser.y"
+#line 271 "CParser.y"
     {
 		(yyvsp[(1) - (3)].variable_declaration)->set_type(Type::CreateArrayType((yyvsp[(1) - (3)].variable_declaration)->get_type(), NULL));
 		(yyval.variable_declaration) = (yyvsp[(1) - (3)].variable_declaration);
@@ -2294,7 +2295,7 @@ yyreduce:
 
   case 68:
 /* Line 1792 of yacc.c  */
-#line 274 "CParser.y"
+#line 275 "CParser.y"
     {
 		(yyvsp[(1) - (4)].variable_declaration)->set_type(Type::CreateArrayType((yyvsp[(1) - (4)].variable_declaration)->get_type(), (yyvsp[(3) - (4)].expression))); 
 		(yyval.variable_declaration) = (yyvsp[(1) - (4)].variable_declaration);
@@ -2303,7 +2304,7 @@ yyreduce:
 
   case 69:
 /* Line 1792 of yacc.c  */
-#line 287 "CParser.y"
+#line 288 "CParser.y"
     {
 		(yyval.function_declaration) = new FunctionDeclaration((yyvsp[(2) - (5)].variable_declaration)->get_identifier(), (yyvsp[(4) - (5)].variable_declaration_list));
 		(yyval.function_declaration)->set_return_type((yyvsp[(2) - (5)].variable_declaration)->get_type());
@@ -2312,7 +2313,7 @@ yyreduce:
 
   case 70:
 /* Line 1792 of yacc.c  */
-#line 291 "CParser.y"
+#line 292 "CParser.y"
     {
 		(yyval.function_declaration) = new FunctionDeclaration((yyvsp[(2) - (4)].variable_declaration)->get_identifier(), new std::vector<VariableDeclaration*>());
 		(yyval.function_declaration)->set_return_type((yyvsp[(2) - (4)].variable_declaration)->get_type());
@@ -2321,7 +2322,7 @@ yyreduce:
 
   case 71:
 /* Line 1792 of yacc.c  */
-#line 298 "CParser.y"
+#line 299 "CParser.y"
     {
 		(yyval.variable_declaration_list) = new std::vector<VariableDeclaration*>();
 		(yyval.variable_declaration_list)->push_back((yyvsp[(1) - (1)].variable_declaration));
@@ -2330,7 +2331,7 @@ yyreduce:
 
   case 72:
 /* Line 1792 of yacc.c  */
-#line 302 "CParser.y"
+#line 303 "CParser.y"
     {
 		(yyvsp[(1) - (3)].variable_declaration_list)->push_back((yyvsp[(3) - (3)].variable_declaration));
 		(yyval.variable_declaration_list) = (yyvsp[(1) - (3)].variable_declaration_list);
@@ -2339,7 +2340,7 @@ yyreduce:
 
   case 73:
 /* Line 1792 of yacc.c  */
-#line 309 "CParser.y"
+#line 310 "CParser.y"
     {
 		std::cout << "parameter_declaration" << std::endl;
 		(yyvsp[(2) - (2)].variable_declaration)->set_basic_type((yyvsp[(1) - (2)].vt_t));
@@ -2349,25 +2350,25 @@ yyreduce:
 
   case 74:
 /* Line 1792 of yacc.c  */
-#line 317 "CParser.y"
+#line 318 "CParser.y"
     { (yyval.identifier) = new Identifier(*(yyvsp[(1) - (1)].str)); }
     break;
 
   case 76:
 /* Line 1792 of yacc.c  */
-#line 329 "CParser.y"
+#line 330 "CParser.y"
     { (yyval.statement) = new ExpressionStatement(NULL); }
     break;
 
   case 84:
 /* Line 1792 of yacc.c  */
-#line 337 "CParser.y"
-    { (yyval.statement) = (yyvsp[(1) - (2)].variable_declaration); }
+#line 338 "CParser.y"
+    { (yyval.statement) = new DeclarationStatement((yyvsp[(1) - (2)].variable_declaration)); }
     break;
 
   case 85:
 /* Line 1792 of yacc.c  */
-#line 341 "CParser.y"
+#line 342 "CParser.y"
     {
 		(yyval.statement) = (yyvsp[(2) - (3)].statement);
 	}
@@ -2375,7 +2376,7 @@ yyreduce:
 
   case 86:
 /* Line 1792 of yacc.c  */
-#line 347 "CParser.y"
+#line 348 "CParser.y"
     {
 		(yyval.statement) = new StatementsBlock();
 		//((StatementsBlock *)$$)->PushStatement($1);
@@ -2384,7 +2385,7 @@ yyreduce:
 
   case 87:
 /* Line 1792 of yacc.c  */
-#line 351 "CParser.y"
+#line 352 "CParser.y"
     {
 		std::cout << "block_item_list" << std::endl;
 		((StatementsBlock *)(yyvsp[(1) - (2)].statement))->PushStatement((yyvsp[(2) - (2)].statement));
@@ -2394,7 +2395,7 @@ yyreduce:
 
   case 89:
 /* Line 1792 of yacc.c  */
-#line 363 "CParser.y"
+#line 364 "CParser.y"
     {
 		(yyval.statement) = new ExpressionStatement((yyvsp[(1) - (2)].expression));
 	}
@@ -2402,7 +2403,7 @@ yyreduce:
 
   case 90:
 /* Line 1792 of yacc.c  */
-#line 369 "CParser.y"
+#line 370 "CParser.y"
     {
 		(yyval.statement) = new IfStatement((yyvsp[(3) - (5)].expression), (yyvsp[(5) - (5)].statement));
 	}
@@ -2410,7 +2411,7 @@ yyreduce:
 
   case 91:
 /* Line 1792 of yacc.c  */
-#line 372 "CParser.y"
+#line 373 "CParser.y"
     {
 		(yyval.statement) = new IfStatement((yyvsp[(3) - (7)].expression), (yyvsp[(5) - (7)].statement), (yyvsp[(7) - (7)].statement));
 	}
@@ -2418,7 +2419,7 @@ yyreduce:
 
   case 92:
 /* Line 1792 of yacc.c  */
-#line 378 "CParser.y"
+#line 379 "CParser.y"
     {
 		(yyval.statement) = new WhileStatement ((yyvsp[(3) - (5)].expression), (yyvsp[(5) - (5)].statement));
 	}
@@ -2426,7 +2427,7 @@ yyreduce:
 
   case 93:
 /* Line 1792 of yacc.c  */
-#line 381 "CParser.y"
+#line 382 "CParser.y"
     {
 		(yyval.statement) = new WhileStatement ((yyvsp[(5) - (7)].expression), (yyvsp[(2) - (7)].statement), true);
 	}
@@ -2434,7 +2435,7 @@ yyreduce:
 
   case 94:
 /* Line 1792 of yacc.c  */
-#line 388 "CParser.y"
+#line 389 "CParser.y"
     {
 		(yyval.statement) = new ForStatement(new ExpressionStatement((yyvsp[(3) - (9)].expression)), (yyvsp[(5) - (9)].expression), (yyvsp[(7) - (9)].expression), (yyvsp[(9) - (9)].statement));
 	}
@@ -2442,7 +2443,7 @@ yyreduce:
 
   case 95:
 /* Line 1792 of yacc.c  */
-#line 391 "CParser.y"
+#line 392 "CParser.y"
     {
 		(yyval.statement) = new ForStatement((yyvsp[(3) - (9)].variable_declaration), (yyvsp[(5) - (9)].expression), (yyvsp[(7) - (9)].expression), (yyvsp[(9) - (9)].statement));
 	}
@@ -2450,7 +2451,7 @@ yyreduce:
 
   case 96:
 /* Line 1792 of yacc.c  */
-#line 398 "CParser.y"
+#line 399 "CParser.y"
     {
 		(yyval.statement) = new JumpStatement(JumpStatement::CONTINUE);
 	}
@@ -2458,7 +2459,7 @@ yyreduce:
 
   case 97:
 /* Line 1792 of yacc.c  */
-#line 401 "CParser.y"
+#line 402 "CParser.y"
     {
 		(yyval.statement) = new JumpStatement(JumpStatement::BREAK);
 	}
@@ -2466,7 +2467,7 @@ yyreduce:
 
   case 98:
 /* Line 1792 of yacc.c  */
-#line 407 "CParser.y"
+#line 408 "CParser.y"
     {
 		(yyval.statement) = new ReturnStatement((yyvsp[(2) - (3)].expression));
 	}
@@ -2474,7 +2475,7 @@ yyreduce:
 
   case 99:
 /* Line 1792 of yacc.c  */
-#line 410 "CParser.y"
+#line 411 "CParser.y"
     {
 		(yyval.statement) = new ReturnStatement(NULL);
 	}
@@ -2482,7 +2483,7 @@ yyreduce:
 
   case 100:
 /* Line 1792 of yacc.c  */
-#line 420 "CParser.y"
+#line 421 "CParser.y"
     {
 		(yyval.program) = new Program();
 		(yyval.program)->PushDeclaration((yyvsp[(1) - (1)].declaration));
@@ -2491,7 +2492,7 @@ yyreduce:
 
   case 101:
 /* Line 1792 of yacc.c  */
-#line 424 "CParser.y"
+#line 425 "CParser.y"
     {
 		(yyval.program)->PushDeclaration((yyvsp[(2) - (2)].declaration));
 	}
@@ -2499,7 +2500,7 @@ yyreduce:
 
   case 102:
 /* Line 1792 of yacc.c  */
-#line 430 "CParser.y"
+#line 431 "CParser.y"
     {
 		(yyval.declaration) = (yyvsp[(1) - (1)].function_declaration);
 	}
@@ -2507,7 +2508,7 @@ yyreduce:
 
   case 103:
 /* Line 1792 of yacc.c  */
-#line 433 "CParser.y"
+#line 434 "CParser.y"
     {
 		(yyval.declaration) = (yyvsp[(1) - (1)].variable_declaration);
 	}
@@ -2515,7 +2516,7 @@ yyreduce:
 
   case 104:
 /* Line 1792 of yacc.c  */
-#line 439 "CParser.y"
+#line 440 "CParser.y"
     {
 		(yyvsp[(1) - (2)].function_declaration)->set_body((yyvsp[(2) - (2)].statement));
 		(yyval.function_declaration) = (yyvsp[(1) - (2)].function_declaration);
@@ -2524,7 +2525,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 2528 "CParser.cpp"
+#line 2529 "CParser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

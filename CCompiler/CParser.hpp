@@ -128,6 +128,7 @@ typedef union YYSTYPE
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
 	Declaration* declaration;
+	DeclarationStatement* variable_statement;
 	std::vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
 	std::vector<VariableDeclaration*>* variable_declaration_list;
@@ -144,7 +145,7 @@ typedef union YYSTYPE
 
 
 /* Line 2058 of yacc.c  */
-#line 148 "CParser.hpp"
+#line 149 "CParser.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

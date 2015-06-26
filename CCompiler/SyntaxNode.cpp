@@ -262,7 +262,6 @@ void StatementsBlock::GenerateCode(ostream& output) {
 	for(auto iter = this->statements_.begin(); iter != this->statements_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output);
-		output << ";" << endl;
 	}
 	output << "}" << endl;
 	//this->init_value->GenerateCode(output);
@@ -286,7 +285,7 @@ void IfStatement::GenerateCode(ostream& output) {
 
 	if(else_statement_ != NULL)
 	{
-		output << "else";
+		output << " else ";
 		this->else_statement_->GenerateCode(output);
 	}
 }
@@ -300,10 +299,10 @@ void JumpStatement::GenerateCode(ostream& output) {
 	switch (type_)
 	{
 	case JumpStatement::CONTINUE:
-		output << "continue";
+		output << "continue;" << endl;
 		break;
 	case JumpStatement::BREAK:
-		output << "break";
+		output << "break;" << endl;
 		break;
 	default:
 		break;
@@ -320,6 +319,7 @@ void ReturnStatement::GenerateCode(ostream& output) {
 	//Expression * return_value_;
 	output << "return ";
 	return_value_->GenerateCode(output);
+	output << ";" << endl;
 }
 
 WhileStatement::WhileStatement(Expression *condition, Statement *body, bool has_do /* = false */) {
@@ -381,7 +381,22 @@ void ExpressionStatement::GenerateCode(ostream& output) {
 	//TODO for sister yuan yang
 	if (this->expression_ != NULL) {
 		expression_->GenerateCode(output);
+		output << ";" << endl;
 	}
+}
+
+DeclarationStatement::DeclarationStatement(VariableDeclaration* declaration)
+	: declaration_(declaration) {
+
+}
+
+void DeclarationStatement::GenerateCode(std::ostream& output) {
+	this->declaration_->GenerateCode(output);
+	output << ";" << endl;
+}
+
+void DeclarationStatement::PrintTree(std::ostream& output) {
+
 }
 
 VariableDeclaration::VariableDeclaration() {

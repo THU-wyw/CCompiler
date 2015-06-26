@@ -253,7 +253,17 @@ private:
 	Expression* expression_;
 };
 
-class Declaration : public Statement{
+class DeclarationStatement: public Statement {
+public:
+	DeclarationStatement(VariableDeclaration* declaration);
+	virtual void GenerateCode(std::ostream& output);
+	virtual void PrintTree(std::ostream& output);
+
+private:
+	VariableDeclaration* declaration_;
+};
+
+class Declaration : public Statement {
 public:
 	virtual void GenerateCode(std::ostream& output) = 0;
 	virtual void PrintTree(std::ostream& output) = 0;

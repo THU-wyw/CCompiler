@@ -32,6 +32,7 @@ void yyerror(const char*s) {
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
 	Declaration* declaration;
+	DeclarationStatement* variable_statement;
 	std::vector<Declaration*>* declaration_list;
 	VariableDeclaration* variable_declaration;
 	std::vector<VariableDeclaration*>* variable_declaration_list;
@@ -334,7 +335,7 @@ statement
 	| for_statement
 	| jump_statement
 	| return_statement
-	| variable_declaration ';' { $$ = $1; }
+	| variable_declaration ';' { $$ = new DeclarationStatement($1); }
 	;
 
 compound_statement

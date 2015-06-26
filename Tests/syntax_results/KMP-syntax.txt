@@ -8,10 +8,7 @@ Program
 			Identifier: s
 		FunctionStatement:
 		StatementsBlock:
-			VariableDeclaration: 
-				Identifier: i
-				ImmediateInteger: 0
-			ForStatement: 
+						ForStatement: 
 				Initializer: 
 				ExpressionStatement:
 					AssignmentExpression: 0
@@ -41,12 +38,7 @@ Program
 			Identifier: next
 		FunctionStatement:
 		StatementsBlock:
-			VariableDeclaration: 
-				Identifier: tlen
-			VariableDeclaration: 
-				Identifier: i
-				ImmediateInteger: 1
-			ExpressionStatement:
+									ExpressionStatement:
 				AssignmentExpression: 0
 					BinaryExpression: 5
 						Identifier: next
@@ -123,11 +115,7 @@ Program
 			Identifier: pos
 		FunctionStatement:
 		StatementsBlock:
-			VariableDeclaration: 
-				Identifier: slen
-			VariableDeclaration: 
-				Identifier: next
-			IfStatement:
+									IfStatement:
 				Condition:
 				BinaryExpression: 20
 					BinaryExpression: 14
@@ -256,13 +244,7 @@ Program
 		FunctionArguments:
 		FunctionStatement:
 		StatementsBlock:
-			VariableDeclaration: 
-				Identifier: str
-				StringLiteral: "helloWorld"
-			VariableDeclaration: 
-				Identifier: c
-				StringLiteral: "Wo"
-			ExpressionStatement:
+									ExpressionStatement:
 				FunctionCall:
 					FunctionIdentifier:
 					Identifier: printf
