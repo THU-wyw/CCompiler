@@ -44,14 +44,21 @@
 /* Line 33 of lalr1.cc  */
 #line 18 "CParser.y"
 
-	#include <vector>
-	#include "SyntaxNode.h"
-	#include "Type.h"
-	class CParserDriver;
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable : 4005)
+#include <intsafe.h>
+#include <stdint.h>
+#pragma warning (pop)
+#endif
+#include <vector>
+#include "SyntaxNode.h"
+#include "Type.h"
+class CParserDriver;
 
 
 /* Line 33 of lalr1.cc  */
-#line 55 "CParser.hpp"
+#line 62 "CParser.hpp"
 
 
 #include <string>
@@ -67,7 +74,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 71 "CParser.hpp"
+#line 78 "CParser.hpp"
 
   /// A Bison parser.
   class CParser
@@ -78,7 +85,7 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 25 "CParser.y"
+#line 32 "CParser.y"
 
 	SyntaxNode* node;
 	Program* program;
@@ -111,7 +118,7 @@ namespace yy {
 
 
 /* Line 33 of lalr1.cc  */
-#line 115 "CParser.hpp"
+#line 122 "CParser.hpp"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -344,7 +351,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 348 "CParser.hpp"
+#line 355 "CParser.hpp"
 
 
 

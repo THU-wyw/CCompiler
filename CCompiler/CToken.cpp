@@ -2333,7 +2333,7 @@ void CParserDriver::ScanBegin() {
 		yyin = stdin;
 	}
 	else {
-		if (!(yyin = fopen(filename_.c_str(), "r"))) {
+		if (fopen_s(&yyin, filename_.c_str(), "r") != 0) {
 			exit(1);
 		}
 	}

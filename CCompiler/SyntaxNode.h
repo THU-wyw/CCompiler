@@ -9,18 +9,20 @@ class VariableDeclaration;
 class FunctionDeclaration;
 class FunctionDefinition;
 class Declaration;
+class CParserDriver;
 class SyntaxNode {
 public:
 	//virtual ~SyntaxNode() = 0;
-	virtual void GenerateCode(std::ostream& output) = 0;
+	virtual void GenerateCode(std::ostream& output, int indentations) = 0;
 	virtual void PrintTree(std::ostream& output) = 0;
-	
+protected:
+	void PrintTabs(std::ostream& output, int tabs);
 };
 
 class Program: public SyntaxNode {
 public:
 	void PushDeclaration(Declaration* declaration);
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	std::vector<Declaration*> declarations_;
@@ -28,7 +30,7 @@ private:
 
 class Expression: public SyntaxNode {
 public:
-	virtual void GenerateCode(std::ostream& output) = 0;
+	virtual void GenerateCode(std::ostream& output, int indentations) = 0;
 	virtual void PrintTree(std::ostream& output) = 0;
 };
 
@@ -37,7 +39,7 @@ public:
 	Identifier(std::string& name);
 	inline std::string& getName() { return this->name_; }
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	std::string name_;
@@ -47,7 +49,7 @@ class ImmediateInteger: public Expression {
 public:
 	ImmediateInteger(int value);
 	
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 
 private:
@@ -58,7 +60,7 @@ class StringLiteral: public Expression {
 public:
 	StringLiteral(std::string& value);
 	
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	std::string value_;
@@ -78,7 +80,7 @@ public:
 		NOT
 	};
 	UnaryExpression(Expression *expression, Operator unary_operator);
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Expression* expression_;
@@ -113,7 +115,7 @@ public:
 		OR
 	};
 	BinaryExpression(Expression* left, Expression* right, Operator binary_operator);
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 
 private:
@@ -141,7 +143,7 @@ public:
 	};
 	AssignmentExpression(Expression *left, Expression *right, Operator assignment_operator);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Operator assignment_operator_;
@@ -162,13 +164,13 @@ private:
 //	int pointer;
 //	std::vector<Expression *> array;
 //
-//	virtual void GenerateCode(std::ostream& output);
+//	virtual void GenerateCode(std::ostream& output, int indentations);
 //	virtual void PrintTree(std::ostream& output);
 //};
 
 class Statement: public SyntaxNode {
 public:
-	virtual void GenerateCode(std::ostream& output) = 0;
+	virtual void GenerateCode(std::ostream& output, int indentations) = 0;
 	virtual void PrintTree(std::ostream& output) = 0;
 };
 
@@ -176,7 +178,7 @@ class StatementsBlock: public Statement {
 public:
 	void PushStatement(Statement *statement);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	std::vector<Statement*> statements_;
@@ -187,7 +189,7 @@ class IfStatement: public Statement {
 public:
 	IfStatement(Expression *condition, Statement *then_statement, Statement *else_statement = NULL);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Expression* condition_;
@@ -202,7 +204,7 @@ public:
 		BREAK
 	};
 	JumpStatement(JumpType jump_type);
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	JumpType type_;
@@ -212,7 +214,7 @@ class ReturnStatement: public Statement {
 public:
 	ReturnStatement(Expression* return_value);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Expression * return_value_;
@@ -222,7 +224,7 @@ class WhileStatement: public Statement {
 public:
 	WhileStatement(Expression *condition, Statement *body, bool has_do = false);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Expression* condition_;
@@ -232,12 +234,14 @@ private:
 
 class ForStatement: public Statement {
 public:
-	ForStatement(Statement* initializer, Expression* operation, Expression* condition, Statement* body);
-	virtual void GenerateCode(std::ostream& output);
+	ForStatement(VariableDeclaration* initializer, Expression* operation, Expression* condition, Statement* body);
+	ForStatement(Expression* initializer, Expression* operation, Expression* condition, Statement* body);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 
 private:
-	Statement* initializer_;
+	Expression* expression_initializer_;
+	VariableDeclaration* declaration_initializer_;
 	Expression* operation_;
 	Expression* condition_;
 	Statement* body_;
@@ -247,7 +251,7 @@ class ExpressionStatement: public Statement {
 public:
 	ExpressionStatement(Expression *expression);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Expression* expression_;
@@ -256,7 +260,7 @@ private:
 class DeclarationStatement: public Statement {
 public:
 	DeclarationStatement(VariableDeclaration* declaration);
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 
 private:
@@ -265,14 +269,14 @@ private:
 
 class Declaration : public Statement {
 public:
-	virtual void GenerateCode(std::ostream& output) = 0;
+	virtual void GenerateCode(std::ostream& output, int indentations) = 0;
 	virtual void PrintTree(std::ostream& output) = 0;
 };
 
 class VariableDeclaration: public Declaration {
 public:
 	VariableDeclaration();
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 	inline void set_type(Type* type) { this->type_ = type; }
 	inline Type* get_type() { return this->type_; }
@@ -293,7 +297,7 @@ public:
 	inline void set_return_type(Type* return_type){ return_type_ = return_type; }
 	inline void set_body(Statement *body) { statements_ = static_cast<StatementsBlock*>(body); }
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Type* return_type_;
@@ -306,7 +310,7 @@ class FunctionCall: public Expression {
 public:
 	FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments);
 
-	virtual void GenerateCode(std::ostream& output);
+	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
 	Identifier* identifier_;

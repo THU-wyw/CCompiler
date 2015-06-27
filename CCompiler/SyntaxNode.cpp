@@ -1,13 +1,20 @@
 #include "SyntaxNode.h"
+#include <fstream>
 using namespace std;
-void Program::GenerateCode(ostream& output) {
+void Program::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
+	PrintTabs(output, indentations);
 	output << "public class " << "ClassName" << "{" << endl;
 	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
-		(*iter)->GenerateCode(output);
+		(*iter)->GenerateCode(output, indentations + 1);
 	}
+	PrintTabs(output, indentations);
 	output << "}" <<endl;
+}
+
+void SyntaxNode::PrintTabs(std::ostream& output, int tabs) {
+	output << string(4 * tabs, ' ');
 }
 
 void Program::PushDeclaration(Declaration* declaration) {
@@ -18,7 +25,7 @@ Identifier::Identifier(std::string& name): name_(name) {
 
 }
 
-void Identifier::GenerateCode(ostream& output)
+void Identifier::GenerateCode(ostream& output, int indentations)
 {
 	//TODO for sister yuan yang
 	output << this->name_;
@@ -28,7 +35,7 @@ ImmediateInteger::ImmediateInteger(int value): value_(value) {
 
 }
 
-void ImmediateInteger::GenerateCode(ostream& output)
+void ImmediateInteger::GenerateCode(ostream& output, int indentations)
 {
 	//TODO for sister yuan yang
 	output << value_;
@@ -38,7 +45,7 @@ StringLiteral::StringLiteral(string& value): value_(value) {
 
 }
 
-void StringLiteral::GenerateCode(ostream& output) {
+void StringLiteral::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	output << value_;
 }
@@ -49,7 +56,7 @@ UnaryExpression::UnaryExpression(Expression *expression, Operator unary_operator
 
 }
 
-void UnaryExpression::GenerateCode(ostream& output) {
+void UnaryExpression::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Expression* expression_;
 	//possible value : _--, _++, --_, ++_, &, *, +, -, ~, !
@@ -58,52 +65,36 @@ void UnaryExpression::GenerateCode(ostream& output) {
 	{
 	case UnaryExpression::INC_PRE:
 		output << "++(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::DEC_PRE:
 		output << "--(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::INC_AFTER:
 		output << "(";
-		expression_->GenerateCode(output);
-		output << ")++";
 		break;
 	case UnaryExpression::DEC_AFTER:
 		output << "(";
-		expression_->GenerateCode(output);
-		output << ")--";
 		break;
 	case UnaryExpression::REFERENCE:
 		output << "&(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::DEREFERENCE:
 		output << "*(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::MINUS:
 		output << "-(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::NOT_BIT:
 		output << "~(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	case UnaryExpression::NOT:
 		output << "!(";
-		expression_->GenerateCode(output);
-		output << ")";
 		break;
 	default:
 		break;
 	}
+	expression_->GenerateCode(output, indentations);
+	output << ")";
 }
 
 BinaryExpression::BinaryExpression(Expression* left, Expression* right, Operator binary_operator):
@@ -113,21 +104,21 @@ BinaryExpression::BinaryExpression(Expression* left, Expression* right, Operator
 
 }
 
-void BinaryExpression::GenerateCode(ostream& output) {
+void BinaryExpression::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Operator binary_operator_;
 	Expression* left_;
 	Expression* right_;*/
 	if(binary_operator_ == BinaryExpression::INDEX)
 	{
-		left_->GenerateCode(output);
+		left_->GenerateCode(output, indentations);
 		output << "[";
-		right_->GenerateCode(output);
+		right_->GenerateCode(output, indentations);
 		output << "]";
 		return;
 	}
 
-	left_->GenerateCode(output);
+	left_->GenerateCode(output, indentations);
 	switch (binary_operator_)
 	{
 		case BinaryExpression::ADD:
@@ -193,7 +184,7 @@ void BinaryExpression::GenerateCode(ostream& output) {
 		default:
 			break;
 	}
-	right_->GenerateCode(output);
+	right_->GenerateCode(output, indentations);
 }
 
 AssignmentExpression::AssignmentExpression(Expression *left, Expression *right, Operator assignment_operator):
@@ -203,12 +194,12 @@ AssignmentExpression::AssignmentExpression(Expression *left, Expression *right, 
 
 }
 
-void AssignmentExpression::GenerateCode(ostream& output) {
+void AssignmentExpression::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Operator assignment_operator_;
 	Expression *unary_expression_;
 	Expression *assignment_expression_;*/
-	unary_expression_->GenerateCode(output);
+	unary_expression_->GenerateCode(output, indentations);
 	switch (assignment_operator_)
 	{
 	case AssignmentExpression::ASSIGN:
@@ -247,46 +238,50 @@ void AssignmentExpression::GenerateCode(ostream& output) {
 	default:
 		break;
 	}
-	assignment_expression_->GenerateCode(output);
+	assignment_expression_->GenerateCode(output, indentations);
 }
 
 void StatementsBlock::PushStatement(Statement *statement) {
 	this->statements_.push_back(statement);
 }
 
-void StatementsBlock::GenerateCode(ostream& output) {
+void StatementsBlock::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*std::vector<Statement*> statements_;
 	Expression* init_value;*/
+	PrintTabs(output, indentations - 1);
 	output << "{" << endl;
 	for(auto iter = this->statements_.begin(); iter != this->statements_.end(); iter++)
 	{
-		(*iter)->GenerateCode(output);
+		(*iter)->GenerateCode(output, indentations);
 	}
+	PrintTabs(output, indentations - 1);
 	output << "}" << endl;
 	//this->init_value->GenerateCode(output);
 }
 
-IfStatement::IfStatement(Expression *condition, Statement *then_statement, Statement *else_statement /* = NULL */) {
+IfStatement::IfStatement(Expression *condition, Statement *then_statement, Statement *else_statement /* = nullptr */) {
 	this->condition_ = condition;
 	this->then_statement_ = then_statement;
 	this->else_statement_ = then_statement_;
 }
 
-void IfStatement::GenerateCode(ostream& output) {
+void IfStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Expression* condition_;
 	Statement* then_statement_;
 	Statement* else_statement_;*/
-	output << "if(";
-	this->condition_->GenerateCode(output);
-	output << ")";
-	this->then_statement_->GenerateCode(output);
+	PrintTabs(output, indentations);
+	output << "if (";
+	this->condition_->GenerateCode(output, indentations + 1);
+	output << ")" << endl;
+	this->then_statement_->GenerateCode(output, indentations + 1);
 
-	if(else_statement_ != NULL)
+	if(else_statement_ != nullptr)
 	{
-		output << " else ";
-		this->else_statement_->GenerateCode(output);
+		PrintTabs(output, indentations);
+		output << "else " << endl;
+		this->else_statement_->GenerateCode(output, indentations + 1);
 	}
 }
 
@@ -294,8 +289,9 @@ JumpStatement::JumpStatement(JumpType jump_type) {
 	this->type_ = jump_type;
 }
 
-void JumpStatement::GenerateCode(ostream& output) {
+void JumpStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
+	PrintTabs(output, indentations);
 	switch (type_)
 	{
 	case JumpStatement::CONTINUE:
@@ -314,11 +310,12 @@ ReturnStatement::ReturnStatement(Expression* return_value):
 
 }
 
-void ReturnStatement::GenerateCode(ostream& output) {
+void ReturnStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	//Expression * return_value_;
+	PrintTabs(output, indentations);
 	output << "return ";
-	return_value_->GenerateCode(output);
+	return_value_->GenerateCode(output, indentations);
 	output << ";" << endl;
 }
 
@@ -328,61 +325,78 @@ WhileStatement::WhileStatement(Expression *condition, Statement *body, bool has_
 	this->has_do_ = has_do;
 }
 
-void WhileStatement::GenerateCode(ostream& output) {
+void WhileStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Expression* condition_;
 	Statement* body_;
 	bool has_do_;*/
 	if(has_do_)
 	{
-		output << "do{"<<endl;
-		body_->GenerateCode(output);
-		output << "while(";
-		condition_->GenerateCode(output);
+		PrintTabs(output, indentations);
+		output << "do {" << endl;
+		body_->GenerateCode(output, indentations + 1);
+		PrintTabs(output, indentations);
+		output << "while (";
+		condition_->GenerateCode(output, indentations);
 		output << ")";
 	}
 	else
 	{
-		output << "while(";
-		condition_->GenerateCode(output);
-		output << ")";
-		body_->GenerateCode(output);
+		PrintTabs(output, indentations);
+		output << "while (";
+		condition_->GenerateCode(output, indentations);
+		output << ")" << endl;
+		body_->GenerateCode(output, indentations + 1);
 	}
 }
 
-ForStatement::ForStatement(Statement* initializer, Expression* operation, Expression* condition, Statement* body) {
-	this->initializer_ = initializer;
+ForStatement::ForStatement(Expression* initializer, Expression* operation, Expression* condition, Statement* body) {
+	this->expression_initializer_ = initializer;
+	this->declaration_initializer_ = nullptr;
 	this->operation_ = operation;
 	this->condition_ = condition;
 	this->body_ = body;
 }
 
-void ForStatement::GenerateCode(std::ostream& output) {
+ForStatement::ForStatement(VariableDeclaration* initializer, Expression* operation, Expression* condition, Statement* body) {
+	this->expression_initializer_ = nullptr;
+	this->declaration_initializer_ = initializer;
+	this->operation_ = operation;
+	this->condition_ = condition;
+	this->body_ = body;
+}
+
+void ForStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Statement* initializer_;
 	Expression* operation_;
 	Expression* condition_;
 	Statement* body_;*/
-	output << "for(";
-	initializer_->GenerateCode(output);
+	PrintTabs(output, indentations);
+	output << "for (";
+	if (expression_initializer_ != nullptr)
+		expression_initializer_->GenerateCode(output, indentations);
+	else 
+		declaration_initializer_->GenerateCode(output, indentations);
 	output <<"; ";
-	condition_->GenerateCode(output);
+	condition_->GenerateCode(output, indentations);
 	output <<"; ";
-	operation_->GenerateCode(output);
-	output << ")";
-	body_->GenerateCode(output);
+	operation_->GenerateCode(output, indentations);
+	output << ")" << endl;
+	body_->GenerateCode(output, indentations + 1);
 }
 
 ExpressionStatement::ExpressionStatement(Expression *expression) {
 	this->expression_ = expression;
 }
 
-void ExpressionStatement::GenerateCode(ostream& output) {
+void ExpressionStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
-	if (this->expression_ != NULL) {
-		expression_->GenerateCode(output);
-		output << ";" << endl;
+	PrintTabs(output, indentations);
+	if (this->expression_ != nullptr) {
+		expression_->GenerateCode(output, indentations);
 	}
+	output << ";" << endl;
 }
 
 DeclarationStatement::DeclarationStatement(VariableDeclaration* declaration)
@@ -390,8 +404,9 @@ DeclarationStatement::DeclarationStatement(VariableDeclaration* declaration)
 
 }
 
-void DeclarationStatement::GenerateCode(std::ostream& output) {
-	this->declaration_->GenerateCode(output);
+void DeclarationStatement::GenerateCode(ostream& output, int indentations) {
+	PrintTabs(output, indentations);
+	this->declaration_->GenerateCode(output, indentations);
 	output << ";" << endl;
 }
 
@@ -400,11 +415,11 @@ void DeclarationStatement::PrintTree(std::ostream& output) {
 }
 
 VariableDeclaration::VariableDeclaration() {
-	this->identifier_ = NULL;
-	this->initializer_ = NULL;
+	this->identifier_ = nullptr;
+	this->initializer_ = nullptr;
 }
 
-void VariableDeclaration::GenerateCode(ostream& output) {
+void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*Identifier	*identifier_;
 	Type* type_;
@@ -412,11 +427,11 @@ void VariableDeclaration::GenerateCode(ostream& output) {
 	//TODO for Type
 
 	output << " ";
-	identifier_->GenerateCode(output);
-	if(initializer_ != NULL)
+	identifier_->GenerateCode(output, indentations);
+	if(initializer_ != nullptr)
 	{
 		output << " = ";
-		this->initializer_->GenerateCode(output);
+		this->initializer_->GenerateCode(output, indentations);
 	}
 }
 
@@ -425,7 +440,7 @@ FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<Var
 	this->arguments_ = arguments;
 }
 
-void FunctionDeclaration::GenerateCode(ostream& output) {
+void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yangs
 	/*	
 	Type* return_type_;
@@ -434,9 +449,10 @@ void FunctionDeclaration::GenerateCode(ostream& output) {
 	StatementsBlock *statements_;
 	*/
 	//修饰符
+	PrintTabs(output, indentations);
 	if(this->identifier_->getName() == "main")//main函数特殊处理
 	{
-		output << "public static void main(String[] args)";
+		output << "public static void main(String[] args)" << endl;
 	}
 	else
 	{
@@ -445,21 +461,21 @@ void FunctionDeclaration::GenerateCode(ostream& output) {
 		//TODO for type
 
 		//函数名
-		this->identifier_->GenerateCode(output);
+		this->identifier_->GenerateCode(output, indentations);
 
 		//参数列表
 		output << "(";
 		for(auto iter = this->arguments_->begin(); iter != this->arguments_->end(); iter++)
 		{
-			(*iter)->GenerateCode(output);
+			(*iter)->GenerateCode(output, indentations);
 			if(iter != this->arguments_->end()-1)
 				output << ", ";
 		}
-		output << ")";
+		output << ")" << endl;
 	}
 
 	//函数定义
-	this->statements_->GenerateCode(output);
+	this->statements_->GenerateCode(output, indentations + 1);
 }
 
 FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments) {
@@ -467,16 +483,16 @@ FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> 
 	this->arguments_ = arguments;
 }
 
-void FunctionCall::GenerateCode(ostream& output) {
+void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*	Identifier* identifier_;
 	std::vector<Expression*> *arguments_;*/
 	//special cases to be added
-	identifier_->GenerateCode(output);
+	identifier_->GenerateCode(output, indentations);
 	output << "(";
 	for(auto iter = arguments_->begin(); iter != arguments_->end(); iter++)
 	{
-		(*iter)->GenerateCode(output);
+		(*iter)->GenerateCode(output, indentations);
 		if(iter != arguments_->end() - 1)
 			output <<", ";
 	}
@@ -568,12 +584,12 @@ void IfStatement::PrintTree(ostream& output)
 	output << "IfStatement:" << endl;
 	printStr(output, "Condition:");
 	printNode(output, condition_);
-	if (then_statement_ != NULL)
+	if (then_statement_ != nullptr)
 	{
 		printStr(output, "then:");
 		printNode(output, then_statement_);
 	}
-	if (else_statement_ != NULL)
+	if (else_statement_ != nullptr)
 	{
 		printStr(output, "else:");
 		printNode(output, else_statement_);
@@ -616,7 +632,6 @@ void WhileStatement::PrintTree(ostream& output)
 void ForStatement::PrintTree(std::ostream& output) {
 	output << "ForStatement: " << endl;
 	printStr(output, "Initializer: ");
-	printNode(output, initializer_);
 	printStr(output, "Operation: ");
 	printNode(output, operation_);
 	printStr(output, "Condition: ");
@@ -628,7 +643,7 @@ void ForStatement::PrintTree(std::ostream& output) {
 void ExpressionStatement::PrintTree(ostream& output)
 {
 	output << "ExpressionStatement:" << endl;
-	if (this->expression_ != NULL) {
+	if (this->expression_ != nullptr) {
 		printNode(output, expression_);
 	} else {
 
@@ -645,7 +660,7 @@ void VariableDeclaration::PrintTree(ostream& output)
 	output << "VariableDeclaration: " << endl;
 //	printNode(output, &variable_type_);
 	printNode(output, identifier_);
-	if (initializer_ != NULL) printNode(output, initializer_);
+	if (initializer_ != nullptr) printNode(output, initializer_);
 }
 
 void FunctionDeclaration::PrintTree(ostream& output)
@@ -671,7 +686,7 @@ void FunctionCall::PrintTree(ostream& output)
 	printStr(output, "FunctionIdentifier:");
 	printNode(output, identifier_);
 	printStr(output, "FunctionArguments:");
-	if (arguments_ == NULL) return;
+	if (arguments_ == nullptr) return;
 	for (auto iter = arguments_->begin(); iter != arguments_->end(); iter ++)
 	{
 		printNode(output, *iter);

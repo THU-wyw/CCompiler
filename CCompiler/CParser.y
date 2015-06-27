@@ -16,10 +16,17 @@ Program* program;
 %parse-param { CParserDriver& driver }
 %lex-param { CParserDriver& driver }
 %code requires {
-	#include <vector>
-	#include "SyntaxNode.h"
-	#include "Type.h"
-	class CParserDriver;
+#ifdef _MSC_VER
+#pragma warning (push)
+#pragma warning (disable : 4005)
+#include <intsafe.h>
+#include <stdint.h>
+#pragma warning (pop)
+#endif
+#include <vector>
+#include "SyntaxNode.h"
+#include "Type.h"
+class CParserDriver;
 }
 
 %union {
@@ -184,7 +191,7 @@ expression
 	| '~' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT_BIT); }
 	| '!' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT); }
 	| identifier '(' argument_expression_list ')' { $$ = new FunctionCall($1, $3); }
-	| identifier '('')' { $$ = new FunctionCall($1, NULL); }
+	| identifier '('')' { $$ = new FunctionCall($1, nullptr); }
 	;
 
 argument_expression_list
@@ -281,7 +288,7 @@ direct_declarator
 		$$->set_identifier($1);
 	}
 	| direct_declarator '[' ']' {
-		$1->set_type(Type::CreateArrayType($1->get_type(), NULL));
+		$1->set_type(Type::CreateArrayType($1->get_type(), nullptr));
 		$$ = $1;
 	}
 	| direct_declarator '[' expression ']' {
@@ -339,7 +346,7 @@ initializer
 	;
 
 statement
-	: ';' { $$ = new ExpressionStatement(NULL); }
+	: ';' { $$ = new ExpressionStatement(nullptr); }
 	| compound_statement
 	| expression_statement
 	| if_statement
@@ -399,7 +406,7 @@ while_statement
 
 for_statement
 	: FOR '(' expression ';' expression ';' expression ')' statement {
-		$$ = new ForStatement(new ExpressionStatement($3), $5, $7, $9);
+		$$ = new ForStatement($3, $5, $7, $9);
 	}
 	| FOR '(' variable_declaration ';' expression ';' expression')' statement {
 		$$ = new ForStatement($3, $5, $7, $9);
@@ -421,7 +428,7 @@ return_statement
 		$$ = new ReturnStatement($2);
 	}
 	| RETURN ';' {
-		$$ = new ReturnStatement(NULL);
+		$$ = new ReturnStatement(nullptr);
 	}
 	;
 

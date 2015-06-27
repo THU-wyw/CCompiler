@@ -14,7 +14,7 @@ void test(string file)
 	fout.open(final_file);
 	CParserDriver parser_driver;
 	parser_driver.Parse(test_file);
-	parser_driver.get_program()->GenerateCode(fout);
+	parser_driver.GenerateCode(final_file);
 	fout.close();
 }
 int main(int argc, char **argv)
