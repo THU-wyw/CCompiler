@@ -4,7 +4,7 @@ using namespace std;
 void Program::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	PrintTabs(output, indentations);
-	output << "public class " << "ClassName" << "{" << endl;
+	output << "public class " << this->main_class_name_ << "{" << endl;
 	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output, indentations + 1);

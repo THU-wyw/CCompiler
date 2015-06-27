@@ -25,8 +25,10 @@ public:
 	void PushDeclaration(Declaration* declaration);
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
+	inline void set_main_class_name_(const std::string& class_name) { this->main_class_name_ = class_name; }
 private:
 	std::vector<std::unique_ptr<Declaration>> declarations_;
+	std::string main_class_name_;
 };
 
 class Expression: public SyntaxNode {

@@ -1,4 +1,4 @@
-public class ClassName{
+public class KMP{
     public static strlen( s)
     {
          i = 0;
