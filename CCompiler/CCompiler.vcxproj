@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="CParser.cpp" />
     <ClCompile Include="CParserDriver.cpp" />
+    <ClCompile Include="CParserException.cpp" />
     <ClCompile Include="CToken.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SyntaxNode.cpp" />
@@ -105,6 +106,7 @@
   <ItemGroup>
     <ClInclude Include="CParser.hpp" />
     <ClInclude Include="CParserDriver.h" />
+    <ClInclude Include="CParserException.h" />
     <ClInclude Include="SyntaxNode.h" />
     <ClInclude Include="Type.h" />
   </ItemGroup>

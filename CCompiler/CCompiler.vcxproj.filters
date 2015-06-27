@@ -44,6 +44,9 @@
     <ClCompile Include="CParserDriver.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CParserException.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SyntaxNode.h">
@@ -65,6 +68,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="position.hh">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CParserException.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

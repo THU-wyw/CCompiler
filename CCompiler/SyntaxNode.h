@@ -263,43 +263,43 @@ public:
 	VariableDeclaration();
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
-	inline void set_type(Type* type) { this->type_ = type; }
-	inline Type* get_type() { return this->type_; }
-	inline void set_basic_type(Type::BasicType basic_type) { this->type_->set_basic_type(basic_type); }
+	inline void AddArraySpecifier(Expression* expression) { this->type_ = Type::CreateArrayType(expression, type_.release()); }
+	inline void AddPointerSpecifier() { this->type_ = Type::CreatePointerType(type_.release()); }
+	inline void set_basic_type(Type::BasicType basic_type) { this->type_->SetRootType(basic_type); }
 	inline void set_initializer(Expression* initializer) { this->initializer_ = initializer; }
-	inline Identifier* get_identifier() { return identifier_; }
-	inline void set_identifier(Identifier* identifier) { this->identifier_ = identifier; }
-
+	inline void set_identifier(Identifier* identifier) { this->identifier_ = std::unique_ptr<Identifier>(identifier); }
+	void SetAsFunctionDeclaration(FunctionDeclaration& function);
 private:
-	Identifier	*identifier_;
-	Type* type_;
+	std::unique_ptr<Identifier> identifier_;
+	std::unique_ptr<Type> type_;
 	Expression *initializer_;
 };
 
 class FunctionDeclaration: public Declaration {
 public:
-	FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments);
-	inline void set_return_type(Type* return_type){ return_type_ = return_type; }
-	inline void set_body(Statement *body) { statements_ = static_cast<StatementsBlock*>(body); }
+	FunctionDeclaration(std::vector<VariableDeclaration*>& arguments);
+	inline void set_identifier(Identifier* identifier) { identifier_ = std::unique_ptr<Identifier>(identifier); }
+	inline void set_return_type(Type* return_type){ return_type_ = std::unique_ptr<Type>(return_type); }
+	inline void set_body(Statement *body) { statements_ = std::unique_ptr<StatementsBlock>(static_cast<StatementsBlock*>(body)); }
 
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Type* return_type_;
-	Identifier *identifier_;
-	std::vector<VariableDeclaration*> *arguments_;
-	StatementsBlock *statements_;
+	std::unique_ptr<Type> return_type_;
+	std::unique_ptr<Identifier> identifier_;
+	std::vector<std::unique_ptr<VariableDeclaration>> arguments_;
+	std::unique_ptr<StatementsBlock> statements_;
 };
 
 class FunctionCall: public Expression {
 public:
-	FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments);
+	FunctionCall(Identifier *function_name, std::vector<Expression *>& arguments);
 
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Identifier* identifier_;
-	std::vector<Expression*> *arguments_;
+	std::unique_ptr<Identifier> identifier_;
+	std::vector<std::unique_ptr<Expression>> arguments_;
 };
 #endif
 

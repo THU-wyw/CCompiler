@@ -190,8 +190,8 @@ expression
 	| '-' expression %prec UMINUS { $$ = new UnaryExpression($2, UnaryExpression::Operator::MINUS); }
 	| '~' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT_BIT); }
 	| '!' expression { $$ = new UnaryExpression($2, UnaryExpression::Operator::NOT); }
-	| identifier '(' argument_expression_list ')' { $$ = new FunctionCall($1, $3); }
-	| identifier '('')' { $$ = new FunctionCall($1, nullptr); }
+	| identifier '(' argument_expression_list ')' { $$ = new FunctionCall($1, *($3)); }
+	| identifier '('')' { $$ = new FunctionCall($1, std::vector<Expression *>()); }
 	;
 
 argument_expression_list
@@ -275,7 +275,7 @@ pointer
 declarator
 	: pointer direct_declarator {
 		for (int i = 0; i < $1; i++) {
-			$2->set_type(Type::CreatePointerType($2->get_type())); 
+			$2->AddPointerSpecifier(); 
 		}
 		$$ = $2;
 	}
@@ -284,15 +284,14 @@ declarator
 direct_declarator
 	: identifier {
 		$$ = new VariableDeclaration();
-		$$->set_type(Type::CreateBasicType());
 		$$->set_identifier($1);
 	}
 	| direct_declarator '[' ']' {
-		$1->set_type(Type::CreateArrayType($1->get_type(), nullptr));
+		$1->AddArraySpecifier(nullptr);
 		$$ = $1;
 	}
 	| direct_declarator '[' expression ']' {
-		$1->set_type(Type::CreateArrayType($1->get_type(), $3)); 
+		$1->AddArraySpecifier($3); 
 		$$ = $1;
 	};
 
@@ -305,12 +304,13 @@ direct_declarator
 */
 function_declarator
 	: declaration_specifiers declarator '(' parameter_list ')' {
-		$$ = new FunctionDeclaration($2->get_identifier(), $4);
-		$$->set_return_type($2->get_type());
+		$$ = new FunctionDeclaration(*($4));
+		$2->SetAsFunctionDeclaration(*$$);
+		delete $4;
 	}
 	| declaration_specifiers declarator '(' ')' {
-		$$ = new FunctionDeclaration($2->get_identifier(), new std::vector<VariableDeclaration*>());
-		$$->set_return_type($2->get_type());
+		$$ = new FunctionDeclaration(std::vector<VariableDeclaration*>());
+		$2->SetAsFunctionDeclaration(*$$);
 	}
 	;
 

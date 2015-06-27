@@ -1,13 +1,13 @@
 
 
-int strlen(char *s)
+int strlen(char s[])
 {
 	int i = 0;
 	for (i = 0; s[i] != 0; i++);
 	return i;
 }
 
-void get_next( char* t, int next[] )
+void get_next( char t[], int next[] )
 {
 	int tlen;
 	int i = 1, j = 0;
@@ -27,7 +27,7 @@ void get_next( char* t, int next[] )
 	}
 }
 
-int Index_KMP( char* s, char* t, int pos )
+int Index_KMP( char s[], char t[], int pos )
 {
 	int slen, tlen, i, j;
 	int next[100];

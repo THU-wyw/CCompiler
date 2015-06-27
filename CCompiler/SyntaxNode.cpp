@@ -420,6 +420,7 @@ void DeclarationStatement::PrintTree(std::ostream& output) {
 VariableDeclaration::VariableDeclaration()
 	: identifier_(nullptr),
 	initializer_(nullptr) {
+	this->type_ = Type::CreateBasicType();
 }
 
 void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
@@ -428,7 +429,7 @@ void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
 	Type* type_;
 	Expression *initializer_;*/
 	//TODO for Type
-
+	type_->PrintTypeName(output);
 	output << " ";
 	identifier_->GenerateCode(output, indentations);
 	if(initializer_ != nullptr)
@@ -438,9 +439,15 @@ void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
 	}
 }
 
-FunctionDeclaration::FunctionDeclaration(Identifier *identifier, std::vector<VariableDeclaration*> *arguments) {
-	this->identifier_ = identifier;
-	this->arguments_ = arguments;
+void VariableDeclaration::SetAsFunctionDeclaration(FunctionDeclaration& function) {
+	function.set_return_type(this->type_.release());
+	function.set_identifier(this->identifier_.release());
+}
+
+FunctionDeclaration::FunctionDeclaration(std::vector<VariableDeclaration*>& arguments) {
+	for (auto argument: arguments) {
+		this->arguments_.push_back(unique_ptr<VariableDeclaration>(argument));
+	}
 }
 
 void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
@@ -468,10 +475,10 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 
 		//参数列表
 		output << "(";
-		for(auto iter = this->arguments_->begin(); iter != this->arguments_->end(); iter++)
+		for(auto iter = this->arguments_.begin(); iter != this->arguments_.end(); iter++)
 		{
 			(*iter)->GenerateCode(output, indentations);
-			if(iter != this->arguments_->end()-1)
+			if(iter != this->arguments_.end()-1)
 				output << ", ";
 		}
 		output << ")" << endl;
@@ -481,9 +488,11 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 	this->statements_->GenerateCode(output, indentations + 1);
 }
 
-FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *> *arguments) {
-	this->identifier_ = function_name;
-	this->arguments_ = arguments;
+FunctionCall::FunctionCall(Identifier *function_name, std::vector<Expression *>& arguments) {
+	this->identifier_ = unique_ptr<Identifier>(function_name);
+	for (auto argument: arguments) {
+		this->arguments_.push_back(unique_ptr<Expression>(argument));
+	}
 }
 
 void FunctionCall::GenerateCode(ostream& output, int indentations) {
@@ -493,10 +502,10 @@ void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	//special cases to be added
 	identifier_->GenerateCode(output, indentations);
 	output << "(";
-	for(auto iter = arguments_->begin(); iter != arguments_->end(); iter++)
+	for(auto iter = arguments_.begin(); iter != arguments_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output, indentations);
-		if(iter != arguments_->end() - 1)
+		if(iter != arguments_.end() - 1)
 			output <<", ";
 	}
 	output << ")";
@@ -712,8 +721,7 @@ void FunctionDeclaration::PrintTree(ostream& output)
 	identifier_->PrintTree(output);
 	tabs --;
 	printStr(output, "FunctionArguments:");
-	vector<VariableDeclaration*>::iterator iter;
-	for (iter = arguments_->begin(); iter != arguments_->end(); iter++)
+	for (auto iter = arguments_.begin(); iter != arguments_.end(); iter++)
 	{
 		tabs ++; printTabs(output);
 		(*iter)->PrintTree(output);
@@ -733,8 +741,7 @@ void FunctionCall::PrintTree(ostream& output)
 	identifier_->PrintTree(output);
 	tabs --;
 	printStr(output, "FunctionArguments:");
-	if (arguments_ == nullptr) return;
-	for (auto iter = arguments_->begin(); iter != arguments_->end(); iter ++)
+	for (auto iter = arguments_.begin(); iter != arguments_.end(); iter ++)
 	{
 		tabs ++; printTabs(output);
 		(*iter)->PrintTree(output);

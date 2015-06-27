@@ -715,13 +715,13 @@ namespace yy {
   case 49:
 /* Line 670 of lalr1.cc  */
 #line 193 "CParser.y"
-    { (yyval.expression) = new FunctionCall((yysemantic_stack_[(4) - (1)].identifier), (yysemantic_stack_[(4) - (3)].expression_list)); }
+    { (yyval.expression) = new FunctionCall((yysemantic_stack_[(4) - (1)].identifier), *((yysemantic_stack_[(4) - (3)].expression_list))); }
     break;
 
   case 50:
 /* Line 670 of lalr1.cc  */
 #line 194 "CParser.y"
-    { (yyval.expression) = new FunctionCall((yysemantic_stack_[(3) - (1)].identifier), nullptr); }
+    { (yyval.expression) = new FunctionCall((yysemantic_stack_[(3) - (1)].identifier), std::vector<Expression *>()); }
     break;
 
   case 51:
@@ -815,7 +815,7 @@ namespace yy {
 #line 276 "CParser.y"
     {
 		for (int i = 0; i < (yysemantic_stack_[(2) - (1)].number); i++) {
-			(yysemantic_stack_[(2) - (2)].variable_declaration)->set_type(Type::CreatePointerType((yysemantic_stack_[(2) - (2)].variable_declaration)->get_type())); 
+			(yysemantic_stack_[(2) - (2)].variable_declaration)->AddPointerSpecifier(); 
 		}
 		(yyval.variable_declaration) = (yysemantic_stack_[(2) - (2)].variable_declaration);
 	}
@@ -826,35 +826,35 @@ namespace yy {
 #line 285 "CParser.y"
     {
 		(yyval.variable_declaration) = new VariableDeclaration();
-		(yyval.variable_declaration)->set_type(Type::CreateBasicType());
 		(yyval.variable_declaration)->set_identifier((yysemantic_stack_[(1) - (1)].identifier));
 	}
     break;
 
   case 67:
 /* Line 670 of lalr1.cc  */
-#line 290 "CParser.y"
+#line 289 "CParser.y"
     {
-		(yysemantic_stack_[(3) - (1)].variable_declaration)->set_type(Type::CreateArrayType((yysemantic_stack_[(3) - (1)].variable_declaration)->get_type(), nullptr));
+		(yysemantic_stack_[(3) - (1)].variable_declaration)->AddArraySpecifier(nullptr);
 		(yyval.variable_declaration) = (yysemantic_stack_[(3) - (1)].variable_declaration);
 	}
     break;
 
   case 68:
 /* Line 670 of lalr1.cc  */
-#line 294 "CParser.y"
+#line 293 "CParser.y"
     {
-		(yysemantic_stack_[(4) - (1)].variable_declaration)->set_type(Type::CreateArrayType((yysemantic_stack_[(4) - (1)].variable_declaration)->get_type(), (yysemantic_stack_[(4) - (3)].expression))); 
+		(yysemantic_stack_[(4) - (1)].variable_declaration)->AddArraySpecifier((yysemantic_stack_[(4) - (3)].expression)); 
 		(yyval.variable_declaration) = (yysemantic_stack_[(4) - (1)].variable_declaration);
 	}
     break;
 
   case 69:
 /* Line 670 of lalr1.cc  */
-#line 307 "CParser.y"
+#line 306 "CParser.y"
     {
-		(yyval.function_declaration) = new FunctionDeclaration((yysemantic_stack_[(5) - (2)].variable_declaration)->get_identifier(), (yysemantic_stack_[(5) - (4)].variable_declaration_list));
-		(yyval.function_declaration)->set_return_type((yysemantic_stack_[(5) - (2)].variable_declaration)->get_type());
+		(yyval.function_declaration) = new FunctionDeclaration(*((yysemantic_stack_[(5) - (4)].variable_declaration_list)));
+		(yysemantic_stack_[(5) - (2)].variable_declaration)->SetAsFunctionDeclaration(*(yyval.function_declaration));
+		delete (yysemantic_stack_[(5) - (4)].variable_declaration_list);
 	}
     break;
 
@@ -862,8 +862,8 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 311 "CParser.y"
     {
-		(yyval.function_declaration) = new FunctionDeclaration((yysemantic_stack_[(4) - (2)].variable_declaration)->get_identifier(), new std::vector<VariableDeclaration*>());
-		(yyval.function_declaration)->set_return_type((yysemantic_stack_[(4) - (2)].variable_declaration)->get_type());
+		(yyval.function_declaration) = new FunctionDeclaration(std::vector<VariableDeclaration*>());
+		(yysemantic_stack_[(4) - (2)].variable_declaration)->SetAsFunctionDeclaration(*(yyval.function_declaration));
 	}
     break;
 
@@ -1848,7 +1848,7 @@ namespace yy {
      174,   175,   176,   177,   178,   179,   180,   181,   182,   183,
      184,   185,   186,   187,   188,   189,   190,   191,   192,   193,
      194,   198,   199,   212,   228,   237,   241,   256,   257,   264,
-     265,   266,   267,   271,   272,   276,   285,   290,   294,   307,
+     265,   266,   267,   271,   272,   276,   285,   289,   293,   306,
      311,   318,   322,   329,   337,   341,   349,   350,   351,   352,
      353,   354,   355,   356,   357,   361,   367,   371,   379,   383,
      389,   392,   398,   401,   408,   411,   418,   421,   427,   430,
