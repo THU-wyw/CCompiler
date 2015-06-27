@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 #include "Type.h"
 
 class VariableDeclaration;
@@ -25,7 +26,7 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	std::vector<Declaration*> declarations_;
+	std::vector<std::unique_ptr<Declaration>> declarations_;
 };
 
 class Expression: public SyntaxNode {
@@ -83,10 +84,9 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Expression* expression_;
+	std::unique_ptr<Expression> expression_;
 	//possible value : _--, _++, --_, ++_, &, *, +, -, ~, !
 	Operator unary_operator_;
-
 };
 
 class BinaryExpression: public Expression {
@@ -122,8 +122,8 @@ private:
 	// possible value : +, -, *, /, %, [], ., ->, <<, >>, <, >, <=, >=, 
 	//                  ==, !=, &, ^, |, &&, ||
 	Operator binary_operator_;
-	Expression* left_;
-	Expression* right_;
+	std::unique_ptr<Expression> left_;
+	std::unique_ptr<Expression> right_;
 };
 
 class AssignmentExpression: public Expression {
@@ -147,26 +147,9 @@ public:
 	virtual void PrintTree(std::ostream& output);
 private:
 	Operator assignment_operator_;
-	Expression *unary_expression_;
-	Expression *assignment_expression_;
+	std::unique_ptr<Expression> unary_expression_;
+	std::unique_ptr<Expression> assignment_expression_;
 };
-
-//class VariableType: public SyntaxNode {
-//public:
-//	enum Type{
-//		VOID,
-//		CHAR,
-//		INT,
-//		FLOAT
-//	};
-//	VariableType():type(VOID), pointer(0){}
-//	Type type;
-//	int pointer;
-//	std::vector<Expression *> array;
-//
-//	virtual void GenerateCode(std::ostream& output, int indentations);
-//	virtual void PrintTree(std::ostream& output);
-//};
 
 class Statement: public SyntaxNode {
 public:
@@ -181,8 +164,8 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	std::vector<Statement*> statements_;
-	Expression* init_value;
+	std::vector<std::unique_ptr<Statement>> statements_;
+	std::unique_ptr<Expression> init_value;
 };
 
 class IfStatement: public Statement {
@@ -192,9 +175,9 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Expression* condition_;
-	Statement* then_statement_;
-	Statement* else_statement_;
+	std::unique_ptr<Expression> condition_;
+	std::unique_ptr<Statement> then_statement_;
+	std::unique_ptr<Statement> else_statement_;
 };
 
 class JumpStatement: public Statement {
@@ -217,7 +200,7 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Expression * return_value_;
+	std::unique_ptr<Expression> return_value_;
 };
 
 class WhileStatement: public Statement {
@@ -227,8 +210,8 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Expression* condition_;
-	Statement* body_;
+	std::unique_ptr<Expression> condition_;
+	std::unique_ptr<Statement> body_;
 	bool has_do_;
 };
 
@@ -240,11 +223,11 @@ public:
 	virtual void PrintTree(std::ostream& output);
 
 private:
-	Expression* expression_initializer_;
-	VariableDeclaration* declaration_initializer_;
-	Expression* operation_;
-	Expression* condition_;
-	Statement* body_;
+	std::unique_ptr<Expression> expression_initializer_;
+	std::unique_ptr<VariableDeclaration> declaration_initializer_;
+	std::unique_ptr<Expression> operation_;
+	std::unique_ptr<Expression> condition_;
+	std::unique_ptr<Statement> body_;
 };
 
 class ExpressionStatement: public Statement {
@@ -254,7 +237,7 @@ public:
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:
-	Expression* expression_;
+	std::unique_ptr<Expression> expression_;
 };
 
 class DeclarationStatement: public Statement {
@@ -264,7 +247,7 @@ public:
 	virtual void PrintTree(std::ostream& output);
 
 private:
-	VariableDeclaration* declaration_;
+	std::unique_ptr<VariableDeclaration> declaration_;
 };
 
 class Declaration : public Statement {

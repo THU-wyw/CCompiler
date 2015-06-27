@@ -18,7 +18,7 @@ void SyntaxNode::PrintTabs(std::ostream& output, int tabs) {
 }
 
 void Program::PushDeclaration(Declaration* declaration) {
-	this->declarations_.push_back(declaration);
+	this->declarations_.push_back(unique_ptr<Declaration>(declaration));
 }
 
 Identifier::Identifier(std::string& name): name_(name) {
@@ -242,7 +242,7 @@ void AssignmentExpression::GenerateCode(ostream& output, int indentations) {
 }
 
 void StatementsBlock::PushStatement(Statement *statement) {
-	this->statements_.push_back(statement);
+	this->statements_.push_back(unique_ptr<Statement>(statement));
 }
 
 void StatementsBlock::GenerateCode(ostream& output, int indentations) {
@@ -260,10 +260,10 @@ void StatementsBlock::GenerateCode(ostream& output, int indentations) {
 	//this->init_value->GenerateCode(output);
 }
 
-IfStatement::IfStatement(Expression *condition, Statement *then_statement, Statement *else_statement /* = nullptr */) {
-	this->condition_ = condition;
-	this->then_statement_ = then_statement;
-	this->else_statement_ = then_statement_;
+IfStatement::IfStatement(Expression *condition, Statement *then_statement, Statement *else_statement /* = nullptr */)
+	: condition_(condition),
+	then_statement_(then_statement),
+	else_statement_(else_statement) {
 }
 
 void IfStatement::GenerateCode(ostream& output, int indentations) {
@@ -277,7 +277,7 @@ void IfStatement::GenerateCode(ostream& output, int indentations) {
 	output << ")" << endl;
 	this->then_statement_->GenerateCode(output, indentations + 1);
 
-	if(else_statement_ != nullptr)
+	if(else_statement_)
 	{
 		PrintTabs(output, indentations);
 		output << "else " << endl;
@@ -314,15 +314,18 @@ void ReturnStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	//Expression * return_value_;
 	PrintTabs(output, indentations);
-	output << "return ";
-	return_value_->GenerateCode(output, indentations);
+	output << "return";
+	if (return_value_) {
+		output << " ";
+		return_value_->GenerateCode(output, indentations);
+	}
 	output << ";" << endl;
 }
 
-WhileStatement::WhileStatement(Expression *condition, Statement *body, bool has_do /* = false */) {
-	this->condition_ = condition;
-	this->body_ = body;
-	this->has_do_ = has_do;
+WhileStatement::WhileStatement(Expression *condition, Statement *body, bool has_do /* = false */)
+	: condition_(condition),
+	body_(body),
+	has_do_(has_do) {
 }
 
 void WhileStatement::GenerateCode(ostream& output, int indentations) {
@@ -350,20 +353,20 @@ void WhileStatement::GenerateCode(ostream& output, int indentations) {
 	}
 }
 
-ForStatement::ForStatement(Expression* initializer, Expression* operation, Expression* condition, Statement* body) {
-	this->expression_initializer_ = initializer;
-	this->declaration_initializer_ = nullptr;
-	this->operation_ = operation;
-	this->condition_ = condition;
-	this->body_ = body;
+ForStatement::ForStatement(Expression* initializer, Expression* operation, Expression* condition, Statement* body)
+	: expression_initializer_(initializer),
+	declaration_initializer_(nullptr),
+	operation_(operation),
+	condition_(condition),
+	body_(body) {
 }
 
-ForStatement::ForStatement(VariableDeclaration* initializer, Expression* operation, Expression* condition, Statement* body) {
-	this->expression_initializer_ = nullptr;
-	this->declaration_initializer_ = initializer;
-	this->operation_ = operation;
-	this->condition_ = condition;
-	this->body_ = body;
+ForStatement::ForStatement(VariableDeclaration* initializer, Expression* operation, Expression* condition, Statement* body)
+	: expression_initializer_(nullptr),
+	declaration_initializer_(initializer),
+	operation_(operation),
+	condition_(condition),
+	body_(body) {
 }
 
 void ForStatement::GenerateCode(ostream& output, int indentations) {
@@ -386,14 +389,14 @@ void ForStatement::GenerateCode(ostream& output, int indentations) {
 	body_->GenerateCode(output, indentations + 1);
 }
 
-ExpressionStatement::ExpressionStatement(Expression *expression) {
-	this->expression_ = expression;
+ExpressionStatement::ExpressionStatement(Expression *expression)
+	: expression_(expression) {
 }
 
 void ExpressionStatement::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	PrintTabs(output, indentations);
-	if (this->expression_ != nullptr) {
+	if (expression_) {
 		expression_->GenerateCode(output, indentations);
 	}
 	output << ";" << endl;
@@ -414,9 +417,9 @@ void DeclarationStatement::PrintTree(std::ostream& output) {
 
 }
 
-VariableDeclaration::VariableDeclaration() {
-	this->identifier_ = nullptr;
-	this->initializer_ = nullptr;
+VariableDeclaration::VariableDeclaration()
+	: identifier_(nullptr),
+	initializer_(nullptr) {
 }
 
 void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
@@ -526,10 +529,11 @@ void printStr(ostream& output, string s)
 void Program::PrintTree(ostream& output)
 {
 	output << "Program" << endl;
-	vector<Declaration*>::iterator iter;
-	for (iter = declarations_.begin(); iter != declarations_.end(); iter++)
+	for (auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
-		printNode(output, (*iter));
+		tabs ++; printTabs(output);
+		(*iter)->PrintTree(output);
+		tabs --;
 	}
 }
 
@@ -551,31 +555,40 @@ void StringLiteral::PrintTree(ostream& output)
 void UnaryExpression::PrintTree(ostream& output)
 {
 	output << "UnaryExpression: " << unary_operator_ << endl;
-	printNode(output, expression_);
+	tabs ++; printTabs(output);
+	expression_->PrintTree(output);
+	tabs --;
 }
 
 void BinaryExpression::PrintTree(ostream& output)
 {
 	output << "BinaryExpression: " << binary_operator_ << endl;
-	printNode(output, left_);
-	printNode(output, right_);
+	tabs ++; printTabs(output);
+	left_->PrintTree(output);
+	printTabs(output);
+	right_->PrintTree(output);
+	tabs --;
 }
 
 void AssignmentExpression::PrintTree(ostream& output)
 {
 	output << "AssignmentExpression: " << assignment_operator_ << endl;
-	printNode(output, unary_expression_);
-	printNode(output, assignment_expression_);
+	tabs ++; printTabs(output);
+	unary_expression_->PrintTree(output);
+	printTabs(output);
+	assignment_expression_->PrintTree(output);
+	tabs --;
 }
 
 
 void StatementsBlock::PrintTree(ostream& output)
 {
 	output << "StatementsBlock:" << endl;
-	vector<Statement*>::iterator iter;
-	for (iter = statements_.begin(); iter != statements_.end(); iter++)
+	for (auto iter = statements_.begin(); iter != statements_.end(); iter++)
 	{
-		printNode(output, *iter);
+		tabs ++; printTabs(output);
+		(*iter)->PrintTree(output);
+		tabs --;
 	}
 }
 
@@ -583,16 +596,22 @@ void IfStatement::PrintTree(ostream& output)
 {
 	output << "IfStatement:" << endl;
 	printStr(output, "Condition:");
-	printNode(output, condition_);
+	tabs ++; printTabs(output);
+	condition_->PrintTree(output);
+	tabs --;
 	if (then_statement_ != nullptr)
 	{
 		printStr(output, "then:");
-		printNode(output, then_statement_);
+		tabs ++; printTabs(output);
+		then_statement_->PrintTree(output);
+		tabs --;
 	}
 	if (else_statement_ != nullptr)
 	{
 		printStr(output, "else:");
-		printNode(output, else_statement_);
+		tabs ++; printTabs(output);
+		else_statement_->PrintTree(output);
+		tabs --;
 	}
 }
 
@@ -617,34 +636,48 @@ void JumpStatement::PrintTree(ostream& output)
 void ReturnStatement::PrintTree(ostream& output)
 {
 	output << "ReturnStatement: " << endl;
-	printNode(output, return_value_);
+	tabs ++; printTabs(output);
+	return_value_->PrintTree(output);
+	tabs --;
 }
 
 void WhileStatement::PrintTree(ostream& output)
 {
 	output << "WhileStatement: " << "(has_do: " << has_do_ << ")" << endl;
 	printStr(output, "Condition: ");
-	printNode(output, condition_);
+	tabs ++; printTabs(output);
+	condition_->PrintTree(output);
+	tabs --;
 	printStr(output, "LoopBody: ");
-	printNode(output, body_);
+	tabs ++; printTabs(output);
+	body_->PrintTree(output);
+	tabs --;
 }
 
 void ForStatement::PrintTree(std::ostream& output) {
 	output << "ForStatement: " << endl;
 	printStr(output, "Initializer: ");
 	printStr(output, "Operation: ");
-	printNode(output, operation_);
+	tabs ++; printTabs(output);
+	operation_->PrintTree(output);
+	tabs --;
 	printStr(output, "Condition: ");
-	printNode(output, condition_);
+	tabs ++; printTabs(output);
+	condition_->PrintTree(output);
+	tabs --;
 	printStr(output, "LoopBody: ");
-	printNode(output, body_);
+	tabs ++; printTabs(output);
+	body_->PrintTree(output);
+	tabs --;
 }
 
 void ExpressionStatement::PrintTree(ostream& output)
 {
 	output << "ExpressionStatement:" << endl;
 	if (this->expression_ != nullptr) {
-		printNode(output, expression_);
+		tabs ++; printTabs(output);
+		expression_->PrintTree(output);
+		tabs --;
 	} else {
 
 	}
@@ -658,9 +691,15 @@ void Declaration::PrintTree(ostream& output)
 void VariableDeclaration::PrintTree(ostream& output)
 {
 	output << "VariableDeclaration: " << endl;
-//	printNode(output, &variable_type_);
-	printNode(output, identifier_);
-	if (initializer_ != nullptr) printNode(output, initializer_);
+	//	printNode(output, &variable_type_);
+	tabs ++; printTabs(output);
+	identifier_->PrintTree(output);
+	tabs --;
+	if (initializer_ != nullptr) {
+		tabs ++; printTabs(output);
+		initializer_->PrintTree(output);
+		tabs --;
+	}
 }
 
 void FunctionDeclaration::PrintTree(ostream& output)
@@ -669,27 +708,37 @@ void FunctionDeclaration::PrintTree(ostream& output)
 	printStr(output, "ReturnType:");
 //	printNode(output, &return_type_);
 	printStr(output, "FunctionIdentifier:");
-	printNode(output, identifier_);
+	tabs ++; printTabs(output);
+	identifier_->PrintTree(output);
+	tabs --;
 	printStr(output, "FunctionArguments:");
 	vector<VariableDeclaration*>::iterator iter;
 	for (iter = arguments_->begin(); iter != arguments_->end(); iter++)
 	{
-		printNode(output, *iter);
+		tabs ++; printTabs(output);
+		(*iter)->PrintTree(output);
+		tabs --;
 	}
 	printStr(output, "FunctionStatement:");
-	printNode(output, statements_);
+	tabs ++; printTabs(output);
+	statements_->PrintTree(output);
+	tabs --;
 }
 
 void FunctionCall::PrintTree(ostream& output)
 {
 	output << "FunctionCall:" << endl;
 	printStr(output, "FunctionIdentifier:");
-	printNode(output, identifier_);
+	tabs ++; printTabs(output);
+	identifier_->PrintTree(output);
+	tabs --;
 	printStr(output, "FunctionArguments:");
 	if (arguments_ == nullptr) return;
 	for (auto iter = arguments_->begin(); iter != arguments_->end(); iter ++)
 	{
-		printNode(output, *iter);
+		tabs ++; printTabs(output);
+		(*iter)->PrintTree(output);
+		tabs --;
 	}
 
 }

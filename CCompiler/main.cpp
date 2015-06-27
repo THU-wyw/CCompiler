@@ -23,7 +23,9 @@ int main(int argc, char **argv)
 	//test("declaration");
 	//test("statement");
     //test("Palindrome");
+	unique_ptr<int> ptr = unique_ptr<int>(new int(4));
 	test("KMP");
+	cout << ptr;
 	//test("ExpressionEvaluation");
 	return 0;
 }

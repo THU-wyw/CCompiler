@@ -23,9 +23,9 @@ public class ClassName{
             }
             else 
             {
-                ++(i);
-                ++(j);
-                next[i] = j;
+                j = next[j];
+                if (j == 0)
+                    next[++(i)] = 0;
             }
         }
     }
@@ -35,14 +35,10 @@ public class ClassName{
          next;
         if (s == NULL || t == NULL)
             return -(1);
-        else 
-            return -(1);
         slen = strlen(s);
         tlen = strlen(t);
         get_next(t, next);
         if (tlen > slen || pos < 0 || pos > tlen - 1)
-            return -(1);
-        else 
             return -(1);
         i = pos;
         j = 0;
@@ -55,14 +51,16 @@ public class ClassName{
             }
             else 
             {
-                ++(i);
-                ++(j);
+                if (j == 0)
+                    ++(i);
+                else 
+                    j = next[j];
             }
         }
         if (j >= tlen)
             return i - tlen;
         else 
-            return i - tlen;
+            return 0;
     }
     public static void main(String[] args)
     {
