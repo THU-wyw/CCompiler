@@ -1,20 +1,25 @@
+%language "C++"
+%defines
+%define parser_class_name "CParser"
+
+%locations
 %{
 #include <stdio.h>
 #include <string>
+#include "CParserDriver.h"
 #include "SyntaxNode.h"
 
 Program* program;
-extern int yylex();
-void yyerror(const char*s) { 
-	printf("ERROR: %s\n", s); 
-}
 
 %}
 
+%parse-param { CParserDriver& driver }
+%lex-param { CParserDriver& driver }
 %code requires {
 	#include <vector>
 	#include "SyntaxNode.h"
 	#include "Type.h"
+	class CParserDriver;
 }
 
 %union {
@@ -113,9 +118,16 @@ void yyerror(const char*s) {
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
+
+%{
+
+extern int yylex(yy::CParser::semantic_type *yylval, 
+	yy::CParser::location_type *yylloc, CParserDriver& driver);
+%}
+
 %%
 program
-	: translation_unit { $$ = $1; program = $1; }
+	: translation_unit { $$ = $1; driver.set_program($1); }
 	;
 
 expression
@@ -441,3 +453,12 @@ function_declaration
 		$1->set_body($2);
 		$$ = $1;
 	}
+
+%%
+
+namespace yy
+{
+void CParser::error(location const& loc, const std::string& s) {
+	std::cerr << "error at " << loc << ": " << s << std::endl;
+}
+}

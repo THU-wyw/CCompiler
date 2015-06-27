@@ -41,6 +41,9 @@
     <ClCompile Include="Type.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CParserDriver.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SyntaxNode.h">
@@ -50,6 +53,18 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Type.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CParserDriver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="location.hh">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stack.hh">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="position.hh">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

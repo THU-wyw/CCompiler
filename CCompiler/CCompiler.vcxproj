@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CParser.cpp" />
+    <ClCompile Include="CParserDriver.cpp" />
     <ClCompile Include="CToken.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SyntaxNode.cpp" />
@@ -103,8 +104,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CParser.hpp" />
+    <ClInclude Include="CParserDriver.h" />
     <ClInclude Include="SyntaxNode.h" />
     <ClInclude Include="Type.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="location.hh">
+      <FileType>Document</FileType>
+    </ClInclude>
+    <ClInclude Include="position.hh">
+      <FileType>Document</FileType>
+    </ClInclude>
+    <ClInclude Include="stack.hh">
+      <FileType>Document</FileType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

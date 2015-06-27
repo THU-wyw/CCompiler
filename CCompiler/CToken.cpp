@@ -579,9 +579,14 @@ char *yytext;
 
 
 #line 6 "CToken.l"
-#include <stdio.h>
+#include <cstdio>
 #include "CParser.hpp"
+#include "CParserDriver.h"
 
+#define YY_DECL int yylex(yy::CParser::semantic_type *yylval,\
+	yy::CParser::location_type *yylloc,CParserDriver& driver)
+
+#define YY_USER_ACTION yylloc->columns(yyleng);
 struct Reference {
 	struct Reference *next;
 	char *filename;
@@ -599,9 +604,10 @@ struct BufferStack {
 	FILE* file;
 } *current_buffer_stack;
 
+typedef yy::CParser::token token;
 int NewFile(char *filename);
 int PopFile(void);
-#line 605 "CToken.cpp"
+#line 611 "CToken.cpp"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -785,9 +791,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 29 "CToken.l"
+#line 35 "CToken.l"
 
-#line 791 "CToken.cpp"
+#line 797 "CToken.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -874,7 +880,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 30 "CToken.l"
+#line 36 "CToken.l"
 
 	YY_BREAK
 case 2:
@@ -882,344 +888,344 @@ case 2:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 31 "CToken.l"
+#line 37 "CToken.l"
 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 32 "CToken.l"
-{ return CASE; }
+#line 38 "CToken.l"
+{ return token::CASE; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 33 "CToken.l"
-{ return DEFAULT; }
+#line 39 "CToken.l"
+{ return token::DEFAULT; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 34 "CToken.l"
-{ return IF; }
+#line 40 "CToken.l"
+{ return token::IF; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "CToken.l"
-{ return ELSE; }
+#line 41 "CToken.l"
+{ return token::ELSE; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 36 "CToken.l"
-{ return SWITCH; }
+#line 42 "CToken.l"
+{ return token::SWITCH; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 37 "CToken.l"
-{ return WHILE; }
+#line 43 "CToken.l"
+{ return token::WHILE; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 38 "CToken.l"
-{ return DO; }
+#line 44 "CToken.l"
+{ return token::DO; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 39 "CToken.l"
-{ return FOR; }
+#line 45 "CToken.l"
+{ return token::FOR; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 40 "CToken.l"
-{ return CONTINUE; }
+#line 46 "CToken.l"
+{ return token::CONTINUE; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 41 "CToken.l"
-{ return BREAK; }
+#line 47 "CToken.l"
+{ return token::BREAK; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 42 "CToken.l"
-{ return RETURN; }
+#line 48 "CToken.l"
+{ return token::RETURN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 43 "CToken.l"
-{ return CHAR; }
+#line 49 "CToken.l"
+{ return token::CHAR; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 44 "CToken.l"
-{ return INT; }
+#line 50 "CToken.l"
+{ return token::INT; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 45 "CToken.l"
-{ return FLOAT; }
+#line 51 "CToken.l"
+{ return token::FLOAT; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 46 "CToken.l"
-{ return CONST; }
+#line 52 "CToken.l"
+{ return token::CONST; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 47 "CToken.l"
-{ return VOID; }
+#line 53 "CToken.l"
+{ return token::VOID; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 48 "CToken.l"
+#line 54 "CToken.l"
 { return '{'; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 49 "CToken.l"
+#line 55 "CToken.l"
 { return '}'; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 50 "CToken.l"
+#line 56 "CToken.l"
 { return '['; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 51 "CToken.l"
+#line 57 "CToken.l"
 { return ']'; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 52 "CToken.l"
+#line 58 "CToken.l"
 { return '('; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 53 "CToken.l"
+#line 59 "CToken.l"
 { return ')'; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 54 "CToken.l"
-{ return INC_OP; }
+#line 60 "CToken.l"
+{ return token::INC_OP; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 55 "CToken.l"
-{ return DEC_OP; }
+#line 61 "CToken.l"
+{ return token::DEC_OP; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 56 "CToken.l"
-{ return PTR_OP; }
+#line 62 "CToken.l"
+{ return token::PTR_OP; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 57 "CToken.l"
-{ return ADD_ASSIGN; }
+#line 63 "CToken.l"
+{ return token::ADD_ASSIGN; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 58 "CToken.l"
-{ return SUB_ASSIGN; }
+#line 64 "CToken.l"
+{ return token::SUB_ASSIGN; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 59 "CToken.l"
-{ return MUL_ASSIGN; }
+#line 65 "CToken.l"
+{ return token::MUL_ASSIGN; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 60 "CToken.l"
-{ return DIV_ASSIGN; }
+#line 66 "CToken.l"
+{ return token::DIV_ASSIGN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 61 "CToken.l"
-{ return MOD_ASSIGN; }
+#line 67 "CToken.l"
+{ return token::MOD_ASSIGN; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 62 "CToken.l"
-{ return SHIFT_LEFT_ASSIGN; }
+#line 68 "CToken.l"
+{ return token::SHIFT_LEFT_ASSIGN; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 63 "CToken.l"
-{ return SHIFT_RIGHT_ASSIGN; }
+#line 69 "CToken.l"
+{ return token::SHIFT_RIGHT_ASSIGN; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 64 "CToken.l"
-{ return AND_ASSIGN; }
+#line 70 "CToken.l"
+{ return token::AND_ASSIGN; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 65 "CToken.l"
-{ return EXCLUSIVE_OR_ASSIGN; }
+#line 71 "CToken.l"
+{ return token::EXCLUSIVE_OR_ASSIGN; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 66 "CToken.l"
-{ return INCLUSIVE_OR_ASSIGN; }
+#line 72 "CToken.l"
+{ return token::INCLUSIVE_OR_ASSIGN; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 67 "CToken.l"
-{ return LE_OP; }
+#line 73 "CToken.l"
+{ return token::LE_OP; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 68 "CToken.l"
-{ return GE_OP; }
+#line 74 "CToken.l"
+{ return token::GE_OP; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 69 "CToken.l"
-{ return EQ_OP; }
+#line 75 "CToken.l"
+{ return token::EQ_OP; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 70 "CToken.l"
-{ return NE_OP; }
+#line 76 "CToken.l"
+{ return token::NE_OP; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 71 "CToken.l"
-{ return AND_OP; }
+#line 77 "CToken.l"
+{ return token::AND_OP; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 72 "CToken.l"
-{ return OR_OP; }
+#line 78 "CToken.l"
+{ return token::OR_OP; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 73 "CToken.l"
-{ return SHIFT_LEFT_OP; }
+#line 79 "CToken.l"
+{ return token::SHIFT_LEFT_OP; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 74 "CToken.l"
-{ return SHIFT_RIGHT_OP; }
+#line 80 "CToken.l"
+{ return token::SHIFT_RIGHT_OP; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 75 "CToken.l"
+#line 81 "CToken.l"
 { return '!'; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 76 "CToken.l"
+#line 82 "CToken.l"
 { return '+'; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 77 "CToken.l"
+#line 83 "CToken.l"
 { return '-'; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 78 "CToken.l"
+#line 84 "CToken.l"
 { return '*'; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 79 "CToken.l"
+#line 85 "CToken.l"
 { return '/'; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 80 "CToken.l"
+#line 86 "CToken.l"
 { return '%'; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 81 "CToken.l"
+#line 87 "CToken.l"
 { return '<'; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 82 "CToken.l"
+#line 88 "CToken.l"
 { return '>'; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 83 "CToken.l"
+#line 89 "CToken.l"
 { return ','; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 84 "CToken.l"
+#line 90 "CToken.l"
 { return '='; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 85 "CToken.l"
+#line 91 "CToken.l"
 { return ';'; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 86 "CToken.l"
+#line 92 "CToken.l"
 { return '&'; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 87 "CToken.l"
+#line 93 "CToken.l"
 { return '~'; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 88 "CToken.l"
+#line 94 "CToken.l"
 { return '.'; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 89 "CToken.l"
+#line 95 "CToken.l"
 { return '^'; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 90 "CToken.l"
+#line 96 "CToken.l"
 { return '|'; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 91 "CToken.l"
+#line 97 "CToken.l"
 { 
 									// printf("integer: %s\n", yytext); 
-									yylval.str = new std::string(yytext, yyleng);
-									return IMMEDIATE_INTEGER;
+									yylval->str = new std::string(yytext, yyleng);
+									return token::IMMEDIATE_INTEGER;
 								}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 96 "CToken.l"
+#line 102 "CToken.l"
 { 
 									// printf("identifier: %s\n", yytext); 
-									yylval.str = new std::string(yytext, yyleng);
-									return IDENTIFIER;
+									yylval->str = new std::string(yytext, yyleng);
+									return token::IDENTIFIER;
 								}
 	YY_BREAK
 case 64:
 /* rule 64 can match eol */
 YY_RULE_SETUP
-#line 101 "CToken.l"
+#line 107 "CToken.l"
 { 
 									// printf("string_literal: %s\n", yytext);
-									yylval.str = new std::string(yytext, yyleng);
-									return STRING_LITERAL; 
+									yylval->str = new std::string(yytext, yyleng);
+									return token::STRING_LITERAL; 
 								}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 106 "CToken.l"
+#line 112 "CToken.l"
 { BEGIN(IFILE); }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 107 "CToken.l"
+#line 113 "CToken.l"
 {
 									char c;
 									while ((c = yyinput()) && c != '\n');
-									yylineno++;
+									yylloc->lines(1);
 									if (NewFile(yytext) == 0) {
 										yyterminate();
 									}
@@ -1229,7 +1235,7 @@ YY_RULE_SETUP
 case 67:
 /* rule 67 can match eol */
 YY_RULE_SETUP
-#line 116 "CToken.l"
+#line 122 "CToken.l"
 {
 									fprintf(stderr, "%4d bad include line\n", yylineno);
 									yyterminate();
@@ -1238,42 +1244,42 @@ YY_RULE_SETUP
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(IFILE):
-#line 120 "CToken.l"
+#line 126 "CToken.l"
 { if(PopFile() == 0) yyterminate(); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 121 "CToken.l"
+#line 127 "CToken.l"
 { BEGIN(COMMENT); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 122 "CToken.l"
+#line 128 "CToken.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 70:
 /* rule 70 can match eol */
 YY_RULE_SETUP
-#line 123 "CToken.l"
+#line 129 "CToken.l"
 
 	YY_BREAK
 case 71:
 /* rule 71 can match eol */
 YY_RULE_SETUP
-#line 124 "CToken.l"
+#line 130 "CToken.l"
 
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 125 "CToken.l"
+#line 131 "CToken.l"
 { printf("no match: %s\n", yytext); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 126 "CToken.l"
+#line 132 "CToken.l"
 ECHO;
 	YY_BREAK
-#line 1277 "CToken.cpp"
+#line 1283 "CToken.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2268,7 +2274,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 125 "CToken.l"
+#line 131 "CToken.l"
 
 
 
@@ -2322,3 +2328,17 @@ int PopFile(void) {
 	return 1;
 }		
 
+void CParserDriver::ScanBegin() {
+	if (filename_.empty()) {
+		yyin = stdin;
+	}
+	else {
+		if (!(yyin = fopen(filename_.c_str(), "r"))) {
+			exit(1);
+		}
+	}
+}
+
+void CParserDriver::ScanEnd() {
+	fclose(yyin);
+}
