@@ -13,7 +13,9 @@ int primary_expression()
 {
 	_23ideNtifIer;
 	233333;
-	"StringLiteral";
+	"StringLiteral\n";
+	'a';
+	'\0';
 	(5);
 }
 

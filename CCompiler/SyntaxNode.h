@@ -69,6 +69,16 @@ private:
 	std::string value_;
 };
 
+class CharLiteral: public Expression {
+public:
+	CharLiteral(char value);
+	
+	virtual void GenerateCode(std::ostream& output, int indentations);
+	virtual void PrintTree(std::ostream& output);
+private:
+	char value_;
+};
+
 class UnaryExpression: public Expression {
 public:	
 	enum Operator {

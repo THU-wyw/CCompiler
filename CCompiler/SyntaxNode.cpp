@@ -46,12 +46,39 @@ void ImmediateInteger::GenerateCode(ostream& output, int indentations)
 }
 
 StringLiteral::StringLiteral(string& value): value_(value) {
-
+	
 }
 
 void StringLiteral::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	output << value_;
+}
+
+CharLiteral::CharLiteral(char value): value_(value) {
+
+}
+
+void CharLiteral::GenerateCode(ostream& output, int indentations) {	
+	//TODO for sister yuan yang
+	switch(value_)
+	{
+		case '\0':
+			output << "\\0"; break;
+		case '\n':
+			output << "\\n"; break;
+		case '\r':
+			output << "\\r"; break;
+		case '\t':
+			output << "\\t"; break;
+		case '\\':
+			output << "\\"; break;
+		case '\'':
+			output << "\'"; break;
+		case '\"':
+			output << "\""; break;
+		default:
+			output << value_; break;
+	}
 }
 
 UnaryExpression::UnaryExpression(Expression *expression, Operator unary_operator):
@@ -601,6 +628,11 @@ void ImmediateInteger::PrintTree(ostream& output)
 void StringLiteral::PrintTree(ostream& output)
 {
 	output << "StringLiteral: " << value_ << endl;
+}
+
+void CharLiteral::PrintTree(ostream& output)
+{
+	output << "CharLiteral: " << value_ << endl;
 }
 
 void UnaryExpression::PrintTree(ostream& output)
