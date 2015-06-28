@@ -62,7 +62,7 @@ void Type::PrintTypeName(ostream& output) {
 			output << "void";
 			break;
 		default:
-			throw new CParserException("Unsupported type.");
+			throw CParserException("Unsupported type.");
 			break;
 		}
 		return;
@@ -88,7 +88,7 @@ void Type::PrintArrayInitializer(std::ostream& output) {
 			output << "float";
 			break;
 		default:
-			throw new CParserException("Unsupported type.");
+			throw CParserException("Unsupported type.");
 			break;
 		}
 		return;
