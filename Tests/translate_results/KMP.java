@@ -75,11 +75,9 @@ public class KMP{
     {
         byte[] str = new byte[100];
         byte[] c = new byte[100];
-        System.out.print("请输入文本串：
-");
+        System.out.print("请输入文本串：");
         System.in.read(str);
-        System.out.print("请输入模式串：
-");
+        System.out.print("请输入模式串：");
         System.in.read(c);
         System.out.print(Index_KMP(str, c, 0));
         return;

@@ -1,7 +1,8 @@
 import java.io.IOException;
 
 public class expression{
-    public static int post_fix_expression(){
+    public static int post_fix_expression()
+    {
         a[5];
         a.b;
         c -> d;
@@ -11,17 +12,18 @@ public class expression{
         a();
     }
 
-    public static int primary_expression(){
+    public static int primary_expression()
+    {
         _23ideNtifIer;
         233333;
-        "StringLiteral
-";
+        "StringLiteral";
         a;
         \0;
         5;
     }
 
-    public static int unary_expression(){
+    public static int unary_expression()
+    {
         ++(x);
         --(y);
         &(a);
@@ -32,7 +34,8 @@ public class expression{
         !(d);
     }
 
-    public static int binary_expression(){
+    public static int binary_expression()
+    {
         a * b;
         a / b;
         a % b;
@@ -49,7 +52,8 @@ public class expression{
         a || b;
     }
 
-    public static int assignment_expression(){
+    public static int assignment_expression()
+    {
         a = b;
         a *= b;
         a /= b;

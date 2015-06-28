@@ -63,6 +63,7 @@ class StringLiteral: public Expression {
 public:
 	StringLiteral(std::string& value);
 	
+	static std::string ProcessESC(std::string &ori);
 	virtual void GenerateCode(std::ostream& output, int indentations);
 	virtual void PrintTree(std::ostream& output);
 private:

@@ -144,66 +144,12 @@ expression
 		delete $1;
 	}
 	| STRING_LITERAL {
-		std::string str = "";
-		char c;
-		for (std::size_t i = 0; i < $1->length(); i++)
-		{
-			if ((*$1)[i] == '\\')
-			{
-					switch((*$1)[++i])
-				{
-					case '0':
-						c = '\0'; break;
-					case 'n':
-						c = '\n'; break;
-					case 'r':
-						c = '\r'; break;
-					case 't':
-						c = '\t'; break;
-					case '\\':
-						c = '\\'; break;
-					case '\'':
-						c = '\''; break;
-					case '\"':
-						c = '\"'; break;
-					default:
-						break;
-				}
-			}
-			else c = (*$1)[i];
-			str += c;
-		}
-		$$ = new StringLiteral(str);
+		$$ = new StringLiteral(StringLiteral::ProcessESC(*$1));
 		delete $1;
 	}
 	| CHAR_LITERAL {
-		char c;
-		if ($1->length() == 3)
-			c = (*$1)[1];
-		else
-		{
-			char temp = (*$1)[2];
-			switch(temp)
-			{
-				case '0':
-					c = '\0'; break;
-				case 'n':
-					c = '\n'; break;
-				case 'r':
-					c = '\r'; break;
-				case 't':
-					c = '\t'; break;
-				case '\\':
-					c = '\\'; break;
-				case '\'':
-					c = '\''; break;
-				case '\"':
-					c = '\"'; break;
-				default:
-					break;
-			}
-		}
-		$$ = new CharLiteral(c);
+		std::string cstr = StringLiteral::ProcessESC(*$1);
+		$$ = new CharLiteral(cstr[1]);
 		delete $1;
 	}
 	| '(' expression ')' { $$ = $2; }

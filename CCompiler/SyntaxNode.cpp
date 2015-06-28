@@ -65,6 +65,65 @@ void StringLiteral::GenerateCode(ostream& output, int indentations) {
 	output << value_;
 }
 
+string StringLiteral::ProcessESC(string &ori)
+{
+	string result = "";
+	for (int i = 0; i < ori.length(); i++)
+	{
+		if (ori[i] == '\\')
+		{
+			i ++;
+			if (ori[i] >= '0' && ori[i] <= '9')
+			{
+				char temp = 0, counter = 0;
+				while (ori[i] >= '0' && ori[i] <= '9' && counter < 3)
+				{
+					temp = temp * 10 + ori[i] - '0';
+					i++;
+					counter ++;
+				}
+				result += temp;
+				i --;
+			}
+			else
+			{
+				switch (ori[i])
+				{
+				case '\'':
+					result += '\''; break;
+				case '\"':
+					result += '\"'; break;
+				case '\?':
+					result += '\?'; break;
+				case '\\':
+					result += '\\'; break;
+				case '\a':
+					result += '\a'; break;
+				case '\b':
+					result += '\b'; break;
+				case '\f':
+					result += '\f'; break;
+				case '\n':
+					result += '\n'; break;
+				case '\r':
+					result += '\r'; break;
+				case '\t':
+					result += '\t'; break;
+				case '\v':
+					result += '\v'; break;
+				default:
+					break;
+				}
+			}						
+		}
+		else
+		{
+			result += ori[i];
+		}
+	}
+	return result;
+}
+
 CharLiteral::CharLiteral(char value): value_(value) {
 
 }
