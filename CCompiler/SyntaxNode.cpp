@@ -269,7 +269,6 @@ void StatementsBlock::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*std::vector<Statement*> statements_;
 	Expression* init_value;*/
-	PrintTabs(output, indentations - 1);
 	output << "{" << endl;
 	for(auto iter = this->statements_.begin(); iter != this->statements_.end(); iter++)
 	{
@@ -294,13 +293,13 @@ void IfStatement::GenerateCode(ostream& output, int indentations) {
 	PrintTabs(output, indentations);
 	output << "if (";
 	this->condition_->GenerateCode(output, indentations + 1);
-	output << ")" << endl;
+	output << ")";
 	this->then_statement_->GenerateCode(output, indentations + 1);
 
 	if(else_statement_)
 	{
 		PrintTabs(output, indentations);
-		output << "else " << endl;
+		output << "else";
 		this->else_statement_->GenerateCode(output, indentations + 1);
 	}
 }
@@ -406,7 +405,7 @@ void ForStatement::GenerateCode(ostream& output, int indentations) {
 	operation_->GenerateCode(output, indentations);
 	output <<"; ";
 	condition_->GenerateCode(output, indentations);
-	output << ")" << endl;
+	output << ")";
 	body_->GenerateCode(output, indentations + 1);
 }
 
@@ -483,7 +482,7 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 	PrintTabs(output, indentations);
 	if(this->identifier_->getName() == "main")//main函数特殊处理
 	{
-		output << "public static void main(String[] args) throws IOException" << endl;
+		output << "public static void main(String[] args) throws IOException";
 		isInMainFunction = 1;
 	}
 	else
@@ -504,7 +503,7 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 			if(iter != this->arguments_.end()-1)
 				output << ", ";
 		}
-		output << ")" << endl;
+		output << ")";
 	}
 
 	//函数定义
