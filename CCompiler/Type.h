@@ -39,6 +39,7 @@ public:
 	void SetRootType(BasicType type);
 	inline Kind get_kind() { return kind_; }
 	void PrintTypeName(std::ostream& output);
+	void PrintArrayInitializer(std::ostream& output);
 private:
 	Kind kind_;
 	BasicType basic_type_;

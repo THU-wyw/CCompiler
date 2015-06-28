@@ -327,7 +327,6 @@ parameter_list
 
 parameter_declaration
 	: declaration_specifiers declarator {
-		std::cout << "parameter_declaration" << std::endl;
 		$2->set_basic_type($1);
 		$$ = $2;
 	}
@@ -369,7 +368,6 @@ block_item_list
 		//((StatementsBlock *)$$)->PushStatement($1);
 	}
 	| block_item_list block_item {
-		std::cout << "block_item_list" << std::endl;
 		((StatementsBlock *)$1)->PushStatement($2);
 		$$ = $1;
 	}

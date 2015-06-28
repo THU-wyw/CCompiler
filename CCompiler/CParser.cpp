@@ -889,7 +889,6 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 329 "CParser.y"
     {
-		std::cout << "parameter_declaration" << std::endl;
 		(yysemantic_stack_[(2) - (2)].variable_declaration)->set_basic_type((yysemantic_stack_[(2) - (1)].vt_t));
 		(yyval.variable_declaration) = (yysemantic_stack_[(2) - (2)].variable_declaration);
 	}
@@ -897,25 +896,25 @@ namespace yy {
 
   case 74:
 /* Line 670 of lalr1.cc  */
-#line 337 "CParser.y"
+#line 336 "CParser.y"
     { (yyval.identifier) = new Identifier(*(yysemantic_stack_[(1) - (1)].str)); }
     break;
 
   case 76:
 /* Line 670 of lalr1.cc  */
-#line 349 "CParser.y"
+#line 348 "CParser.y"
     { (yyval.statement) = new ExpressionStatement(nullptr); }
     break;
 
   case 84:
 /* Line 670 of lalr1.cc  */
-#line 357 "CParser.y"
+#line 356 "CParser.y"
     { (yyval.statement) = new DeclarationStatement((yysemantic_stack_[(2) - (1)].variable_declaration)); }
     break;
 
   case 85:
 /* Line 670 of lalr1.cc  */
-#line 361 "CParser.y"
+#line 360 "CParser.y"
     {
 		(yyval.statement) = (yysemantic_stack_[(3) - (2)].statement);
 	}
@@ -923,7 +922,7 @@ namespace yy {
 
   case 86:
 /* Line 670 of lalr1.cc  */
-#line 367 "CParser.y"
+#line 366 "CParser.y"
     {
 		(yyval.statement) = new StatementsBlock();
 		//((StatementsBlock *)$$)->PushStatement($1);
@@ -932,9 +931,8 @@ namespace yy {
 
   case 87:
 /* Line 670 of lalr1.cc  */
-#line 371 "CParser.y"
+#line 370 "CParser.y"
     {
-		std::cout << "block_item_list" << std::endl;
 		((StatementsBlock *)(yysemantic_stack_[(2) - (1)].statement))->PushStatement((yysemantic_stack_[(2) - (2)].statement));
 		(yyval.statement) = (yysemantic_stack_[(2) - (1)].statement);
 	}
@@ -942,7 +940,7 @@ namespace yy {
 
   case 89:
 /* Line 670 of lalr1.cc  */
-#line 383 "CParser.y"
+#line 381 "CParser.y"
     {
 		(yyval.statement) = new ExpressionStatement((yysemantic_stack_[(2) - (1)].expression));
 	}
@@ -950,7 +948,7 @@ namespace yy {
 
   case 90:
 /* Line 670 of lalr1.cc  */
-#line 389 "CParser.y"
+#line 387 "CParser.y"
     {
 		(yyval.statement) = new IfStatement((yysemantic_stack_[(5) - (3)].expression), (yysemantic_stack_[(5) - (5)].statement));
 	}
@@ -958,7 +956,7 @@ namespace yy {
 
   case 91:
 /* Line 670 of lalr1.cc  */
-#line 392 "CParser.y"
+#line 390 "CParser.y"
     {
 		(yyval.statement) = new IfStatement((yysemantic_stack_[(7) - (3)].expression), (yysemantic_stack_[(7) - (5)].statement), (yysemantic_stack_[(7) - (7)].statement));
 	}
@@ -966,7 +964,7 @@ namespace yy {
 
   case 92:
 /* Line 670 of lalr1.cc  */
-#line 398 "CParser.y"
+#line 396 "CParser.y"
     {
 		(yyval.statement) = new WhileStatement ((yysemantic_stack_[(5) - (3)].expression), (yysemantic_stack_[(5) - (5)].statement));
 	}
@@ -974,7 +972,7 @@ namespace yy {
 
   case 93:
 /* Line 670 of lalr1.cc  */
-#line 401 "CParser.y"
+#line 399 "CParser.y"
     {
 		(yyval.statement) = new WhileStatement ((yysemantic_stack_[(7) - (5)].expression), (yysemantic_stack_[(7) - (2)].statement), true);
 	}
@@ -982,7 +980,7 @@ namespace yy {
 
   case 94:
 /* Line 670 of lalr1.cc  */
-#line 408 "CParser.y"
+#line 406 "CParser.y"
     {
 		(yyval.statement) = new ForStatement((yysemantic_stack_[(9) - (3)].expression), (yysemantic_stack_[(9) - (5)].expression), (yysemantic_stack_[(9) - (7)].expression), (yysemantic_stack_[(9) - (9)].statement));
 	}
@@ -990,7 +988,7 @@ namespace yy {
 
   case 95:
 /* Line 670 of lalr1.cc  */
-#line 411 "CParser.y"
+#line 409 "CParser.y"
     {
 		(yyval.statement) = new ForStatement((yysemantic_stack_[(9) - (3)].variable_declaration), (yysemantic_stack_[(9) - (5)].expression), (yysemantic_stack_[(9) - (7)].expression), (yysemantic_stack_[(9) - (9)].statement));
 	}
@@ -998,7 +996,7 @@ namespace yy {
 
   case 96:
 /* Line 670 of lalr1.cc  */
-#line 418 "CParser.y"
+#line 416 "CParser.y"
     {
 		(yyval.statement) = new JumpStatement(JumpStatement::CONTINUE);
 	}
@@ -1006,7 +1004,7 @@ namespace yy {
 
   case 97:
 /* Line 670 of lalr1.cc  */
-#line 421 "CParser.y"
+#line 419 "CParser.y"
     {
 		(yyval.statement) = new JumpStatement(JumpStatement::BREAK);
 	}
@@ -1014,7 +1012,7 @@ namespace yy {
 
   case 98:
 /* Line 670 of lalr1.cc  */
-#line 427 "CParser.y"
+#line 425 "CParser.y"
     {
 		(yyval.statement) = new ReturnStatement((yysemantic_stack_[(3) - (2)].expression));
 	}
@@ -1022,7 +1020,7 @@ namespace yy {
 
   case 99:
 /* Line 670 of lalr1.cc  */
-#line 430 "CParser.y"
+#line 428 "CParser.y"
     {
 		(yyval.statement) = new ReturnStatement(nullptr);
 	}
@@ -1030,7 +1028,7 @@ namespace yy {
 
   case 100:
 /* Line 670 of lalr1.cc  */
-#line 440 "CParser.y"
+#line 438 "CParser.y"
     {
 		(yyval.program) = new Program();
 		(yyval.program)->PushDeclaration((yysemantic_stack_[(1) - (1)].declaration));
@@ -1039,7 +1037,7 @@ namespace yy {
 
   case 101:
 /* Line 670 of lalr1.cc  */
-#line 444 "CParser.y"
+#line 442 "CParser.y"
     {
 		(yyval.program)->PushDeclaration((yysemantic_stack_[(2) - (2)].declaration));
 	}
@@ -1047,7 +1045,7 @@ namespace yy {
 
   case 102:
 /* Line 670 of lalr1.cc  */
-#line 450 "CParser.y"
+#line 448 "CParser.y"
     {
 		(yyval.declaration) = (yysemantic_stack_[(1) - (1)].function_declaration);
 	}
@@ -1055,7 +1053,7 @@ namespace yy {
 
   case 103:
 /* Line 670 of lalr1.cc  */
-#line 453 "CParser.y"
+#line 451 "CParser.y"
     {
 		(yyval.declaration) = (yysemantic_stack_[(1) - (1)].variable_declaration);
 	}
@@ -1063,7 +1061,7 @@ namespace yy {
 
   case 104:
 /* Line 670 of lalr1.cc  */
-#line 459 "CParser.y"
+#line 457 "CParser.y"
     {
 		(yysemantic_stack_[(2) - (1)].function_declaration)->set_body((yysemantic_stack_[(2) - (2)].statement));
 		(yyval.function_declaration) = (yysemantic_stack_[(2) - (1)].function_declaration);
@@ -1072,7 +1070,7 @@ namespace yy {
 
 
 /* Line 670 of lalr1.cc  */
-#line 1076 "CParser.cpp"
+#line 1074 "CParser.cpp"
       default:
         break;
       }
@@ -1849,10 +1847,10 @@ namespace yy {
      184,   185,   186,   187,   188,   189,   190,   191,   192,   193,
      194,   198,   199,   212,   228,   237,   241,   256,   257,   264,
      265,   266,   267,   271,   272,   276,   285,   289,   293,   306,
-     311,   318,   322,   329,   337,   341,   349,   350,   351,   352,
-     353,   354,   355,   356,   357,   361,   367,   371,   379,   383,
-     389,   392,   398,   401,   408,   411,   418,   421,   427,   430,
-     440,   444,   450,   453,   459
+     311,   318,   322,   329,   336,   340,   348,   349,   350,   351,
+     352,   353,   354,   355,   356,   360,   366,   370,   377,   381,
+     387,   390,   396,   399,   406,   409,   416,   419,   425,   428,
+     438,   442,   448,   451,   457
   };
 
   // Print the state stack on the debug stream.
@@ -1945,9 +1943,9 @@ namespace yy {
 
 } // yy
 /* Line 1141 of lalr1.cc  */
-#line 1949 "CParser.cpp"
+#line 1947 "CParser.cpp"
 /* Line 1142 of lalr1.cc  */
-#line 464 "CParser.y"
+#line 462 "CParser.y"
 
 
 namespace yy

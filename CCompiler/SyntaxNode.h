@@ -266,13 +266,15 @@ public:
 	inline void AddArraySpecifier(Expression* expression) { this->type_ = Type::CreateArrayType(expression, type_.release()); }
 	inline void AddPointerSpecifier() { this->type_ = Type::CreatePointerType(type_.release()); }
 	inline void set_basic_type(Type::BasicType basic_type) { this->type_->SetRootType(basic_type); }
-	inline void set_initializer(Expression* initializer) { this->initializer_ = initializer; }
+	inline void set_initializer(Expression* initializer) { this->initializer_ = std::unique_ptr<Expression>(initializer); }
 	inline void set_identifier(Identifier* identifier) { this->identifier_ = std::unique_ptr<Identifier>(identifier); }
+	inline bool has_initializer() { return this->initializer_; }
+	inline Type& get_type() { return *type_; }
 	void SetAsFunctionDeclaration(FunctionDeclaration& function);
 private:
 	std::unique_ptr<Identifier> identifier_;
 	std::unique_ptr<Type> type_;
-	Expression *initializer_;
+	std::unique_ptr<Expression> initializer_;
 };
 
 class FunctionDeclaration: public Declaration {

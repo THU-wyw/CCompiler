@@ -67,3 +67,32 @@ void Type::PrintTypeName(ostream& output) {
 	this->array_type_.type->PrintTypeName(output);
 	output << "[]";
 }; 
+
+void Type::PrintArrayInitializer(std::ostream& output) {
+	if (this->kind_ == POINTER_TYPE) {
+		throw CParserException("Pointer is not supported in JAVA.");
+	}
+	if (this->kind_ == BASIC_TYPE) {
+		switch (this->basic_type_)
+		{
+		case INTEGER:
+			output << "int";
+			break;
+		case CHARACTER:
+			output << "byte";
+			break;
+		case FLOAT:
+			output << "float";
+			break;
+		default:
+			throw new CParserException("Unsupported type.");
+			break;
+		}
+		return;
+	}
+	output << "new ";
+	this->array_type_.type->PrintArrayInitializer(output);
+	output << "[";
+	this->array_type_.expression->GenerateCode(output, -1);
+	output << "]";
+}

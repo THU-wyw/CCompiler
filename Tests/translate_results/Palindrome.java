@@ -2,7 +2,7 @@ import java.io.IOException;
 
 public class Palindrome{
     public static void main(String[] args) throws IOException{
-        byte[] str;
+        byte[] str = new byte[100];
         int flag = 0;
         int length = 0;
         System.in.read(str);

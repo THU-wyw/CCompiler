@@ -69,47 +69,47 @@ void UnaryExpression::GenerateCode(ostream& output, int indentations) {
 	{
 	case UnaryExpression::INC_PRE:
 		output << "++(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::DEC_PRE:
 		output << "--(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::INC_AFTER:
 		output << "(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")++";
 		break;
 	case UnaryExpression::DEC_AFTER:
 		output << "(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")--";
 		break;
 	case UnaryExpression::REFERENCE:
 		output << "&(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::DEREFERENCE:
 		output << "*(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::MINUS:
 		output << "-(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::NOT_BIT:
 		output << "~(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	case UnaryExpression::NOT:
 		output << "!(";
-		expression_->GenerateCode(output, indentations);
+		expression_->GenerateCode(output, -1);
 		output << ")";
 		break;
 	default:
@@ -429,7 +429,11 @@ DeclarationStatement::DeclarationStatement(VariableDeclaration* declaration)
 
 void DeclarationStatement::GenerateCode(ostream& output, int indentations) {
 	PrintTabs(output, indentations);
-	this->declaration_->GenerateCode(output, indentations);
+	this->declaration_->GenerateCode(output, -1);
+	if (this->declaration_->get_type().get_kind() == Type::ARRAY_TYPE && !this->declaration_->has_initializer()) {
+		output << " = ";
+		this->declaration_->get_type().PrintArrayInitializer(output);
+	}
 	output << ";" << endl;
 }
 
@@ -451,11 +455,11 @@ void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
 	//TODO for Type
 	type_->PrintTypeName(output);
 	output << " ";
-	identifier_->GenerateCode(output, indentations);
-	if(initializer_ != nullptr)
+	identifier_->GenerateCode(output, -1);
+	if(initializer_)
 	{
 		output << " = ";
-		this->initializer_->GenerateCode(output, indentations);
+		this->initializer_->GenerateCode(output, -1);
 	}
 }
 
@@ -493,13 +497,13 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 		//TODO for type
 
 		//函数名
-		this->identifier_->GenerateCode(output, indentations);
+		this->identifier_->GenerateCode(output, -1);
 
 		//参数列表
 		output << "(";
 		for(auto iter = this->arguments_.begin(); iter != this->arguments_.end(); iter++)
 		{
-			(*iter)->GenerateCode(output, indentations);
+			(*iter)->GenerateCode(output, -1);
 			if(iter != this->arguments_.end()-1)
 				output << ", ";
 		}
@@ -526,7 +530,7 @@ void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	{
 		output << "System.in.read(";
 		auto iter = ++arguments_.begin();
-		(*iter)->GenerateCode(output, indentations);
+		(*iter)->GenerateCode(output, -1);
 		output << ")";
 		return;
 	}
@@ -534,15 +538,15 @@ void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	{
 		output << "System.out.println(";
 		auto iter = arguments_.begin();
-		(*iter)->GenerateCode(output, indentations);
+		(*iter)->GenerateCode(output, -1);
 		output << ")";
 		return;
 	}
-	identifier_->GenerateCode(output, indentations);
+	identifier_->GenerateCode(output, -1);
 	output << "(";
 	for(auto iter = arguments_.begin(); iter != arguments_.end(); iter++)
 	{
-		(*iter)->GenerateCode(output, indentations);
+		(*iter)->GenerateCode(output, -1);
 		if(iter != arguments_.end() - 1)
 			output <<", ";
 	}
