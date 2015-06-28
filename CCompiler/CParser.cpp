@@ -449,7 +449,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 146 "CParser.y"
     {
-		(yyval.expression) = new StringLiteral(StringLiteral::ProcessESC(*(yysemantic_stack_[(1) - (1)].str)));
+		(yyval.expression) = new StringLiteral(*(yysemantic_stack_[(1) - (1)].str));
 		delete (yysemantic_stack_[(1) - (1)].str);
 	}
     break;

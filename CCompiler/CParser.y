@@ -144,7 +144,7 @@ expression
 		delete $1;
 	}
 	| STRING_LITERAL {
-		$$ = new StringLiteral(StringLiteral::ProcessESC(*$1));
+		$$ = new StringLiteral(*$1);
 		delete $1;
 	}
 	| CHAR_LITERAL {
