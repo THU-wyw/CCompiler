@@ -109,7 +109,7 @@ int PopFile(void);
 									yylval->str = new std::string(yytext, yyleng);
 									return token::STRING_LITERAL; 
 								}
-\'(.|\\.)\'						{
+\'([^'\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3})\'						{
 									yylval->str = new std::string(yytext, yyleng);
 									return token::CHAR_LITERAL;
 								}

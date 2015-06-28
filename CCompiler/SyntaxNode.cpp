@@ -65,33 +65,91 @@ void StringLiteral::GenerateCode(ostream& output, int indentations) {
 	output << value_;
 }
 
+string StringLiteral::ProcessESC(string &ori)
+{
+	string result = "";
+	for (int i = 0; i < ori.length(); i++)
+	{
+		if (ori[i] == '\\')
+		{
+			i ++;
+			if (ori[i] >= '0' && ori[i] <= '9')
+			{
+				char temp = 0, counter = 0;
+				while (ori[i] >= '0' && ori[i] <= '9' && counter < 3)
+				{
+					temp = temp * 10 + ori[i] - '0';
+					i++;
+					counter ++;
+				}
+				result += temp;
+				i --;
+			}
+			else
+			{
+				switch (ori[i])
+				{
+				case '\'':
+					result += '\''; break;
+				case '\"':
+					result += '\"'; break;
+				case '\?':
+					result += '\?'; break;
+				case '\\':
+					result += '\\'; break;
+				case '\a':
+					result += '\a'; break;
+				case '\b':
+					result += '\b'; break;
+				case '\f':
+					result += '\f'; break;
+				case '\n':
+					result += '\n'; break;
+				case '\r':
+					result += '\r'; break;
+				case '\t':
+					result += '\t'; break;
+				case '\v':
+					result += '\v'; break;
+				default:
+					break;
+				}
+			}						
+		}
+		else
+		{
+			result += ori[i];
+		}
+	}
+	return result;
+}
+
 CharLiteral::CharLiteral(char value): value_(value) {
 
 }
 
 void CharLiteral::GenerateCode(ostream& output, int indentations) {	
 	//TODO for sister yuan yang
-	output << "'";
 	switch(value_)
 	{
-		case '\0':
-			output << "\\0"; break;
+		case '\0'://java中，从控制台读入的byte流以10结尾
+			output << "10"; break;
 		case '\n':
-			output << "\\n"; break;
+			output << "'\\n'"; break;
 		case '\r':
-			output << "\\r"; break;
+			output << "'\\r'"; break;
 		case '\t':
-			output << "\\t"; break;
+			output << "'\\t'"; break;
 		case '\\':
-			output << "\\"; break;
+			output << "'\\'"; break;
 		case '\'':
-			output << "\'"; break;
+			output << "'\''"; break;
 		case '\"':
-			output << "\""; break;
+			output << "'\"'"; break;
 		default:
-			output << value_; break;
+			output << "'" << value_ << "'";
+			break;
 	}
-	output << "'";
 }
 
 UnaryExpression::UnaryExpression(Expression *expression, Operator unary_operator):
