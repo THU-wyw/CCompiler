@@ -1,12 +1,6 @@
 #include"stdio.h"
 #include"stdlib.h" 
-//#include"string.h" 
-//#include"math.h"
-#define true 1 
-#define false 0 
-#define OPSETSIZE 8 
-#define MAXSIZE 100
-typedef int Status; 
+ 
 unsigned char Prior[8][8] =
 { // 运算符优先级表 
  // '+' '-' '*' '/' '(' ')' '#' '^' 
@@ -19,80 +13,63 @@ unsigned char Prior[8][8] =
  /*'#'*/'<','<','<','<','<',' ','=','<', 
  /*'^'*/'>','>','>','>','<','>','>','>' 
 }; 
-typedef struct StackChar
-{
-	char c; 
-	struct StackChar *next; 
-}SC;       //StackChar类型的结点SC
 
-typedef struct StackFloat
+int PushChar(char s[], char c, int top)
 {
-	float f; 
-	struct StackFloat *next; 
-}SF;       //StackFloat类型的结点SF
+	s[top] = c;
+	return (top+1);
+}
 
-SC *Push(SC *s,char c)          //SC类型的指针Push，返回p
+int PushNum(float s[], float x, int top)
 {
-	SC *p=(SC*)malloc(sizeof(SC)); 
-	p->c=c; 
-	p->next=s; 
-	return p; 
-} 
+	s[top] = x;
+	return (top+1);
+}
 
-SF *Push(SF *s,float f)        //SF类型的指针Push，返回p
+int PopChar(char s[], int top)
 {
-	SF *p=(SF*)malloc(sizeof(SF)); 
-	p->f=f; 
-	p->next=s; 
-	return p; 
-} 
+	return (top-1);
+}
 
-SC *Pop(SC *s)    //SC类型的指针Pop
+int PopNum(float s[], int top)
 {
-	SC *q=s; 
-	s=s->next; 
-	free(q); 
-	return s; 
-} 
+	return (top-1);
+}
 
-SF *Pop(SF *s)      //SF类型的指针Pop
-{
-	SF *q=s; 
-	s=s->next; 
-	free(q); 
-	return s; 
-} 
-
-char* strcat(char* str1, char* str2)
+void strcat(char str1[], char str2[], char result[])
 {
 	if(str1 == NULL && str2 == NULL)
-		return NULL;
+	{
+		result = NULL;
+		return;
+	}
 
 	int i = 0;
 	int j = 0;
 	while (str1[i] != '\0')
 	{
+		result[i] = str1[i];
 		i++;
 	}
 	while(str2[j] != '\0')
 	{
+		result[i] = str2[j];
 		str1[i++] = str2[j++];
 	}
 	str1[i] = '\0';
-
-	return str1;
+	result[i] = '\0';
 }
 
-char* strcpy(char* dest, char* source)
+void strcpy(char dest[], char source[], char result[])
 {
 	int i = 0;
-	while(true)
+	while(1)
 	{
 		dest[i] = source[i];
+		result[i] = source[i];
 		if(source[i] == '\0') break;
 		i++;
 	}
-	return dest;
 }
 
 
@@ -109,22 +86,22 @@ float Operate(float a,unsigned char theta, float b)      //计算函数Operate
 	} 
 } 
 
-char OPSET[OPSETSIZE]={'+','-','*','/','(',')','#','^'}; 
+char OPSET[8]={'+','-','*','/','(',')','#','^'}; 
 
-Status In(char Test,char *TestOp)
+int In(char Test,char TestOp[])
 {
-	int Find=false; 
-	for (int i=0; i< OPSETSIZE; i++)
+	int Find = 0; 
+	for (int i=0; i< 8; i++)
 	{
 		if(Test == TestOp[i])
-		Find= true; 
+		Find= 1; 
 	} 
 	return Find; 
 } 
 
-Status ReturnOpOrd(char op,char *TestOp)
+int ReturnOpOrd(char op,char TestOp[])
 { 
-	for(int i=0; i< OPSETSIZE; i++)
+	for(int i = 0; i < 8; i++)
 	{
 		if (op == TestOp[i])
 			return i;
@@ -136,54 +113,65 @@ char precede(char Aop, char Bop)
 	return Prior[ReturnOpOrd(Aop,OPSET)][ReturnOpOrd(Bop,OPSET)]; 
 } 
 
-float EvaluateExpression(char* MyExpression)
+float EvaluateExpression(char MyExpression[])
 { 
 	// 算术表达式求值的算符优先算法
-	// 设OPTR和OPND分别为运算符栈和运算数栈，OP为运算符集合 
-	SC *OPTR=NULL;       // 运算符栈，字符元素 
-	SF *OPND=NULL;       // 运算数栈，实数元素 
+	// 设OPTR和OPND分别为运算符栈和运算数栈，OP为运算符集合    
+	char OPTR[100];		// 运算符栈，字符元素
+	int optr_top = 0;
+	float OPND[100];	// 运算数栈，实数元素 
+	int opnd_top = 0;
 	char TempData[20]; 
-	float Data,a,b; 
-	char theta,*c,Dr[]={'#','\0'}; 
-	OPTR=Push(OPTR,'#'); 
-	c=strcat(MyExpression,Dr); 
-	strcpy(TempData,"\0");//字符串拷贝函数 
-	while (*c!= '#' || OPTR->c!='#')
+	float Data; 
+	float a;
+	float b;
+	char theta;
+	char c[100];
+	char TempC[100];
+	char Dr[]={'#','\0'}; 
+	optr_top = PushChar(OPTR,'#',optr_top); 
+	strcat(MyExpression, Dr, c); 
+	strcpy(TempData,"\0",TempC);//字符串拷贝函数 
+	int temp = 0;
+	while (c[temp] != '#' || OPTR[optr_top-1] != '#')
 	{ 
-		if (!In(*c, OPSET))
+		if (!In(c[temp], OPSET))
 		{ 
-			Dr[0]=*c; 
-			strcat(TempData,Dr);           //字符串连接函数 
-			c++; 
-			if (In(*c, OPSET))
+			Dr[0]=c[temp]; 
+			strcat(TempData,Dr,TempC);           //字符串连接函数 
+			temp++; 
+			if (In(c[temp], OPSET))
 			{ 
-				Data=atof(TempData);       //字符串转换函数(double) 
-				OPND=Push(OPND, Data); 
-				strcpy(TempData,"\0"); 
+				Data = atof(TempData);       //字符串转换函数(double) 
+				opnd_top = PushNum(OPND, Data, opnd_top); 
+				strcpy(TempData,"\0",TempC); 
 			} 
 		} 
 		else    // 不是运算符则进栈 
 		{
-			switch (precede(OPTR->c, *c))
+			switch (precede(OPTR[optr_top - 1], c[temp]))
 			{
-				case '<': // 栈顶元素优先级低 
-					OPTR=Push(OPTR, *c); 
-					c++; 
+				case '<': // 栈顶元素优先级低  
+					optr_top = PushChar(OPTR, c[temp], optr_top);
+					temp++; 
 					break; 
 				case '=': // 脱括号并接收下一字符 
-					OPTR=Pop(OPTR); 
-					c++; 
+					optr_top = PopChar(OPTR, optr_top);
+					temp++; 
 					break; 
 				case '>': // 退栈并将运算结果入栈 
-					theta=OPTR->c;OPTR=Pop(OPTR); 
-					b=OPND->f;OPND=Pop(OPND); 
-					a=OPND->f;OPND=Pop(OPND); 
-					OPND=Push(OPND, Operate(a, theta, b)); 
+					theta = OPTR[optr_top-1];
+					optr_top = PopChar(OPTR, optr_top);
+					b = OPND[opnd_top-1];
+					opnd_top = PopNum(OPND, opnd_top);
+					a = OPND[opnd_top-1];
+					opnd_top = PopNum(OPND, opnd_top);
+					opnd_top = PushNum(OPND, Operate(a, theta, b), opnd_top);
 					break; 
 			} //switch
 		} 
 	} //while 
-	return OPND->f; 
+	return OPND[opnd_top-1]; 
 } //EvaluateExpression 
 
 int main(void)
