@@ -76,9 +76,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="CToken.l">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">flex --wincompat -o %(Filename).cpp %(Filename)%(Extension)</Command>

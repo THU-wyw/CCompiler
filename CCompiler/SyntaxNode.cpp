@@ -71,6 +71,7 @@ CharLiteral::CharLiteral(char value): value_(value) {
 
 void CharLiteral::GenerateCode(ostream& output, int indentations) {	
 	//TODO for sister yuan yang
+	output << "'";
 	switch(value_)
 	{
 		case '\0':
@@ -90,6 +91,7 @@ void CharLiteral::GenerateCode(ostream& output, int indentations) {
 		default:
 			output << value_; break;
 	}
+	output << "'";
 }
 
 UnaryExpression::UnaryExpression(Expression *expression, Operator unary_operator):
@@ -297,6 +299,21 @@ void AssignmentExpression::GenerateCode(ostream& output, int indentations) {
 		break;
 	}
 	assignment_expression_->GenerateCode(output, indentations);
+}
+
+void ListInitializer::PushExpression(Expression* expression) {
+	this->expressions_.push_back(unique_ptr<Expression>(expression));
+}
+
+void ListInitializer::GenerateCode(std::ostream& output, int indentations) {
+	output << "{";
+	for (auto it = expressions_.begin(); it != expressions_.end(); ++it) {
+		if (it != expressions_.begin()) {
+			output << ", ";
+		}
+		(*it)->GenerateCode(output, -1);
+	}
+	output << "}";
 }
 
 void StatementsBlock::PushStatement(Statement *statement) {
@@ -507,6 +524,18 @@ void VariableDeclaration::GenerateCode(ostream& output, int indentations) {
 void VariableDeclaration::SetAsFunctionDeclaration(FunctionDeclaration& function) {
 	function.set_return_type(this->type_.release());
 	function.set_identifier(this->identifier_.release());
+}
+
+GlobalVariableDeclaration::GlobalVariableDeclaration(VariableDeclaration* declaration) 
+	: declaration_(declaration) {
+
+}
+
+void GlobalVariableDeclaration::GenerateCode(std::ostream& output, int indentations) {
+	PrintTabs(output, indentations);
+	output << "public static ";
+	declaration_->GenerateCode(output, -1);
+	output << ";" << endl;
 }
 
 FunctionDeclaration::FunctionDeclaration(std::vector<VariableDeclaration*>& arguments) {

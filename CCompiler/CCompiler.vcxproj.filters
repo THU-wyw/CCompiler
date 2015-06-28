@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="test.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="CToken.l">
       <Filter>源文件</Filter>
     </CustomBuild>

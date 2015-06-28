@@ -40,6 +40,7 @@ class CParserDriver;
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
 	std::vector<Expression*>* expression_list;
+	ListInitializer* array_initializer;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
@@ -83,6 +84,7 @@ class CParserDriver;
 %type <expression> expression 
 %type <expression> initializer
 %type <expression_list> argument_expression_list
+%type <array_initializer> initializer_list
 
 //declaration types
 %type <variable_declaration> variable_declaration init_declarator declarator direct_declarator parameter_declaration 
@@ -399,10 +401,20 @@ identifier
 
 initializer
 	: expression
+	| '{' initializer_list '}' { $$ = $2;}
 	/*
-	| { initializer_list }
 	| { initializer_list , }
 	*/
+	;
+
+initializer_list
+	: initializer { 
+		$$ = new ListInitializer();
+		$$->PushExpression($1);
+	}
+	| initializer_list ',' initializer {
+		$$->PushExpression($3);
+	}
 	;
 
 statement
@@ -509,8 +521,8 @@ declaration
 	: function_declaration {
 		$$ = $1;
 	} 
-	| variable_declaration {
-		$$ = $1;
+	| variable_declaration ';'{
+		$$ = new GlobalVariableDeclaration($1);
 	}
 	;
 

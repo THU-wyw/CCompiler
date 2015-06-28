@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 	//test("declaration");
 	//test("statement");
 	//test("Palindrome");
-	test("KMP");
-	//test("ExpressionEvaluation");
+	//test("KMP");
+	test("ExpressionEvaluation");
 	return 0;
 }

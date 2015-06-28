@@ -97,6 +97,7 @@ namespace yy {
 	UnaryExpression* unary_expression;
 	BinaryExpression* binary_expression;
 	std::vector<Expression*>* expression_list;
+	ListInitializer* array_initializer;
 	FunctionCall* function_call;
 	AssignmentExpression* assignment_expression;
 	Statement* statement;
@@ -118,7 +119,7 @@ namespace yy {
 
 
 /* Line 33 of lalr1.cc  */
-#line 122 "CParser.hpp"
+#line 123 "CParser.hpp"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -352,7 +353,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 356 "CParser.hpp"
+#line 357 "CParser.hpp"
 
 
 

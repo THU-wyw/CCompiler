@@ -163,6 +163,15 @@ private:
 	std::unique_ptr<Expression> assignment_expression_;
 };
 
+class ListInitializer: public Expression {
+public:
+	void PushExpression(Expression* expression);
+	virtual void GenerateCode(std::ostream& output, int indentations);
+	virtual void PrintTree(std::ostream& output){}
+private:
+	std::vector<std::unique_ptr<Expression>> expressions_;
+};
+
 class Statement: public SyntaxNode {
 public:
 	virtual void GenerateCode(std::ostream& output, int indentations) = 0;
@@ -285,6 +294,16 @@ private:
 	std::unique_ptr<Identifier> identifier_;
 	std::unique_ptr<Type> type_;
 	std::unique_ptr<Expression> initializer_;
+};
+
+class GlobalVariableDeclaration: public Declaration {
+public:
+	GlobalVariableDeclaration(VariableDeclaration* declaration);
+	virtual void GenerateCode(std::ostream& output, int indentations);
+	virtual void PrintTree(std::ostream& output){}
+
+private:
+	std::unique_ptr<VariableDeclaration> declaration_;
 };
 
 class FunctionDeclaration: public Declaration {
