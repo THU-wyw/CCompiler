@@ -109,6 +109,10 @@ int PopFile(void);
 									yylval->str = new std::string(yytext, yyleng);
 									return token::STRING_LITERAL; 
 								}
+\'(.|\\.)\'						{
+									yylval->str = new std::string(yytext, yyleng);
+									return token::CHAR_LITERAL;
+								}
 ^"#"[ \t]*include[ \t]*[\"<]	{ BEGIN(IFILE); }
 <IFILE>[^ \t\n\">]+				{
 									char c;
