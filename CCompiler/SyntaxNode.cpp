@@ -307,6 +307,7 @@ void StatementsBlock::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	/*std::vector<Statement*> statements_;
 	Expression* init_value;*/
+	PrintTabs(output, indentations - 1);
 	output << "{" << endl;
 	for(auto iter = this->statements_.begin(); iter != this->statements_.end(); iter++)
 	{
@@ -331,13 +332,13 @@ void IfStatement::GenerateCode(ostream& output, int indentations) {
 	PrintTabs(output, indentations);
 	output << "if (";
 	this->condition_->GenerateCode(output, indentations + 1);
-	output << ")";
+	output << ")" << endl;
 	this->then_statement_->GenerateCode(output, indentations + 1);
 
 	if(else_statement_)
 	{
 		PrintTabs(output, indentations);
-		output << "else";
+		output << "else" << endl;
 		this->else_statement_->GenerateCode(output, indentations + 1);
 	}
 }
@@ -394,7 +395,9 @@ void WhileStatement::GenerateCode(ostream& output, int indentations) {
 	if(has_do_)
 	{
 		PrintTabs(output, indentations);
-		output << "do {" << endl;
+		output << "do" << endl;
+		PrintTabs(output, indentations);
+		output << "{";
 		body_->GenerateCode(output, indentations + 1);
 		PrintTabs(output, indentations);
 		output << "while (";
@@ -406,7 +409,7 @@ void WhileStatement::GenerateCode(ostream& output, int indentations) {
 		PrintTabs(output, indentations);
 		output << "while (";
 		condition_->GenerateCode(output, indentations);
-		output << ")";
+		output << ")" << endl;
 		body_->GenerateCode(output, indentations + 1);
 	}
 }
@@ -443,7 +446,7 @@ void ForStatement::GenerateCode(ostream& output, int indentations) {
 	operation_->GenerateCode(output, indentations);
 	output <<"; ";
 	condition_->GenerateCode(output, indentations);
-	output << ")";
+	output << ")" << endl;
 	body_->GenerateCode(output, indentations + 1);
 }
 
@@ -533,7 +536,7 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 		output << "public static ";
 		//返回值
 		//TODO for type
-		//return_type_->PrintTypeName(output);
+		return_type_->PrintTypeName(output);
 		output << " ";
 		//函数名
 		this->identifier_->GenerateCode(output, -1);
@@ -548,7 +551,7 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 		}
 		output << ")";
 	}
-
+	output << endl;
 	//函数定义
 	this->statements_->GenerateCode(output, indentations + 1);
 }
@@ -708,14 +711,14 @@ void IfStatement::PrintTree(ostream& output)
 	tabs ++; printTabs(output);
 	condition_->PrintTree(output);
 	tabs --;
-	if (then_statement_ != nullptr)
+	if (then_statement_)
 	{
 		printStr(output, "then:");
 		tabs ++; printTabs(output);
 		then_statement_->PrintTree(output);
 		tabs --;
 	}
-	if (else_statement_ != nullptr)
+	if (else_statement_)
 	{
 		printStr(output, "else:");
 		tabs ++; printTabs(output);

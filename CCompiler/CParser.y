@@ -146,7 +146,7 @@ expression
 	| STRING_LITERAL {
 		std::string str = "";
 		char c;
-		for (int i = 0; i < $1->length(); i++)
+		for (std::size_t i = 0; i < $1->length(); i++)
 		{
 			if ((*$1)[i] == '\\')
 			{
@@ -364,11 +364,13 @@ direct_declarator
 function_declarator
 	: declaration_specifiers declarator '(' parameter_list ')' {
 		$$ = new FunctionDeclaration(*($4));
+		$2->set_basic_type($1);
 		$2->SetAsFunctionDeclaration(*$$);
 		delete $4;
 	}
 	| declaration_specifiers declarator '(' ')' {
 		$$ = new FunctionDeclaration(std::vector<VariableDeclaration*>());
+		$2->set_basic_type($1);
 		$2->SetAsFunctionDeclaration(*$$);
 	}
 	;
