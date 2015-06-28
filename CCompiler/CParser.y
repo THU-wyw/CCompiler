@@ -384,11 +384,11 @@ compound_statement
 block_item_list
 	: {
 		$$ = new StatementsBlock();
-		//((StatementsBlock *)$$)->PushStatement($1);
 	}
 	| block_item_list block_item {
 		((StatementsBlock *)$1)->PushStatement($2);
 		$$ = $1;
+		$1->GenerateCode(std::cout, 1);
 	}
 	;
 

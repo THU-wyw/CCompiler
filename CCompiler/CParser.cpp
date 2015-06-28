@@ -960,16 +960,16 @@ namespace yy {
 #line 385 "CParser.y"
     {
 		(yyval.statement) = new StatementsBlock();
-		//((StatementsBlock *)$$)->PushStatement($1);
 	}
     break;
 
   case 91:
 /* Line 670 of lalr1.cc  */
-#line 389 "CParser.y"
+#line 388 "CParser.y"
     {
 		((StatementsBlock *)(yysemantic_stack_[(2) - (1)].statement))->PushStatement((yysemantic_stack_[(2) - (2)].statement));
 		(yyval.statement) = (yysemantic_stack_[(2) - (1)].statement);
+		(yysemantic_stack_[(2) - (1)].statement)->GenerateCode(std::cout, 1);
 	}
     break;
 
@@ -1894,7 +1894,7 @@ namespace yy {
      271,   272,   273,   274,   278,   279,   283,   292,   296,   300,
      313,   319,   327,   331,   338,   345,   349,   350,   357,   361,
      367,   368,   369,   370,   371,   372,   373,   374,   375,   379,
-     385,   389,   396,   400,   406,   409,   415,   418,   425,   428,
+     385,   388,   396,   400,   406,   409,   415,   418,   425,   428,
      435,   438,   444,   447,   457,   461,   467,   470,   476
   };
 

@@ -75,6 +75,26 @@ void strcpy(char dest[], char source[], char result[])
 
 float Operate(float a, char theta, float b)      //计算函数Operate
 {
+	if (theta == '+')
+	{
+		return a+b;
+	}
+	else if (theta == '-')
+	{
+		return a-b;
+	}
+	else if (theta == '*')
+	{
+		return a*b;
+	}
+	else if (theta == '/')
+	{
+		return a/b;
+	}
+	else
+	{
+		return 0;
+	}/*
 	switch(theta)
 	{
 		case '+': return a+b; 
@@ -83,7 +103,7 @@ float Operate(float a, char theta, float b)      //计算函数Operate
 		case '/': return a/b; 
 		//case '^': return pow(a,b); 
 		default : return 0; 
-	} 
+	} */
 } 
 
 char OPSET[8]={'+','-','*','/','(',')','#','^'}; 
@@ -149,32 +169,37 @@ float EvaluateExpression(char MyExpression[])
 		} 
 		else    // 不是运算符则进栈 
 		{
-			switch (precede(OPTR[optr_top - 1], c[temp]))
+			char preTemp = precede(OPTR[optr_top - 1], c[temp]);
+			if (preTemp == '<')
 			{
-				case '<': // 栈顶元素优先级低  
-					optr_top = PushChar(OPTR, c[temp], optr_top);
-					temp++; 
-					break; 
-				case '=': // 脱括号并接收下一字符 
-					optr_top = PopChar(OPTR, optr_top);
-					temp++; 
-					break; 
-				case '>': // 退栈并将运算结果入栈 
-					theta = OPTR[optr_top-1];
-					optr_top = PopChar(OPTR, optr_top);
-					b = OPND[opnd_top-1];
-					opnd_top = PopNum(OPND, opnd_top);
-					a = OPND[opnd_top-1];
-					opnd_top = PopNum(OPND, opnd_top);
-					opnd_top = PushNum(OPND, Operate(a, theta, b), opnd_top);
-					break; 
-			} //switch
+				optr_top = PushChar(OPTR, c[temp], optr_top);
+				temp++; 
+			}
+			else if (preTemp == '=')
+			{
+				optr_top = PopChar(OPTR, optr_top);
+				temp++;
+			}
+			else if (preTemp == '>')
+			{
+				theta = OPTR[optr_top-1];
+				optr_top = PopChar(OPTR, optr_top);
+				b = OPND[opnd_top-1];
+				opnd_top = PopNum(OPND, opnd_top);
+				a = OPND[opnd_top-1];
+				opnd_top = PopNum(OPND, opnd_top);
+				opnd_top = PushNum(OPND, Operate(a, theta, b), opnd_top);
+			}
+			else
+			{
+				
+			}
 		} 
 	} //while 
 	return OPND[opnd_top-1]; 
 } //EvaluateExpression 
 
-int main(void)
+int main()
 { 
 	char s[]="1+(3*4)/(2-1)\0";
 	printf("%g\n",EvaluateExpression(s));
