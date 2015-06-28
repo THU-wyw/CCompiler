@@ -1,9 +1,13 @@
 #include "SyntaxNode.h"
 #include <fstream>
 using namespace std;
+
+bool isInMainFunction;
+
 void Program::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	PrintTabs(output, indentations);
+	output << "import java.io.IOException;" << endl << endl;
 	output << "public class " << this->main_class_name_ << "{" << endl;
 	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
@@ -65,36 +69,52 @@ void UnaryExpression::GenerateCode(ostream& output, int indentations) {
 	{
 	case UnaryExpression::INC_PRE:
 		output << "++(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::DEC_PRE:
 		output << "--(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::INC_AFTER:
 		output << "(";
+		expression_->GenerateCode(output, indentations);
+		output << ")++";
 		break;
 	case UnaryExpression::DEC_AFTER:
 		output << "(";
+		expression_->GenerateCode(output, indentations);
+		output << ")--";
 		break;
 	case UnaryExpression::REFERENCE:
 		output << "&(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::DEREFERENCE:
 		output << "*(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::MINUS:
 		output << "-(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::NOT_BIT:
 		output << "~(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	case UnaryExpression::NOT:
 		output << "!(";
+		expression_->GenerateCode(output, indentations);
+		output << ")";
 		break;
 	default:
 		break;
 	}
-	expression_->GenerateCode(output, indentations);
-	output << ")";
 }
 
 BinaryExpression::BinaryExpression(Expression* left, Expression* right, Operator binary_operator):
@@ -315,7 +335,8 @@ void ReturnStatement::GenerateCode(ostream& output, int indentations) {
 	//Expression * return_value_;
 	PrintTabs(output, indentations);
 	output << "return";
-	if (return_value_) {
+	if(isInMainFunction != 1 && return_value_)
+	{
 		output << " ";
 		return_value_->GenerateCode(output, indentations);
 	}
@@ -382,9 +403,9 @@ void ForStatement::GenerateCode(ostream& output, int indentations) {
 	else 
 		declaration_initializer_->GenerateCode(output, indentations);
 	output <<"; ";
-	condition_->GenerateCode(output, indentations);
-	output <<"; ";
 	operation_->GenerateCode(output, indentations);
+	output <<"; ";
+	condition_->GenerateCode(output, indentations);
 	output << ")" << endl;
 	body_->GenerateCode(output, indentations + 1);
 }
@@ -462,10 +483,12 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 	PrintTabs(output, indentations);
 	if(this->identifier_->getName() == "main")//main函数特殊处理
 	{
-		output << "public static void main(String[] args)" << endl;
+		output << "public static void main(String[] args) throws IOException" << endl;
+		isInMainFunction = 1;
 	}
 	else
 	{
+		isInMainFunction = 0;
 		output << "public static ";
 		//返回值
 		//TODO for type
@@ -500,6 +523,22 @@ void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	/*	Identifier* identifier_;
 	std::vector<Expression*> *arguments_;*/
 	//special cases to be added
+	if(identifier_->getName() == "scanf")
+	{
+		output << "System.in.read(";
+		auto iter = ++arguments_.begin();
+		(*iter)->GenerateCode(output, indentations);
+		output << ")";
+		return;
+	}
+	if(identifier_->getName() == "printf")
+	{
+		output << "System.out.println(";
+		auto iter = arguments_.begin();
+		(*iter)->GenerateCode(output, indentations);
+		output << ")";
+		return;
+	}
 	identifier_->GenerateCode(output, indentations);
 	output << "(";
 	for(auto iter = arguments_.begin(); iter != arguments_.end(); iter++)
