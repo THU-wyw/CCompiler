@@ -3,7 +3,7 @@ int main() {
 	int flag = 0;
 	int length = 0;
 	scanf("%s", str);
-	while(str[length] != 0) length++;
+	while(str[length] != '\0') length++;
 	for (int i = 0; i < length / 2; i++) {
 		if (str[i] != str[length - i - 1])
 		{

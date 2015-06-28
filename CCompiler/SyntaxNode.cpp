@@ -132,8 +132,8 @@ void CharLiteral::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
 	switch(value_)
 	{
-		case '\0':
-			output << "\\0"; break;
+		case '\0'://java中，从控制台读入的byte流以10结尾
+			output << "10"; break;
 		case '\n':
 			output << "\\n"; break;
 		case '\r':

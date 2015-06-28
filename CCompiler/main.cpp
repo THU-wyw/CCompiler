@@ -19,11 +19,11 @@ void test(string file)
 }
 int main(int argc, char **argv)
 {	
-	test("expression");
+	//test("expression");
 	//test("declaration");
 	//test("statement");
 	//test("Palindrome");
 	//test("KMP");
-	//test("ExpressionEvaluation");
+	test("ExpressionEvaluation");
 	return 0;
 }
