@@ -58,6 +58,9 @@ void Type::PrintTypeName(ostream& output) {
 		case FLOAT:
 			output << "float";
 			break;
+		case VOID:
+			output << "void";
+			break;
 		default:
 			throw new CParserException("Unsupported type.");
 			break;

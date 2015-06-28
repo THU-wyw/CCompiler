@@ -1,16 +1,17 @@
 #include <stdio.h>
 
-int strlen(char *s)
+int strlen(char s[])
 {
 	int i = 0;
-	for (i = 0; s[i] != '\0'; i++);
+	for (i = 0; s[i] != 0; i++);
 	return i;
 }
 
-void get_next( char* t, int next[] )        /*若不存在k使得‘p0...pk-1’ = ‘pj-k...pj-1’，则令next[j] = 0（原先算法是令这种情况的next值为1）*/
+void get_next( char t[], int next[] )
 {
 	int tlen;
-	int i = 1, j = 0;
+	int i = 1;
+	int j = 0;
 	next[0] = 0;
 	next[1] = 0;
 	tlen = strlen( t );
@@ -27,9 +28,12 @@ void get_next( char* t, int next[] )        /*若不存在k使得‘p0...pk-1’ = ‘pj-
 	}
 }
 
-int Index_KMP( char* s, char* t, int pos )
+int Index_KMP( char s[], char t[], int pos )
 {
-	int slen, tlen, i, j;
+	int slen;
+	int tlen;
+	int i;
+	int j;
 	int next[100];
 	if( s == NULL || t == NULL )
 		return -1;
@@ -60,8 +64,12 @@ int Index_KMP( char* s, char* t, int pos )
 
 int main()
 {
-	char str[] = "helloWorld";
-	char c[] = "Wo";
+	char str[100];
+	char c[100];
+	printf("请输入文本串：\n");
+	scanf("%s", str);
+	printf("请输入模式串：\n");
+	scanf("%s", c);
 	printf("%d\n", Index_KMP(str, c, 0));
 	return 0;
 }

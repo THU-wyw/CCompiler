@@ -12,6 +12,10 @@ void Program::GenerateCode(ostream& output, int indentations) {
 	for(auto iter = declarations_.begin(); iter != declarations_.end(); iter++)
 	{
 		(*iter)->GenerateCode(output, indentations + 1);
+		if(iter != declarations_.end() - 1)
+		{
+			output << endl;
+		}
 	}
 	PrintTabs(output, indentations);
 	output << "}" <<endl;
@@ -32,7 +36,14 @@ Identifier::Identifier(std::string& name): name_(name) {
 void Identifier::GenerateCode(ostream& output, int indentations)
 {
 	//TODO for sister yuan yang
-	output << this->name_;
+	if(name_ == "NULL")
+	{
+		output << "null";
+	}
+	else
+	{
+		output << name_;
+	}
 }
 
 ImmediateInteger::ImmediateInteger(int value): value_(value) {
@@ -368,7 +379,7 @@ void WhileStatement::GenerateCode(ostream& output, int indentations) {
 		PrintTabs(output, indentations);
 		output << "while (";
 		condition_->GenerateCode(output, indentations);
-		output << ")" << endl;
+		output << ")";
 		body_->GenerateCode(output, indentations + 1);
 	}
 }
@@ -495,7 +506,8 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 		output << "public static ";
 		//返回值
 		//TODO for type
-
+		//return_type_->PrintTypeName(output);
+		output << " ";
 		//函数名
 		this->identifier_->GenerateCode(output, -1);
 
@@ -536,9 +548,23 @@ void FunctionCall::GenerateCode(ostream& output, int indentations) {
 	}
 	if(identifier_->getName() == "printf")
 	{
-		output << "System.out.println(";
-		auto iter = arguments_.begin();
-		(*iter)->GenerateCode(output, -1);
+		output << "System.out.print(";
+		if(arguments_.size() == 1)
+		{
+			auto iter = arguments_.begin();
+			(*iter)->GenerateCode(output, -1);
+		}
+		else
+		{
+			for(auto iter = arguments_.begin() + 1; iter != arguments_.end(); iter++)
+			{
+				(*iter)->GenerateCode(output, -1);
+				if(iter != arguments_.end() - 1)
+				{
+					output <<" + ";
+				}
+			}		
+		}
 		output << ")";
 		return;
 	}

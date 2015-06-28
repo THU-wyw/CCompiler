@@ -6,8 +6,7 @@ public class Palindrome{
         int flag = 0;
         int length = 0;
         System.in.read(str);
-        while (str[length] != 0)
-            (length)++;
+        while (str[length] != 0)            (length)++;
         for (int i = 0; i < length / 2; (i)++){
             if (str[i] != str[length - i - 1]){
                 flag = 1;
@@ -15,10 +14,10 @@ public class Palindrome{
             }
         }
         if (flag == 0){
-            System.out.println("yes\n");
+            System.out.print("yes\n");
         }
         else{
-            System.out.println("no\n");
+            System.out.print("no\n");
         }
         return;
     }
