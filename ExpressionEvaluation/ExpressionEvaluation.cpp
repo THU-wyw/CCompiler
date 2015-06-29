@@ -227,7 +227,7 @@ float EvaluateExpression(char MyExpression[])
 
 int main()
 { 
-	char s[]="13.745*5.2+2/5\0";
+	char s[]="13.78*5.2+2/5\0";
 	printf("%g\n",EvaluateExpression(s));
 
 	return 0;
