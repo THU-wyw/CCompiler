@@ -969,7 +969,7 @@ namespace yy {
     {
 		((StatementsBlock *)(yysemantic_stack_[(2) - (1)].statement))->PushStatement((yysemantic_stack_[(2) - (2)].statement));
 		(yyval.statement) = (yysemantic_stack_[(2) - (1)].statement);
-		(yysemantic_stack_[(2) - (1)].statement)->GenerateCode(std::cout, 1);
+		// $1->GenerateCode(std::cout, 1);
 	}
     break;
 
