@@ -62,7 +62,7 @@ StringLiteral::StringLiteral(string& value): value_(value) {
 
 void StringLiteral::GenerateCode(ostream& output, int indentations) {
 	//TODO for sister yuan yang
-	output << value_;
+	output << value_ << ".getBytes()";
 }
 
 string StringLiteral::ProcessESC(string &ori)
@@ -130,10 +130,11 @@ CharLiteral::CharLiteral(char value): value_(value) {
 
 void CharLiteral::GenerateCode(ostream& output, int indentations) {	
 	//TODO for sister yuan yang
+	output << "(byte)";
 	switch(value_)
 	{
 		case '\0'://java中，从控制台读入的byte流以10结尾
-			output << "10"; break;
+			output << "0"; break;
 		case '\n':
 			output << "'\\n'"; break;
 		case '\r':
@@ -636,7 +637,7 @@ void FunctionDeclaration::GenerateCode(ostream& output, int indentations) {
 			if(iter != this->arguments_.end()-1)
 				output << ", ";
 		}
-		output << ")";
+		output << ") throws IOException";
 	}
 	output << endl;
 	//函数定义
@@ -743,7 +744,7 @@ void ImmediateInteger::PrintTree(ostream& output)
 
 void StringLiteral::PrintTree(ostream& output)
 {
-	output << "StringLiteral: " << value_ << endl;
+	output << "StringLiteral: " << value_ <<  endl;
 }
 
 void CharLiteral::PrintTree(ostream& output)

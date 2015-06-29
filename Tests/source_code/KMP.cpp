@@ -1,3 +1,10 @@
+void getString(char buffer[]) {
+	int i = 0;
+	scanf("%s", buffer);
+	while (buffer[i] != 0 && buffer[i] != 10 && buffer[i] != 13) i++;
+	buffer[i] = 0;
+}
+
 int strlen(char s[])
 {
 	int i = 0;
@@ -65,9 +72,9 @@ int main()
 	char str[100];
 	char c[100];
 	printf("请输入文本串：\n");
-	scanf("%s", str);
+	getString(str);
 	printf("请输入模式串：\n");
-	scanf("%s", c);
+	getString(c);
 	printf("%d\n", Index_KMP(str, c, 0));
 	return 0;
 }

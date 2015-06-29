@@ -38,12 +38,6 @@ int PopNum(float s[], int top)
 
 void strcat(char str1[], char str2[], char result[])
 {
-	if(str1 == NULL && str2 == NULL)
-	{
-		result = NULL;
-		return;
-	}
-
 	int i = 0;
 	int j = 0;
 	while (str1[i] != '\0')
@@ -56,20 +50,19 @@ void strcat(char str1[], char str2[], char result[])
 		result[i] = str2[j];
 		str1[i++] = str2[j++];
 	}
-	str1[i] = '\0';
 	result[i] = '\0';
 }
 
 void strcpy(char dest[], char source[], char result[])
 {
 	int i = 0;
-	while(1)
-	{
+	while (source[i] != 0) {
 		dest[i] = source[i];
 		result[i] = source[i];
-		if(source[i] == '\0') break;
 		i++;
 	}
+	dest[i] = source[i];
+	result[i] = source[i];
 }
 
 
@@ -121,11 +114,13 @@ int In(char Test,char TestOp[])
 
 int ReturnOpOrd(char op,char TestOp[])
 { 
+	int Find = 0;
 	for(int i = 0; i < 8; i++)
 	{
 		if (op == TestOp[i])
-			return i;
+			Find = i;
 	}
+	return Find;
 }
 
 char precede(char Aop, char Bop)
@@ -155,12 +150,12 @@ float EvaluateExpression(char MyExpression[])
 	int temp = 0;
 	while (c[temp] != '#' || OPTR[optr_top-1] != '#')
 	{ 
-		if (!In(c[temp], OPSET))
+		if (In(c[temp], OPSET) == 0)
 		{ 
 			Dr[0]=c[temp]; 
 			strcat(TempData,Dr,TempC);           //×Ö·û´®Á¬½Óº¯Êý 
 			temp++; 
-			if (In(c[temp], OPSET))
+			if (In(c[temp], OPSET) == 1)
 			{ 
 				Data = atof(TempData);       //×Ö·û´®×ª»»º¯Êý(double) 
 				opnd_top = PushNum(OPND, Data, opnd_top); 
@@ -201,7 +196,7 @@ float EvaluateExpression(char MyExpression[])
 
 int main()
 { 
-	char s[]="1+(3*4)/(2-1)\0";
+	char s[]="1+(3*4)/(3-1)\0";
 	printf("%g\n",EvaluateExpression(s));
 
 	return 0;

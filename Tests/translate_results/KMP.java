@@ -1,15 +1,24 @@
 import java.io.IOException;
 
 public class KMP{
-    public static int strlen(byte[] s)
+    public static void getString(byte[] buffer) throws IOException
     {
         int i = 0;
-        for (i = 0; s[i] != 10; (i)++)
+        System.in.read(buffer);
+        while (buffer[i] != 0 && buffer[i] != 10 && buffer[i] != 13)
+            (i)++;
+        buffer[i] = 0;
+    }
+
+    public static int strlen(byte[] s) throws IOException
+    {
+        int i = 0;
+        for (i = 0; s[i] != 0; (i)++)
             ;
         return i;
     }
 
-    public static void get_next(byte[] t, int[] next)
+    public static void get_next(byte[] t, int[] next) throws IOException
     {
         int tlen;
         int i = 1;
@@ -34,7 +43,7 @@ public class KMP{
         }
     }
 
-    public static int Index_KMP(byte[] s, byte[] t, int pos)
+    public static int Index_KMP(byte[] s, byte[] t, int pos) throws IOException
     {
         int slen;
         int tlen;
@@ -76,9 +85,9 @@ public class KMP{
         byte[] str = new byte[100];
         byte[] c = new byte[100];
         System.out.print("请输入文本串：\n");
-        System.in.read(str);
+        getString(str);
         System.out.print("请输入模式串：\n");
-        System.in.read(c);
+        getString(c);
         System.out.print(Index_KMP(str, c, 0));
         return;
     }
