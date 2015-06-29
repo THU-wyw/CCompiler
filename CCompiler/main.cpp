@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
 #include <stdio.h>
 #include "SyntaxNode.h"
 #include "CParserDriver.h"
@@ -22,8 +23,8 @@ int main(int argc, char **argv)
 	//test("expression");
 	//test("declaration");
 	//test("statement");
-	test("Palindrome");
-	test("KMP");
+	//test("Palindrome");
+	//test("KMP");
 	test("ExpressionEvaluation");
 	return 0;
 }

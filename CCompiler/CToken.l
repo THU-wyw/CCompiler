@@ -33,8 +33,12 @@ int NewFile(char *filename);
 int PopFile(void);
 %}
 %%
-[ \t\n]+
-\\$
+%{
+	yylloc->step();
+%}
+[ \t]							{ yylloc->step(); }
+\n								{ yylloc->lines(1); }
+\\$								{ yylloc->lines(1); }
 "case"							{ return token::CASE; }
 "default"						{ return token::DEFAULT; }
 "if"							{ return token::IF; }

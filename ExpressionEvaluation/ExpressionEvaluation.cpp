@@ -14,12 +14,12 @@ char Prior[8][8] =
  /*'^'*/{'>','>','>','>','<','>','>','>'} 
 }; 
 
-double atof_(char str[])
+float atof_(char str[])
 {
-	double result = 0;
+	float result = 0;
 	int flag = 0;
 	int n = 1;
-	double temp = 0;
+	float temp = 0;
 	for(int i = 0; str[i] != '\0'; i++)
 	{
 		if(str[i] == '.')
@@ -35,6 +35,7 @@ double atof_(char str[])
 			for(int j = 0; j < n; j++)
 				temp /= 10;
 			result += temp;
+			n++;
 		}
 	}
 	return result;
@@ -46,7 +47,7 @@ int PushChar(char s[], char c, int top)
 	return (top+1);
 }
 
-int PushNum(double s[], double x, int top)
+int PushNum(float s[], float x, int top)
 {
 	s[top] = x;
 	return (top+1);
@@ -57,7 +58,7 @@ int PopChar(char s[], int top)
 	return (top-1);
 }
 
-int PopNum(double s[], int top)
+int PopNum(float s[], int top)
 {
 	return (top-1);
 }
@@ -93,7 +94,7 @@ void strcpy(char dest[], char source[], char result[])
 }
 
 
-double Operate(double a, char theta, double b)      //计算函数Operate
+float Operate(float a, char theta, float b)      //计算函数Operate
 {
 	if (theta == '+')
 	{
@@ -155,24 +156,27 @@ char precede(char Aop, char Bop)
 	return Prior[ReturnOpOrd(Aop,OPSET)][ReturnOpOrd(Bop,OPSET)]; 
 } 
 
-double EvaluateExpression(char MyExpression[])
+float EvaluateExpression(char MyExpression[])
 { 
 	// 算术表达式求值的算符优先算法
 	// 设OPTR和OPND分别为运算符栈和运算数栈，OP为运算符集合 
 	int optr_top = 0;
 	int opnd_top = 0;
-	char OPTR[100] = {0};		// 运算符栈，字符元素
-	double OPND[100] = {0};	// 运算数栈，实数元素 
+	char OPTR[100];		// 运算符栈，
+	OPTR[0] = 0;
+	float OPND[100];	// 运算数栈，实数元素 
+	OPND[0] = 0;
 	char TempData[20]; 
-	double Data; 
-	double a;
-	double b;
+	float Data; 
+	float a;
+	float b;
 	char theta;
 	char c[100];
 	char TempC[100];
 	char Dr[]={'#','\0'}; 
 	optr_top = PushChar(OPTR,'#',optr_top); 
-	strcat(MyExpression, Dr, c); 
+	strcpy(c, MyExpression, c);
+	strcat(c, Dr, c); 
 	strcpy(TempData,"\0",TempC);//字符串拷贝函数 
 	int temp = 0;
 	while (c[temp] != '#' || OPTR[optr_top-1] != '#')
@@ -184,7 +188,7 @@ double EvaluateExpression(char MyExpression[])
 			temp++; 
 			if (In(c[temp], OPSET) == 1)
 			{ 
-				Data = atof_(TempData);       //字符串转换函数(double) 
+				Data = atof_(TempData);       //字符串转换函数(float) 
 				opnd_top = PushNum(OPND, Data, opnd_top); 
 				strcpy(TempData,"\0",TempC); 
 			} 
@@ -223,7 +227,7 @@ double EvaluateExpression(char MyExpression[])
 
 int main()
 { 
-	char s[]="13.7*5.2+2/5\0";
+	char s[]="13.745*5.2+2/5\0";
 	printf("%g\n",EvaluateExpression(s));
 
 	return 0;
