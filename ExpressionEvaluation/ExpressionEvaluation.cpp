@@ -35,6 +35,7 @@ double atof_(char str[])
 			for(int j = 0; j < n; j++)
 				temp /= 10;
 			result += temp;
+			n++;
 		}
 	}
 	return result;
@@ -223,7 +224,7 @@ double EvaluateExpression(char MyExpression[])
 
 int main()
 { 
-	char s[]="13.7*5.2+2/5\0";
+	char s[]="13.78*5.2+2/5\0";
 	printf("%g\n",EvaluateExpression(s));
 
 	return 0;
