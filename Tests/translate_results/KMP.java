@@ -13,7 +13,7 @@ public class KMP{
     public static int strlen(byte[] s) throws IOException
     {
         int i = 0;
-        for (i = 0; s[i] != 0; (i)++)
+        for (i = 0; s[i] != (byte)0; (i)++)
             ;
         return i;
     }
@@ -84,9 +84,9 @@ public class KMP{
     {
         byte[] str = new byte[100];
         byte[] c = new byte[100];
-        System.out.print("请输入文本串：\n");
+        System.out.print("请输入文本串：\n".getBytes());
         getString(str);
-        System.out.print("请输入模式串：\n");
+        System.out.print("请输入模式串：\n".getBytes());
         getString(c);
         System.out.print(Index_KMP(str, c, 0));
         return;
